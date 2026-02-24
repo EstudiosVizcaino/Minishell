@@ -10,8 +10,9 @@ t_env	*env_new(char *key, char *value)
 	node->key = ft_strdup(key);
 	node->value = value ? ft_strdup(value) : NULL;
 	node->next = NULL;
-	if (!node->key)
+	if (!node->key || (value && !node->value))
 	{
+		free(node->key);
 		free(node->value);
 		free(node);
 		return (NULL);

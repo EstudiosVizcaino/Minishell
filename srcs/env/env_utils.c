@@ -35,6 +35,8 @@ int	env_set(t_env **env, char *key, char *value)
 	if (node)
 	{
 		val = value ? ft_strdup(value) : NULL;
+		if (value && !val)
+			return (1);
 		free(node->value);
 		node->value = val;
 		return (0);
