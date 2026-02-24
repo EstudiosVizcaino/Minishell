@@ -116,6 +116,7 @@ int			is_builtin(char *name);
 char		*find_executable(char *name, t_env *env);
 int			apply_redirs(t_redir *redirs);
 int			open_heredoc(t_redir *redir);
+void		open_heredocs(t_redir *redir, t_shell *shell);
 
 /* Builtins */
 int			builtin_echo(t_cmd *cmd);
@@ -140,6 +141,7 @@ t_env		*env_find(t_env *env, char *key);
 /* Signals */
 void		setup_signals(void);
 void		setup_signals_child(void);
+void		setup_signals_heredoc(void);
 void		sig_handler(int sig);
 void		sig_heredoc(int sig);
 
