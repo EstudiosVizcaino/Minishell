@@ -35,7 +35,12 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 	char	*path;
 
 	if (!cmd->args[1])
-		return (cd_home(shell));
+	{
+		if (cd_home(shell) != 0)
+			return (1);
+		update_pwd(shell);
+		return (0);
+	}
 	path = cmd->args[1];
 	if (chdir(path) != 0)
 	{

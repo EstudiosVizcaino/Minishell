@@ -46,8 +46,12 @@ static int	export_one(char *arg, t_shell *shell)
 	eq = ft_strchr(arg, '=');
 	if (!eq)
 	{
-		if (is_valid_key(arg))
-			env_set(&shell->env, arg, NULL);
+		if (!is_valid_key(arg))
+		{
+			ft_putstr_fd("export: invalid identifier\n", STDERR_FILENO);
+			return (1);
+		}
+		env_set(&shell->env, arg, NULL);
 		return (0);
 	}
 	key = ft_substr(arg, 0, eq - arg);
