@@ -24,6 +24,10 @@ typedef enum e_token_type
 	TOKEN_REDIR_OUT,
 	TOKEN_HEREDOC,
 	TOKEN_APPEND,
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_LPAREN,
+	TOKEN_RPAREN,
 	TOKEN_EOF
 }	t_token_type;
 
@@ -153,5 +157,12 @@ void		free_array(char **arr);
 int			array_len(char **arr);
 void		free_shell(t_shell *shell);
 void		fatal_error(char *msg);
+
+/* Bonus */
+t_ast		*parse_and_or(t_token **tokens);
+int			exec_and_or(t_ast *ast, t_shell *shell);
+void		expand_wildcards_cmd(t_cmd *cmd);
+char		**expand_wildcard(char *pattern);
+int			match_wildcard(char *pattern, char *str);
 
 #endif

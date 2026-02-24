@@ -2,7 +2,13 @@
 
 int	is_operator(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+#ifdef BONUS
+	if (c == '&' || c == '(' || c == ')')
+		return (1);
+#endif
+	return (0);
 }
 
 t_token	*handle_operator(char *input, int *i)
@@ -23,6 +29,28 @@ t_token	*handle_operator(char *input, int *i)
 		(*i) += 2;
 		return (new_token(TOKEN_APPEND, ">>"));
 	}
+#ifdef BONUS
+	if (input[*i] == '&' && input[*i + 1] == '&')
+	{
+		(*i) += 2;
+		return (new_token(TOKEN_AND, "&&"));
+	}
+	if (input[*i] == '|' && input[*i + 1] == '|')
+	{
+		(*i) += 2;
+		return (new_token(TOKEN_OR, "||"));
+	}
+	if (input[*i] == '(')
+	{
+		(*i)++;
+		return (new_token(TOKEN_LPAREN, "("));
+	}
+	if (input[*i] == ')')
+	{
+		(*i)++;
+		return (new_token(TOKEN_RPAREN, ")"));
+	}
+#endif
 	if (input[*i] == '|')
 		type = TOKEN_PIPE;
 	else if (input[*i] == '<')

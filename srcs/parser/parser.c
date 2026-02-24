@@ -33,7 +33,11 @@ t_ast	*parser(t_token *tokens)
 	tok = tokens;
 	if (!tok)
 		return (NULL);
+#ifdef BONUS
+	return (parse_and_or(&tok));
+#else
 	return (parse_pipeline(&tok));
+#endif
 }
 
 t_ast	*parse_pipeline(t_token **tokens)

@@ -49,12 +49,18 @@ $(NAME): $(LIBFT) $(OBJS)
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-bonus: $(LIBFT) $(OBJS) $(BONUS_OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(BONUS_OBJS) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
+BONUS_CFLAGS = -Wall -Wextra -Werror -DBONUS
+BONUS_OBJS_ALL = $(SRCS:.c=.bo) $(BONUS_SRCS:.c=.bo)
+
+bonus: fclean $(LIBFT) $(BONUS_OBJS_ALL)
+	$(CC) $(BONUS_CFLAGS) $(BONUS_OBJS_ALL) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
+
+%.bo: %.c
+	$(CC) $(BONUS_CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -f $(OBJS) $(BONUS_OBJS)
+	rm -f $(OBJS) $(BONUS_OBJS) $(BONUS_OBJS_ALL)
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
