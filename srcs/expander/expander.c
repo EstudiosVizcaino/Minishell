@@ -35,6 +35,9 @@ static void	expand_cmd(t_cmd *cmd, t_shell *shell)
 		}
 	}
 	expand_redirs(cmd->redirs, shell);
+#ifdef BONUS
+	expand_wildcards_cmd(cmd);
+#endif
 }
 
 void	expand_ast(t_ast *ast, t_shell *shell)
