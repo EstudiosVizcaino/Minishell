@@ -9,9 +9,19 @@ Minishell is a simple UNIX shell implemented in C, following the 42 School curri
 ## Instructions
 
 ### Requirements
-- gcc / cc compiler
+
+#### Linux (Debian/Ubuntu)
+- cc compiler
 - GNU make
-- readline library (`libreadline-dev` on Debian/Ubuntu)
+- readline library: `sudo apt-get install libreadline-dev`
+
+#### macOS
+- Xcode Command Line Tools: `xcode-select --install`
+- [Homebrew](https://brew.sh)
+- GNU readline via Homebrew: `brew install readline`
+
+> The Makefile auto-detects macOS and resolves the Homebrew readline path (works on
+> both Intel `/usr/local/opt/readline` and Apple Silicon `/opt/homebrew/opt/readline`).
 
 ### Compilation
 ```sh

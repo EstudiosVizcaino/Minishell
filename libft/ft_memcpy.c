@@ -1,6 +1,6 @@
 #include "libft.h"
 
-void	*ft_memcpy(void *dst, const char *src, size_t n)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	unsigned char		*d;
 	const unsigned char	*s;

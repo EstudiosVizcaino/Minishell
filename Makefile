@@ -4,6 +4,20 @@ CFLAGS = -Wall -Wextra -Werror
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
+# macOS: auto-detect Homebrew readline (works on both Intel and Apple Silicon)
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Darwin)
+    BREW_PREFIX := $(shell brew --prefix readline 2>/dev/null)
+    ifeq ($(BREW_PREFIX),)
+        BREW_PREFIX := /usr/local/opt/readline
+    endif
+    READLINE_INC := -I$(BREW_PREFIX)/include
+    READLINE_LIB := -L$(BREW_PREFIX)/lib
+else
+    READLINE_INC :=
+    READLINE_LIB :=
+endif
+
 SRCS =	srcs/main.c \
 	srcs/signals/signals.c \
 	srcs/env/env.c \
@@ -36,7 +50,7 @@ BONUS_SRCS = srcs_bonus/parser_bonus.c \
 OBJS = $(SRCS:.c=.o)
 BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
-INCLUDES = -I includes -I $(LIBFT_DIR)
+INCLUDES = -I includes -I $(LIBFT_DIR) $(READLINE_INC)
 
 all: $(NAME)
 
@@ -44,7 +58,7 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft $(READLINE_LIB) -lreadline -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -53,7 +67,7 @@ BONUS_CFLAGS = -Wall -Wextra -Werror -DBONUS
 BONUS_OBJS_ALL = $(SRCS:.c=.bo) $(BONUS_SRCS:.c=.bo)
 
 bonus: fclean $(LIBFT) $(BONUS_OBJS_ALL)
-	$(CC) $(BONUS_CFLAGS) $(BONUS_OBJS_ALL) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
+	$(CC) $(BONUS_CFLAGS) $(BONUS_OBJS_ALL) -L$(LIBFT_DIR) -lft $(READLINE_LIB) -lreadline -o $(NAME)
 
 %.bo: %.c
 	$(CC) $(BONUS_CFLAGS) $(INCLUDES) -c $< -o $@
