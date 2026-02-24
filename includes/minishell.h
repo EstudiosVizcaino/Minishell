@@ -129,6 +129,7 @@ int			builtin_exit(t_cmd *cmd, t_shell *shell);
 /* Env */
 t_env		*env_init(char **envp);
 t_env		*env_new(char *key, char *value);
+t_env		*env_parse_entry(char *entry);
 char		*env_get(t_env *env, char *key);
 int			env_set(t_env **env, char *key, char *value);
 void		env_unset(t_env **env, char *key);
