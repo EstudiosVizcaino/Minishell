@@ -78,7 +78,10 @@ t_redir	*parse_redir(t_token **tokens)
 	head = NULL;
 	tail = NULL;
 	while (*tokens && (*tokens)->type != TOKEN_PIPE
-		&& (*tokens)->type != TOKEN_EOF)
+		&& (*tokens)->type != TOKEN_EOF
+		&& (*tokens)->type != TOKEN_AND
+		&& (*tokens)->type != TOKEN_OR
+		&& (*tokens)->type != TOKEN_RPAREN)
 	{
 		if ((*tokens)->type == TOKEN_WORD)
 			break ;

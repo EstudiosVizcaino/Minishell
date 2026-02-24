@@ -54,7 +54,7 @@ t_token	*lexer(char *input)
 			i++;
 		if (!input[i])
 			break ;
-		if (input[i] == '|' || input[i] == '<' || input[i] == '>')
+		if (is_operator(input[i]))
 			tok = handle_operator(input, &i);
 		else
 			tok = handle_word(input, &i);
