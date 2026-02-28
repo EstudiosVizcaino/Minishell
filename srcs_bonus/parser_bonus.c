@@ -1,16 +1,34 @@
 #include "minishell.h"
 
+/**
+ * @brief Checks if a token type is a pipe, AND, or OR operator.
+ *
+ * @param type The token type to check.
+ * @return 1 if the type is an operator, 0 otherwise.
+ */
 static int	is_op_token(t_token_type type)
 {
 	return (type == TOKEN_PIPE || type == TOKEN_AND || type == TOKEN_OR);
 }
 
+/**
+ * @brief Checks if a token type is a redirection.
+ *
+ * @param type The token type to check.
+ * @return 1 if the type is a redirection, 0 otherwise.
+ */
 static int	is_redir_type(t_token_type type)
 {
 	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
 		|| type == TOKEN_HEREDOC || type == TOKEN_APPEND);
 }
 
+/**
+ * @brief Prints a syntax error message for an unexpected token.
+ *
+ * @param tok_val The token value that caused the error.
+ * @return Always returns 1 to indicate an error.
+ */
 static int	syntax_error(char *tok_val)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token `",
@@ -20,6 +38,12 @@ static int	syntax_error(char *tok_val)
 	return (1);
 }
 
+/**
+ * @brief Validates a single token for syntax errors.
+ *
+ * @param tok The token to validate.
+ * @return 1 if a syntax error is found, 0 otherwise.
+ */
 static int	check_token(t_token *tok)
 {
 	if (tok->type == TOKEN_WORD && ft_strcmp(tok->value, "&") == 0)
@@ -43,6 +67,12 @@ static int	check_token(t_token *tok)
 	return (0);
 }
 
+/**
+ * @brief Validates the syntax of a complete token list.
+ *
+ * @param tokens The head of the token list to validate.
+ * @return 1 if a syntax error is found, 0 otherwise.
+ */
 int	check_syntax(t_token *tokens)
 {
 	t_token	*tok;

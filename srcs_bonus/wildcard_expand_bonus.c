@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+/**
+ * @brief Merges expanded wildcard results into the command arguments array.
+ *
+ * @param old The original arguments array.
+ * @param idx The index of the argument being replaced.
+ * @param exp The expanded wildcard results.
+ * @param old_len The length of the original arguments array.
+ * @return A new merged arguments array, or NULL on failure.
+ */
 static char	**merge_args(char **old, int idx, char **exp, int old_len)
 {
 	char	**new_args;
@@ -25,6 +34,13 @@ static char	**merge_args(char **old, int idx, char **exp, int old_len)
 	return (new_args);
 }
 
+/**
+ * @brief Replaces a single wildcard argument with its expanded matches.
+ *
+ * @param cmd The command whose argument is being expanded.
+ * @param i The index of the wildcard argument to replace.
+ * @return The next index to process, or -1 on failure.
+ */
 static int	replace_wildcard(t_cmd *cmd, int i)
 {
 	char	**exp;
@@ -47,6 +63,11 @@ static int	replace_wildcard(t_cmd *cmd, int i)
 	return (i + exp_len);
 }
 
+/**
+ * @brief Unmasks all wildcard mask bytes in command arguments.
+ *
+ * @param cmd The command whose arguments are unmasked.
+ */
 static void	unmask_all_args(t_cmd *cmd)
 {
 	int	i;
@@ -61,6 +82,11 @@ static void	unmask_all_args(t_cmd *cmd)
 	}
 }
 
+/**
+ * @brief Expands all wildcard arguments in a command.
+ *
+ * @param cmd The command whose arguments are expanded.
+ */
 void	expand_wildcards_cmd(t_cmd *cmd)
 {
 	int	i;

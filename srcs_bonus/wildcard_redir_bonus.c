@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/**
+ * @brief Prints an ambiguous redirect error and nullifies the file target.
+ *
+ * @param redir The redirection that is ambiguous.
+ */
 static void	redir_ambiguous(t_redir *redir)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -9,6 +14,11 @@ static void	redir_ambiguous(t_redir *redir)
 	redir->file = NULL;
 }
 
+/**
+ * @brief Applies wildcard expansion to a redirection file target.
+ *
+ * @param redir The redirection to expand.
+ */
 static void	apply_redir_wildcard(t_redir *redir)
 {
 	char	**exp;
@@ -26,6 +36,11 @@ static void	apply_redir_wildcard(t_redir *redir)
 	free_array(exp);
 }
 
+/**
+ * @brief Expands wildcards in all non-heredoc redirections.
+ *
+ * @param redir The head of the redirection list.
+ */
 void	expand_wildcard_redir(t_redir *redir)
 {
 	while (redir)

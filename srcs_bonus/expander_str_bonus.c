@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/**
+ * @brief Replaces asterisk characters with a mask byte to prevent wildcard expansion.
+ *
+ * @param s The string in which to mask wildcards.
+ */
 static void	mask_wildcards(char *s)
 {
 	while (s && *s)
@@ -10,6 +15,13 @@ static void	mask_wildcards(char *s)
 	}
 }
 
+/**
+ * @brief Extracts text within single quotes, masking wildcards.
+ *
+ * @param str The input string containing the quoted segment.
+ * @param i Pointer to the current index in the string.
+ * @return The extracted and masked substring.
+ */
 static char	*expand_single_quote(char *str, int *i)
 {
 	char	*result;
@@ -26,6 +38,14 @@ static char	*expand_single_quote(char *str, int *i)
 	return (result);
 }
 
+/**
+ * @brief Expands variables within double-quoted text, masking wildcards.
+ *
+ * @param str The input string containing the quoted segment.
+ * @param i Pointer to the current index in the string.
+ * @param shell The shell state structure.
+ * @return The expanded and masked substring.
+ */
 static char	*expand_double_quote(char *str, int *i, t_shell *shell)
 {
 	char	*result;
@@ -52,6 +72,14 @@ static char	*expand_double_quote(char *str, int *i, t_shell *shell)
 	return (result);
 }
 
+/**
+ * @brief Expands a single token element (quote, variable, or literal).
+ *
+ * @param str The input string to expand from.
+ * @param i Pointer to the current index in the string.
+ * @param shell The shell state structure.
+ * @return The expanded substring.
+ */
 static char	*expand_one(char *str, int *i, t_shell *shell)
 {
 	char	buf[2];
@@ -67,6 +95,13 @@ static char	*expand_one(char *str, int *i, t_shell *shell)
 	return (ft_strdup(buf));
 }
 
+/**
+ * @brief Expands all variables and removes quotes from a string (bonus version).
+ *
+ * @param str The input string to expand.
+ * @param shell The shell state structure.
+ * @return The fully expanded string.
+ */
 char	*expand_str(char *str, t_shell *shell)
 {
 	char	*result;

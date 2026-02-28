@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+/**
+ * @brief Executes AND/OR logical operator AST nodes.
+ *
+ * @param ast The AST node containing the AND/OR operator.
+ * @param shell The shell state structure.
+ * @return The exit status of the executed branch.
+ */
 int	exec_and_or(t_ast *ast, t_shell *shell)
 {
 	int	left_status;
@@ -15,6 +22,13 @@ int	exec_and_or(t_ast *ast, t_shell *shell)
 	return (execute(ast->right, shell));
 }
 
+/**
+ * @brief Dispatches AST node execution based on node type (bonus version with AND/OR support).
+ *
+ * @param ast The AST node to execute.
+ * @param shell The shell state structure.
+ * @return The exit status of the executed command.
+ */
 int	execute(t_ast *ast, t_shell *shell)
 {
 	if (!ast)
