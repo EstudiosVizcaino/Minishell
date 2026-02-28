@@ -1,11 +1,23 @@
 #include "minishell.h"
 
+/**
+ * @brief Checks if a token type is a redirection.
+ *
+ * @param type The token type to check.
+ * @return Non-zero if the token type is a redirection, 0 otherwise.
+ */
 static int	is_redir_token(t_token_type type)
 {
 	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
 		|| type == TOKEN_HEREDOC || type == TOKEN_APPEND);
 }
 
+/**
+ * @brief Counts the number of word tokens for argument allocation.
+ *
+ * @param tok The starting token to count from.
+ * @return The number of word tokens found.
+ */
 static int	count_word_tokens(t_token *tok)
 {
 	int	count;
@@ -28,6 +40,13 @@ static int	count_word_tokens(t_token *tok)
 	return (count);
 }
 
+/**
+ * @brief Adds a redirection to a command's redirection list.
+ *
+ * @param cmd The command to add the redirection to.
+ * @param tail A pointer to the tail of the redirection list.
+ * @param tokens A pointer to the current position in the token list.
+ */
 static void	add_redir(t_cmd *cmd, t_redir **tail, t_token **tokens)
 {
 	t_redir	*r;
@@ -40,6 +59,12 @@ static void	add_redir(t_cmd *cmd, t_redir **tail, t_token **tokens)
 	*tail = r;
 }
 
+/**
+ * @brief Fills a command structure with arguments and redirections from tokens.
+ *
+ * @param cmd The command structure to fill.
+ * @param tokens A pointer to the current position in the token list.
+ */
 static void	fill_cmd(t_cmd *cmd, t_token **tokens)
 {
 	t_redir	*redir_tail;
@@ -63,6 +88,12 @@ static void	fill_cmd(t_cmd *cmd, t_token **tokens)
 		cmd->args[i] = NULL;
 }
 
+/**
+ * @brief Parses a single command from the token stream.
+ *
+ * @param tokens A pointer to the current position in the token list.
+ * @return A pointer to the AST node representing the command, or NULL on failure.
+ */
 t_ast	*parse_command(t_token **tokens)
 {
 	t_ast	*node;

@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/**
+ * @brief Frees a linked list of redirection nodes.
+ *
+ * @param redir The head of the redirection list to free.
+ */
 void	free_redir(t_redir *redir)
 {
 	t_redir	*next;
@@ -15,6 +20,11 @@ void	free_redir(t_redir *redir)
 	}
 }
 
+/**
+ * @brief Frees a command structure and its contents.
+ *
+ * @param cmd The command structure to free.
+ */
 void	free_cmd(t_cmd *cmd)
 {
 	int	i;
@@ -35,6 +45,11 @@ void	free_cmd(t_cmd *cmd)
 	free(cmd);
 }
 
+/**
+ * @brief Recursively frees an AST and all its children.
+ *
+ * @param node The root of the AST subtree to free.
+ */
 void	free_ast(t_ast *node)
 {
 	if (!node)
@@ -46,6 +61,12 @@ void	free_ast(t_ast *node)
 	free(node);
 }
 
+/**
+ * @brief Creates a redirection node from the current token.
+ *
+ * @param tokens A pointer to the current position in the token list.
+ * @return A pointer to the new redirection node, or NULL on failure.
+ */
 t_redir	*make_redir(t_token **tokens)
 {
 	t_redir	*redir;
@@ -71,6 +92,12 @@ t_redir	*make_redir(t_token **tokens)
 	return (redir);
 }
 
+/**
+ * @brief Parses consecutive redirection tokens into a linked list.
+ *
+ * @param tokens A pointer to the current position in the token list.
+ * @return A pointer to the head of the redirection list, or NULL if none found.
+ */
 t_redir	*parse_redir(t_token **tokens)
 {
 	t_redir	*redir;
