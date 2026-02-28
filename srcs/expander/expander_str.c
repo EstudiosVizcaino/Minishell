@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+/**
+ * @brief Extracts text within single quotes without expansion.
+ *
+ * @param str The input string containing the single-quoted text.
+ * @param i Pointer to the current index in the string.
+ * @return The extracted text inside the single quotes.
+ */
 static char	*expand_single_quote(char *str, int *i)
 {
 	char	*result;
@@ -15,6 +22,14 @@ static char	*expand_single_quote(char *str, int *i)
 	return (result);
 }
 
+/**
+ * @brief Expands variables within double-quoted text.
+ *
+ * @param str The input string containing the double-quoted text.
+ * @param i Pointer to the current index in the string.
+ * @param shell The shell context containing environment variables.
+ * @return The expanded text inside the double quotes.
+ */
 static char	*expand_double_quote(char *str, int *i, t_shell *shell)
 {
 	char	*result;
@@ -40,6 +55,14 @@ static char	*expand_double_quote(char *str, int *i, t_shell *shell)
 	return (result);
 }
 
+/**
+ * @brief Expands a single token element (quote, variable, or literal).
+ *
+ * @param str The input string to expand from.
+ * @param i Pointer to the current index in the string.
+ * @param shell The shell context containing environment variables.
+ * @return The expanded token element as a new string.
+ */
 static char	*expand_one(char *str, int *i, t_shell *shell)
 {
 	char	buf[2];
@@ -55,6 +78,13 @@ static char	*expand_one(char *str, int *i, t_shell *shell)
 	return (ft_strdup(buf));
 }
 
+/**
+ * @brief Expands all variables and removes quotes from a string.
+ *
+ * @param str The input string to expand.
+ * @param shell The shell context containing environment variables.
+ * @return The fully expanded string with quotes removed.
+ */
 char	*expand_str(char *str, t_shell *shell)
 {
 	char	*result;

@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Allocates memory and exits on failure.
+ *
+ * @param size The number of bytes to allocate.
+ * @return A pointer to the allocated memory.
+ */
 void	*ft_malloc(size_t size)
 {
 	void	*ptr;
@@ -10,12 +16,23 @@ void	*ft_malloc(size_t size)
 	return (ptr);
 }
 
+/**
+ * @brief Checks if a character is a whitespace character.
+ *
+ * @param c The character to check.
+ * @return Non-zero if the character is whitespace, 0 otherwise.
+ */
 int	ft_isspace(int c)
 {
 	return (c == ' ' || c == '\t' || c == '\n'
 		|| c == '\r' || c == '\f' || c == '\v');
 }
 
+/**
+ * @brief Frees a NULL-terminated array of strings.
+ *
+ * @param arr The array of strings to free.
+ */
 void	free_array(char **arr)
 {
 	int	i;
@@ -31,6 +48,12 @@ void	free_array(char **arr)
 	free(arr);
 }
 
+/**
+ * @brief Returns the length of a NULL-terminated string array.
+ *
+ * @param arr The array of strings to measure.
+ * @return The number of elements in the array.
+ */
 int	array_len(char **arr)
 {
 	int	i;
@@ -43,6 +66,11 @@ int	array_len(char **arr)
 	return (i);
 }
 
+/**
+ * @brief Prints an error message and exits the program.
+ *
+ * @param msg The error message to print.
+ */
 void	fatal_error(char *msg)
 {
 	if (msg)

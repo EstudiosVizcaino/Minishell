@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Changes directory to the HOME env variable.
+ *
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success, 1 on failure.
+ */
 static int	cd_home(t_shell *shell)
 {
 	char	*home;
@@ -18,6 +24,11 @@ static int	cd_home(t_shell *shell)
 	return (0);
 }
 
+/**
+ * @brief Updates PWD and OLDPWD environment variables after a directory change.
+ *
+ * @param shell Pointer to the shell structure.
+ */
 static void	update_pwd(t_shell *shell)
 {
 	char	buf[4096];
@@ -30,6 +41,12 @@ static void	update_pwd(t_shell *shell)
 		env_set(&shell->env, "PWD", buf);
 }
 
+/**
+ * @brief Prints a cd error message with the path and errno string.
+ *
+ * @param path The path that caused the error.
+ * @return 1 to indicate failure.
+ */
 static int	cd_error(char *path)
 {
 	ft_putstr_fd("cd: ", STDERR_FILENO);
@@ -40,6 +57,13 @@ static int	cd_error(char *path)
 	return (1);
 }
 
+/**
+ * @brief Implements the cd builtin command.
+ *
+ * @param cmd Pointer to the command structure.
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success, 1 on failure.
+ */
 int	builtin_cd(t_cmd *cmd, t_shell *shell)
 {
 	char	*path;

@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Sorts wildcard matches alphabetically using bubble sort.
+ *
+ * @param matches The array of matched filenames to sort.
+ * @param count The number of elements in the array.
+ */
 static void	sort_matches(char **matches, int count)
 {
 	char	*tmp;
@@ -24,6 +30,13 @@ static void	sort_matches(char **matches, int count)
 	}
 }
 
+/**
+ * @brief Counts directory entries matching a wildcard pattern.
+ *
+ * @param dir The directory stream to read from.
+ * @param pattern The wildcard pattern to match against.
+ * @return The number of matching entries.
+ */
 static int	count_matches(DIR *dir, char *pattern)
 {
 	struct dirent	*entry;
@@ -41,6 +54,14 @@ static int	count_matches(DIR *dir, char *pattern)
 	return (count);
 }
 
+/**
+ * @brief Creates an array of directory entries matching a wildcard pattern.
+ *
+ * @param dir The directory stream to read from.
+ * @param pattern The wildcard pattern to match against.
+ * @param count The number of expected matches.
+ * @return A sorted NULL-terminated array of matching filenames.
+ */
 static char	**fill_matches(DIR *dir, char *pattern, int count)
 {
 	struct dirent	*entry;
@@ -64,6 +85,12 @@ static char	**fill_matches(DIR *dir, char *pattern, int count)
 	return (matches);
 }
 
+/**
+ * @brief Expands a wildcard pattern into matching filenames.
+ *
+ * @param pattern The wildcard pattern to expand.
+ * @return A NULL-terminated array of matching filenames, or NULL if none match.
+ */
 char	**expand_wildcard(char *pattern)
 {
 	DIR		*dir;

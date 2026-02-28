@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/**
+ * @brief Replaces mask bytes back to asterisk characters.
+ *
+ * @param s The string in which to unmask wildcards.
+ */
 void	unmask_wildcards(char *s)
 {
 	while (s && *s)
@@ -10,6 +15,13 @@ void	unmask_wildcards(char *s)
 	}
 }
 
+/**
+ * @brief Recursively matches a string against a wildcard pattern.
+ *
+ * @param pattern The wildcard pattern to match.
+ * @param str The string to test against the pattern.
+ * @return 1 if the string matches, 0 otherwise.
+ */
 int	match_wildcard(char *pattern, char *str)
 {
 	if (*pattern == '\0')

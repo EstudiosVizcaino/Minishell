@@ -2,6 +2,12 @@
 
 int	g_signal = 0;
 
+/**
+ * @brief Tokenizes, syntax-checks, parses, expands, and executes a single input line.
+ *
+ * @param line The input line to process.
+ * @param shell The shell state structure.
+ */
 static void	run_line(char *line, t_shell *shell)
 {
 	t_token	*tokens;
@@ -25,6 +31,11 @@ static void	run_line(char *line, t_shell *shell)
 	free_ast(ast);
 }
 
+/**
+ * @brief Runs the main read-eval-print loop of the shell.
+ *
+ * @param shell The shell state structure.
+ */
 static void	main_loop(t_shell *shell)
 {
 	char	*line;
@@ -45,6 +56,14 @@ static void	main_loop(t_shell *shell)
 	}
 }
 
+/**
+ * @brief Entry point of the minishell program (bonus version).
+ *
+ * @param argc The argument count.
+ * @param argv The argument vector.
+ * @param envp The environment variables array.
+ * @return The last exit status of the shell.
+ */
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;

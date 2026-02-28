@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Opens all heredoc redirections in a redirection list.
+ *
+ * @param redir The head of the redirection list.
+ * @param shell The shell state.
+ */
 void	open_heredocs(t_redir *redir, t_shell *shell)
 {
 	(void)shell;
@@ -11,6 +17,12 @@ void	open_heredocs(t_redir *redir, t_shell *shell)
 	}
 }
 
+/**
+ * @brief Waits for a child process and returns its exit status.
+ *
+ * @param pid The process ID of the child to wait for.
+ * @return The exit status of the child process.
+ */
 static int	wait_for_child(pid_t pid)
 {
 	int	status;
@@ -29,12 +41,26 @@ static int	wait_for_child(pid_t pid)
 	return (exit_code);
 }
 
+/**
+ * @brief Executes redirections for a command with no arguments.
+ *
+ * @param cmd The command structure containing redirections.
+ * @param shell The shell state.
+ * @return 0 on success, non-zero on failure.
+ */
 static int	exec_redir_only(t_cmd *cmd, t_shell *shell)
 {
 	open_heredocs(cmd->redirs, shell);
 	return (apply_redirs(cmd->redirs));
 }
 
+/**
+ * @brief Executes a single command AST node.
+ *
+ * @param ast The AST node representing the command.
+ * @param shell The shell state.
+ * @return The exit status of the executed command.
+ */
 int	exec_cmd(t_ast *ast, t_shell *shell)
 {
 	t_cmd	*cmd;

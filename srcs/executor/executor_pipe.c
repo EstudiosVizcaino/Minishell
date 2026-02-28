@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+/**
+ * @brief Waits for two child processes and returns the exit status of the second.
+ *
+ * @param pid1 The process ID of the first child.
+ * @param pid2 The process ID of the second child.
+ * @return The exit status of the second child process.
+ */
 static int	wait_children(pid_t pid1, pid_t pid2)
 {
 	int	status;
@@ -15,6 +22,13 @@ static int	wait_children(pid_t pid1, pid_t pid2)
 	return (exit_code);
 }
 
+/**
+ * @brief Executes the left side of a pipe in a child process.
+ *
+ * @param ast The AST node representing the pipe.
+ * @param pipefd The pipe file descriptors.
+ * @param shell The shell state.
+ */
 static void	child_left(t_ast *ast, int *pipefd, t_shell *shell)
 {
 	setup_signals_child();
@@ -27,6 +41,13 @@ static void	child_left(t_ast *ast, int *pipefd, t_shell *shell)
 	exit(shell->last_exit);
 }
 
+/**
+ * @brief Executes the right side of a pipe in a child process.
+ *
+ * @param ast The AST node representing the pipe.
+ * @param pipefd The pipe file descriptors.
+ * @param shell The shell state.
+ */
 static void	child_right(t_ast *ast, int *pipefd, t_shell *shell)
 {
 	setup_signals_child();
@@ -39,6 +60,15 @@ static void	child_right(t_ast *ast, int *pipefd, t_shell *shell)
 	exit(shell->last_exit);
 }
 
+/**
+ * @brief Forks the right child of a pipe and waits for both children.
+ *
+ * @param ast The AST node representing the pipe.
+ * @param pipefd The pipe file descriptors.
+ * @param shell The shell state.
+ * @param p1 The process ID of the left child.
+ * @return The exit status of the right child process.
+ */
 static int	fork_right(t_ast *ast, int *pipefd, t_shell *shell, pid_t p1)
 {
 	pid_t	pid2;
@@ -58,6 +88,13 @@ static int	fork_right(t_ast *ast, int *pipefd, t_shell *shell, pid_t p1)
 	return (wait_children(p1, pid2));
 }
 
+/**
+ * @brief Executes a pipe AST node by forking two child processes.
+ *
+ * @param ast The AST node representing the pipe.
+ * @param shell The shell state.
+ * @return The exit status of the right side of the pipe.
+ */
 int	exec_pipe(t_ast *ast, t_shell *shell)
 {
 	int		pipefd[2];

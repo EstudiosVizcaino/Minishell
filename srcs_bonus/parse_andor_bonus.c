@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Parses a parenthesized subexpression or falls through to pipeline parsing.
+ *
+ * @param tokens Pointer to the current token list position.
+ * @return The parsed AST node.
+ */
 static t_ast	*parse_parens(t_token **tokens)
 {
 	t_ast	*node;
@@ -15,6 +21,12 @@ static t_ast	*parse_parens(t_token **tokens)
 	return (node);
 }
 
+/**
+ * @brief Checks if a token is an AND or OR operator.
+ *
+ * @param tok The token to check.
+ * @return 1 if the token is AND or OR, 0 otherwise.
+ */
 static int	is_and_or_token(t_token *tok)
 {
 	if (!tok)
@@ -22,6 +34,13 @@ static int	is_and_or_token(t_token *tok)
 	return (tok->type == TOKEN_AND || tok->type == TOKEN_OR);
 }
 
+/**
+ * @brief Creates an AND/OR AST node with left and right children.
+ *
+ * @param tokens Pointer to the current token list position.
+ * @param left The left child AST node.
+ * @return The new AND/OR AST node, or NULL on failure.
+ */
 static t_ast	*make_and_or(t_token **tokens, t_ast *left)
 {
 	t_ast		*node;
@@ -48,6 +67,12 @@ static t_ast	*make_and_or(t_token **tokens, t_ast *left)
 	return (node);
 }
 
+/**
+ * @brief Parses a sequence of AND/OR operators with their operands.
+ *
+ * @param tokens Pointer to the current token list position.
+ * @return The root AST node of the parsed expression.
+ */
 t_ast	*parse_and_or(t_token **tokens)
 {
 	t_ast	*left;

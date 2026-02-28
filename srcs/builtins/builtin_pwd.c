@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/**
+ * @brief Implements the pwd builtin command.
+ *
+ * @return 0 on success, 1 on failure.
+ */
 int	builtin_pwd(void)
 {
 	char	buf[4096];

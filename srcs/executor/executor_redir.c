@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Opens a file descriptor for a redirection based on its type.
+ *
+ * @param redir The redirection structure containing file and type info.
+ * @return The opened file descriptor, or -1 on failure.
+ */
 static int	open_redir_fd(t_redir *redir)
 {
 	if (!redir->file)
@@ -11,6 +17,12 @@ static int	open_redir_fd(t_redir *redir)
 	return (-1);
 }
 
+/**
+ * @brief Applies a single input or output redirection.
+ *
+ * @param redir The redirection structure to apply.
+ * @return 0 on success, 1 on failure.
+ */
 static int	apply_one_redir(t_redir *redir)
 {
 	int	fd;
@@ -33,6 +45,12 @@ static int	apply_one_redir(t_redir *redir)
 	return (0);
 }
 
+/**
+ * @brief Applies an append redirection.
+ *
+ * @param redir The redirection structure to apply.
+ * @return 0 on success, 1 on failure.
+ */
 static int	apply_append(t_redir *redir)
 {
 	int	fd;
@@ -50,6 +68,12 @@ static int	apply_append(t_redir *redir)
 	return (0);
 }
 
+/**
+ * @brief Reads heredoc input until the delimiter and stores it in a pipe.
+ *
+ * @param redir The redirection structure containing the heredoc delimiter.
+ * @return 0 on success, 1 on failure.
+ */
 int	open_heredoc(t_redir *redir)
 {
 	int		pipefd[2];
@@ -76,6 +100,12 @@ int	open_heredoc(t_redir *redir)
 	return (0);
 }
 
+/**
+ * @brief Applies all redirections in a redirection list.
+ *
+ * @param redirs The head of the redirection list.
+ * @return 0 on success, non-zero on failure.
+ */
 int	apply_redirs(t_redir *redirs)
 {
 	t_redir	*r;

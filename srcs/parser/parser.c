@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Allocates and initializes a new AST node.
+ *
+ * @param type The type of the AST node to create.
+ * @return A pointer to the new AST node, or NULL on allocation failure.
+ */
 t_ast	*new_ast_node(t_node_type type)
 {
 	t_ast	*node;
@@ -14,6 +20,11 @@ t_ast	*new_ast_node(t_node_type type)
 	return (node);
 }
 
+/**
+ * @brief Allocates and initializes a new command structure.
+ *
+ * @return A pointer to the new command structure, or NULL on allocation failure.
+ */
 t_cmd	*new_cmd(void)
 {
 	t_cmd	*cmd;
@@ -26,6 +37,12 @@ t_cmd	*new_cmd(void)
 	return (cmd);
 }
 
+/**
+ * @brief Parses a pipeline of commands connected by pipes.
+ *
+ * @param tokens A pointer to the current position in the token list.
+ * @return A pointer to the AST representing the pipeline, or NULL on failure.
+ */
 t_ast	*parse_pipeline(t_token **tokens)
 {
 	t_ast	*left;

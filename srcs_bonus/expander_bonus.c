@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Expands variables and wildcards in a command's arguments and redirections.
+ *
+ * @param cmd The command structure to expand.
+ * @param shell The shell state structure.
+ */
 static void	expand_cmd(t_cmd *cmd, t_shell *shell)
 {
 	if (!cmd)
@@ -11,6 +17,12 @@ static void	expand_cmd(t_cmd *cmd, t_shell *shell)
 	expand_wildcard_redir(cmd->redirs);
 }
 
+/**
+ * @brief Recursively expands variables and wildcards in all commands of an AST.
+ *
+ * @param ast The AST node to expand.
+ * @param shell The shell state structure.
+ */
 void	expand_ast(t_ast *ast, t_shell *shell)
 {
 	if (!ast)

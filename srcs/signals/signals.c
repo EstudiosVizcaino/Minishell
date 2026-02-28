@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/**
+ * @brief Handles SIGINT in interactive mode by redisplaying the prompt.
+ *
+ * @param sig The signal number received.
+ */
 void	sig_handler(int sig)
 {
 	if (sig == SIGINT)
@@ -12,6 +17,11 @@ void	sig_handler(int sig)
 	}
 }
 
+/**
+ * @brief Handles SIGINT during heredoc input by closing stdin.
+ *
+ * @param sig The signal number received.
+ */
 void	sig_heredoc(int sig)
 {
 	if (sig == SIGINT)
@@ -22,6 +32,9 @@ void	sig_heredoc(int sig)
 	}
 }
 
+/**
+ * @brief Sets up signal handlers for interactive shell mode.
+ */
 void	setup_signals(void)
 {
 	struct sigaction	sa;
@@ -34,12 +47,18 @@ void	setup_signals(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
+/**
+ * @brief Resets signal handlers to defaults for child processes.
+ */
 void	setup_signals_child(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
 
+/**
+ * @brief Sets up signal handlers for heredoc input mode.
+ */
 void	setup_signals_heredoc(void)
 {
 	struct sigaction	sa;
