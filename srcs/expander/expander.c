@@ -80,6 +80,7 @@ static void	expand_cmd(t_cmd *cmd, t_shell *shell)
 	expand_redirs(cmd->redirs, shell);
 #ifdef BONUS
 	expand_wildcards_cmd(cmd);
+	expand_wildcard_redir(cmd->redirs);
 #endif
 }
 

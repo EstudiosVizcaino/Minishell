@@ -165,5 +165,8 @@ int			exec_and_or(t_ast *ast, t_shell *shell);
 void		expand_wildcards_cmd(t_cmd *cmd);
 char		**expand_wildcard(char *pattern);
 int			match_wildcard(char *pattern, char *str);
+void		unmask_wildcards(char *s);
+int			check_syntax(t_token *tokens);
+void		expand_wildcard_redir(t_redir *redir);
 
 #endif

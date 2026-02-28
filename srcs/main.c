@@ -10,6 +10,14 @@ static void	run_line(char *line, t_shell *shell)
 	tokens = lexer(line);
 	if (!tokens)
 		return ;
+#ifdef BONUS
+	if (check_syntax(tokens))
+	{
+		shell->last_exit = 2;
+		free_tokens(tokens);
+		return ;
+	}
+#endif
 	ast = parser(tokens);
 	free_tokens(tokens);
 	if (!ast)

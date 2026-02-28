@@ -50,6 +50,12 @@ t_token	*handle_operator(char *input, int *i)
 		(*i)++;
 		return (new_token(TOKEN_RPAREN, ")"));
 	}
+	if (input[*i] == '&')
+	{
+		(*i)++;
+		two[1] = '\0';
+		return (new_token(TOKEN_WORD, two));
+	}
 #endif
 	if (input[*i] == '|')
 		type = TOKEN_PIPE;

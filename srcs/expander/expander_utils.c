@@ -51,6 +51,20 @@ static char	*join_free(char *s1, char *s2)
 	return (tmp);
 }
 
+static void	mask_wildcards(char *s)
+{
+#ifdef BONUS
+	while (s && *s)
+	{
+		if (*s == '*')
+			*s = '\x01';
+		s++;
+	}
+#else
+	(void)s;
+#endif
+}
+
 static char	*expand_single_quote(char *str, int *i)
 {
 	char	*result;
@@ -63,6 +77,7 @@ static char	*expand_single_quote(char *str, int *i)
 	result = ft_substr(str, start, *i - start);
 	if (str[*i] == '\'')
 		(*i)++;
+	mask_wildcards(result);
 	return (result);
 }
 
@@ -88,6 +103,7 @@ static char	*expand_double_quote(char *str, int *i, t_shell *shell)
 	}
 	if (str[*i] == '"')
 		(*i)++;
+	mask_wildcards(result);
 	return (result);
 }
 

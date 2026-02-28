@@ -109,7 +109,15 @@ int	exec_cmd(t_ast *ast, t_shell *shell)
 	int		ret;
 
 	cmd = ast->cmd;
-	if (!cmd || !cmd->args || !cmd->args[0])
+	if (!cmd)
+		return (0);
+	if ((!cmd->args || !cmd->args[0]) && cmd->redirs)
+	{
+		open_heredocs(cmd->redirs, shell);
+		ret = apply_redirs(cmd->redirs);
+		return (ret);
+	}
+	if (!cmd->args || !cmd->args[0])
 		return (0);
 	open_heredocs(cmd->redirs, shell);
 	if (is_builtin(cmd->args[0]))

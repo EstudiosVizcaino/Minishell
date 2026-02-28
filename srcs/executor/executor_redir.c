@@ -4,6 +4,8 @@ static int	apply_one_redir(t_redir *redir)
 {
 	int	fd;
 
+	if (!redir->file)
+		return (1);
 	if (redir->type == TOKEN_REDIR_IN)
 	{
 		fd = open(redir->file, O_RDONLY);
@@ -33,6 +35,8 @@ static int	apply_append(t_redir *redir)
 {
 	int	fd;
 
+	if (!redir->file)
+		return (1);
 	fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 	{
