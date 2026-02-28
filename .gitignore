@@ -4,3 +4,5 @@ minishell
 *.a
 test_files/
 outfiles/
+minishell_tester/
+minishell_bonus
