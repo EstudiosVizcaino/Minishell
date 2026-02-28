@@ -79,7 +79,14 @@ t_ast	*parse_command(t_token **tokens)
 	}
 	count = count_word_tokens(*tokens);
 	if (count > 0)
+	{
 		cmd->args = malloc((count + 1) * sizeof(char *));
+		if (!cmd->args)
+		{
+			free_ast(node);
+			return (NULL);
+		}
+	}
 	fill_cmd(cmd, tokens);
 	node->cmd = cmd;
 	return (node);
