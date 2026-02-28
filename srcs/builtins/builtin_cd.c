@@ -30,6 +30,16 @@ static void	update_pwd(t_shell *shell)
 		env_set(&shell->env, "PWD", buf);
 }
 
+static int	cd_error(char *path)
+{
+	ft_putstr_fd("cd: ", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(strerror(errno), STDERR_FILENO);
+	ft_putchar_fd('\n', STDERR_FILENO);
+	return (1);
+}
+
 int	builtin_cd(t_cmd *cmd, t_shell *shell)
 {
 	char	*path;
@@ -48,14 +58,7 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 		return (1);
 	}
 	if (chdir(path) != 0)
-	{
-		ft_putstr_fd("cd: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
-		ft_putchar_fd('\n', STDERR_FILENO);
-		return (1);
-	}
+		return (cd_error(path));
 	update_pwd(shell);
 	return (0);
 }

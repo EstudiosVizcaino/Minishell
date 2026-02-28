@@ -39,11 +39,29 @@ static void	child_right(t_ast *ast, int *pipefd, t_shell *shell)
 	exit(shell->last_exit);
 }
 
+static int	fork_right(t_ast *ast, int *pipefd, t_shell *shell, pid_t p1)
+{
+	pid_t	pid2;
+
+	pid2 = fork();
+	if (pid2 < 0)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		waitpid(p1, NULL, 0);
+		return (1);
+	}
+	if (pid2 == 0)
+		child_right(ast, pipefd, shell);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	return (wait_children(p1, pid2));
+}
+
 int	exec_pipe(t_ast *ast, t_shell *shell)
 {
 	int		pipefd[2];
 	pid_t	pid1;
-	pid_t	pid2;
 
 	if (pipe(pipefd) == -1)
 	{
@@ -59,17 +77,5 @@ int	exec_pipe(t_ast *ast, t_shell *shell)
 	}
 	if (pid1 == 0)
 		child_left(ast, pipefd, shell);
-	pid2 = fork();
-	if (pid2 < 0)
-	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-		waitpid(pid1, NULL, 0);
-		return (1);
-	}
-	if (pid2 == 0)
-		child_right(ast, pipefd, shell);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	return (wait_children(pid1, pid2));
+	return (fork_right(ast, pipefd, shell, pid1));
 }

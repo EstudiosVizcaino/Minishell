@@ -42,18 +42,3 @@ int	exec_builtin(t_cmd *cmd, t_shell *shell)
 		return (builtin_exit(cmd, shell));
 	return (1);
 }
-
-int	execute(t_ast *ast, t_shell *shell)
-{
-	if (!ast)
-		return (0);
-	if (ast->type == NODE_PIPE)
-		return (exec_pipe(ast, shell));
-#ifdef BONUS
-	if (ast->type == NODE_AND || ast->type == NODE_OR)
-		return (exec_and_or(ast, shell));
-#endif
-	if (ast->type == NODE_CMD)
-		return (exec_cmd(ast, shell));
-	return (0);
-}

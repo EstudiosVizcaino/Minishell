@@ -7,6 +7,8 @@ void	free_redir(t_redir *redir)
 	while (redir)
 	{
 		next = redir->next;
+		if (redir->heredoc_fd >= 0)
+			close(redir->heredoc_fd);
 		free(redir->file);
 		free(redir);
 		redir = next;

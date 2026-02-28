@@ -34,7 +34,10 @@ int	env_set(t_env **env, char *key, char *value)
 	node = env_find(*env, key);
 	if (node)
 	{
-		val = value ? ft_strdup(value) : NULL;
+		if (value)
+			val = ft_strdup(value);
+		else
+			val = NULL;
 		if (value && !val)
 			return (1);
 		free(node->value);
@@ -85,7 +88,10 @@ static void	env_arr_fill(t_env *env, char **arr)
 	while (curr)
 	{
 		tmp = ft_strjoin(curr->key, "=");
-		arr[i] = ft_strjoin(tmp, curr->value ? curr->value : "");
+		if (curr->value)
+			arr[i] = ft_strjoin(tmp, curr->value);
+		else
+			arr[i] = ft_strjoin(tmp, "");
 		free(tmp);
 		i++;
 		curr = curr->next;

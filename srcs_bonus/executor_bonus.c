@@ -14,3 +14,16 @@ int	exec_and_or(t_ast *ast, t_shell *shell)
 		return (left_status);
 	return (execute(ast->right, shell));
 }
+
+int	execute(t_ast *ast, t_shell *shell)
+{
+	if (!ast)
+		return (0);
+	if (ast->type == NODE_PIPE)
+		return (exec_pipe(ast, shell));
+	if (ast->type == NODE_AND || ast->type == NODE_OR)
+		return (exec_and_or(ast, shell));
+	if (ast->type == NODE_CMD)
+		return (exec_cmd(ast, shell));
+	return (0);
+}

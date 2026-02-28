@@ -7,6 +7,8 @@ static void	expand_cmd(t_cmd *cmd, t_shell *shell)
 	if (cmd->args)
 		expand_args(cmd, shell);
 	expand_redirs(cmd->redirs, shell);
+	expand_wildcards_cmd(cmd);
+	expand_wildcard_redir(cmd->redirs);
 }
 
 void	expand_ast(t_ast *ast, t_shell *shell)
