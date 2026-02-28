@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Expands variables in redirection file targets.
+ *
+ * @param redir The linked list of redirections to expand.
+ * @param shell The shell context containing environment variables.
+ */
 void	expand_redirs(t_redir *redir, t_shell *shell)
 {
 	char	*expanded;
@@ -16,6 +22,12 @@ void	expand_redirs(t_redir *redir, t_shell *shell)
 	}
 }
 
+/**
+ * @brief Checks if a string consists entirely of variable references.
+ *
+ * @param str The string to check.
+ * @return 1 if the string contains only variable references, 0 otherwise.
+ */
 static int	is_only_vars(char *str)
 {
 	int	i;
@@ -43,6 +55,12 @@ static int	is_only_vars(char *str)
 	return (1);
 }
 
+/**
+ * @brief Expands variables in all command arguments, removing empty expansions.
+ *
+ * @param cmd The command whose arguments to expand.
+ * @param shell The shell context containing environment variables.
+ */
 void	expand_args(t_cmd *cmd, t_shell *shell)
 {
 	char	*expanded;

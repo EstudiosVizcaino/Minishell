@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+/**
+ * @brief Retrieves the value of a shell variable by name.
+ *
+ * @param name The variable name to look up.
+ * @param shell The shell context containing environment variables.
+ * @return The variable's value as a new string, or empty string if not found.
+ */
 char	*get_var_value(char *name, t_shell *shell)
 {
 	char	*val;
@@ -14,6 +21,14 @@ char	*get_var_value(char *name, t_shell *shell)
 	return (ft_strdup(val));
 }
 
+/**
+ * @brief Parses and expands a dollar variable from a string.
+ *
+ * @param str The input string containing the variable reference.
+ * @param i Pointer to the current index in the string.
+ * @param shell The shell context containing environment variables.
+ * @return The expanded variable value as a new string.
+ */
 char	*expand_var(char *str, int *i, t_shell *shell)
 {
 	int		start;
@@ -39,6 +54,13 @@ char	*expand_var(char *str, int *i, t_shell *shell)
 	return (val);
 }
 
+/**
+ * @brief Joins two strings and frees both originals.
+ *
+ * @param s1 The first string (freed after join).
+ * @param s2 The second string (freed after join).
+ * @return The concatenated result as a new string.
+ */
 char	*join_free(char *s1, char *s2)
 {
 	char	*tmp;
