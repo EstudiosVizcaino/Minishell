@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Implements the env builtin, printing all environment variables with values.
+ *
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success.
+ */
 int	builtin_env(t_shell *shell)
 {
 	t_env	*env;

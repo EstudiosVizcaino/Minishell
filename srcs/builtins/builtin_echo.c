@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Implements the echo builtin command with optional -n flag.
+ *
+ * @param cmd Pointer to the command structure.
+ * @return 0 on success.
+ */
 int	builtin_echo(t_cmd *cmd)
 {
 	int	i;

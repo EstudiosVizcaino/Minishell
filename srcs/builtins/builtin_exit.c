@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Checks if a string consists entirely of digits (with optional sign).
+ *
+ * @param s The string to check.
+ * @return 1 if valid numeric string, 0 otherwise.
+ */
 static int	all_digits(char *s)
 {
 	int	i;
@@ -18,6 +24,12 @@ static int	all_digits(char *s)
 	return (1);
 }
 
+/**
+ * @brief Cleans up shell resources and exits with the given code.
+ *
+ * @param shell Pointer to the shell structure.
+ * @param code The exit code to terminate with.
+ */
 static void	do_exit(t_shell *shell, int code)
 {
 	env_free(shell->env);
@@ -26,6 +38,13 @@ static void	do_exit(t_shell *shell, int code)
 	exit(code);
 }
 
+/**
+ * @brief Implements the exit builtin command.
+ *
+ * @param cmd Pointer to the command structure.
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success, 1 on failure.
+ */
 int	builtin_exit(t_cmd *cmd, t_shell *shell)
 {
 	int	code;
