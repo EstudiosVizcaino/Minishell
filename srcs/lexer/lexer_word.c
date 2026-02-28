@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+/**
+ * @brief Finds the end index of a word token in the input.
+ *
+ * @param input The input string being tokenized.
+ * @param i The starting index of the word.
+ * @return The index past the end of the word.
+ */
 static int	word_end(char *input, int i)
 {
 	while (input[i] && input[i] != ' ' && input[i] != '\t'
@@ -13,6 +20,13 @@ static int	word_end(char *input, int i)
 	return (i);
 }
 
+/**
+ * @brief Extracts and tokenizes a word from the input string.
+ *
+ * @param input The input string being tokenized.
+ * @param i A pointer to the current index in the input string.
+ * @return A pointer to the newly created word token, or NULL on failure.
+ */
 t_token	*handle_word(char *input, int *i)
 {
 	t_token	*tok;

@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Checks if a character is a shell operator.
+ *
+ * @param c The character to check.
+ * @return 1 if the character is an operator, 0 otherwise.
+ */
 int	is_operator(char c)
 {
 	if (c == '|' || c == '<' || c == '>')
@@ -7,6 +13,13 @@ int	is_operator(char c)
 	return (0);
 }
 
+/**
+ * @brief Handles double-character operators (heredoc and append).
+ *
+ * @param input The input string being tokenized.
+ * @param i A pointer to the current index in the input string.
+ * @return A token for the double operator, or NULL if none matched.
+ */
 static t_token	*handle_double_op(char *input, int *i)
 {
 	if (input[*i] == '<' && input[*i + 1] == '<')
@@ -22,6 +35,13 @@ static t_token	*handle_double_op(char *input, int *i)
 	return (NULL);
 }
 
+/**
+ * @brief Tokenizes a shell operator from the input string.
+ *
+ * @param input The input string being tokenized.
+ * @param i A pointer to the current index in the input string.
+ * @return A pointer to the newly created operator token.
+ */
 t_token	*handle_operator(char *input, int *i)
 {
 	t_token			*tok;
@@ -45,6 +65,13 @@ t_token	*handle_operator(char *input, int *i)
 	return (new_token(type, two));
 }
 
+/**
+ * @brief Calculates the length of a quoted segment including quotes.
+ *
+ * @param s The string containing the quoted segment.
+ * @param i The starting index of the opening quote.
+ * @return The total length of the quoted segment.
+ */
 int	quote_len(char *s, int i)
 {
 	char	quote;
