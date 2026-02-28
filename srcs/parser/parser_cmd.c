@@ -1,78 +1,93 @@
 #include "minishell.h"
 
-static int	count_args(t_token *tok)
+static int	is_redir_token(t_token_type type)
+{
+	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+		|| type == TOKEN_HEREDOC || type == TOKEN_APPEND);
+}
+
+static int	count_word_tokens(t_token *tok)
 {
 	int	count;
 
 	count = 0;
-	while (tok && tok->type == TOKEN_WORD)
+	while (tok && (tok->type == TOKEN_WORD || is_redir_token(tok->type)))
 	{
-		count++;
-		tok = tok->next;
+		if (is_redir_token(tok->type))
+		{
+			tok = tok->next;
+			if (tok)
+				tok = tok->next;
+		}
+		else
+		{
+			count++;
+			tok = tok->next;
+		}
 	}
 	return (count);
 }
 
-static char	**build_args(t_token **tokens)
+static void	add_redir(t_cmd *cmd, t_redir **tail, t_token **tokens)
 {
-	char	**args;
-	int		count;
+	t_redir	*r;
+
+	r = make_redir(tokens);
+	if (!cmd->redirs)
+		cmd->redirs = r;
+	else
+		(*tail)->next = r;
+	*tail = r;
+}
+
+static void	fill_cmd(t_cmd *cmd, t_token **tokens)
+{
+	t_redir	*redir_tail;
 	int		i;
 
-	count = count_args(*tokens);
-	if (count == 0)
-		return (NULL);
-	args = malloc((count + 1) * sizeof(char *));
-	if (!args)
-		return (NULL);
+	redir_tail = NULL;
 	i = 0;
-	while (*tokens && (*tokens)->type == TOKEN_WORD)
+	while (*tokens && ((*tokens)->type == TOKEN_WORD
+			|| is_redir_token((*tokens)->type)))
 	{
-		args[i] = ft_strdup((*tokens)->value);
-		if (!args[i])
+		if (is_redir_token((*tokens)->type))
+			add_redir(cmd, &redir_tail, tokens);
+		else
 		{
-			while (i-- > 0)
-				free(args[i]);
-			free(args);
-			return (NULL);
+			if (cmd->args)
+				cmd->args[i++] = ft_strdup((*tokens)->value);
+			*tokens = (*tokens)->next;
 		}
-		i++;
-		*tokens = (*tokens)->next;
 	}
-	args[i] = NULL;
-	return (args);
+	if (cmd->args)
+		cmd->args[i] = NULL;
 }
 
 t_ast	*parse_command(t_token **tokens)
 {
 	t_ast	*node;
 	t_cmd	*cmd;
-	t_redir	*pre_redir;
-	t_redir	*post_redir;
-	t_redir	*tail;
+	int		count;
 
 	node = new_ast_node(NODE_CMD);
-	if (!node)
-		return (NULL);
 	cmd = new_cmd();
-	if (!cmd)
+	if (!node || !cmd)
 	{
 		free(node);
+		free_cmd(cmd);
 		return (NULL);
 	}
-	pre_redir = parse_redir(tokens);
-	cmd->args = build_args(tokens);
-	post_redir = parse_redir(tokens);
-	cmd->redirs = pre_redir;
-	if (pre_redir)
+	count = count_word_tokens(*tokens);
+	if (count > 0)
 	{
-		tail = pre_redir;
-		while (tail->next)
-			tail = tail->next;
-		tail->next = post_redir;
+		cmd->args = malloc((count + 1) * sizeof(char *));
+		if (!cmd->args)
+		{
+			free_ast(node);
+			return (NULL);
+		}
 	}
-	else
-		cmd->redirs = post_redir;
+	fill_cmd(cmd, tokens);
 	node->cmd = cmd;
 	return (node);
 }

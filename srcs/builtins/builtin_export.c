@@ -36,24 +36,12 @@ static int	is_valid_key(char *key)
 	return (1);
 }
 
-static int	export_one(char *arg, t_shell *shell)
+static int	export_with_value(char *arg, char *eq, t_shell *shell)
 {
-	char	*eq;
 	char	*key;
 	char	*value;
 	int		ret;
 
-	eq = ft_strchr(arg, '=');
-	if (!eq)
-	{
-		if (!is_valid_key(arg))
-		{
-			ft_putstr_fd("export: invalid identifier\n", STDERR_FILENO);
-			return (1);
-		}
-		env_set(&shell->env, arg, NULL);
-		return (0);
-	}
 	key = ft_substr(arg, 0, eq - arg);
 	if (!is_valid_key(key))
 	{
@@ -66,6 +54,24 @@ static int	export_one(char *arg, t_shell *shell)
 	free(key);
 	free(value);
 	return (ret);
+}
+
+static int	export_one(char *arg, t_shell *shell)
+{
+	char	*eq;
+
+	eq = ft_strchr(arg, '=');
+	if (!eq)
+	{
+		if (!is_valid_key(arg))
+		{
+			ft_putstr_fd("export: invalid identifier\n", STDERR_FILENO);
+			return (1);
+		}
+		env_set(&shell->env, arg, NULL);
+		return (0);
+	}
+	return (export_with_value(arg, eq, shell));
 }
 
 int	builtin_export(t_cmd *cmd, t_shell *shell)

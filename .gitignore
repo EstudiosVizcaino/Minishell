@@ -2,3 +2,7 @@ minishell
 *.o
 *.bo
 *.a
+test_files/
+outfiles/
+minishell_tester/
+minishell_bonus

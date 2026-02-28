@@ -8,7 +8,10 @@ t_token	*new_token(t_token_type type, char *value)
 	if (!tok)
 		return (NULL);
 	tok->type = type;
-	tok->value = value ? ft_strdup(value) : NULL;
+	if (value)
+		tok->value = ft_strdup(value);
+	else
+		tok->value = NULL;
 	tok->next = NULL;
 	return (tok);
 }

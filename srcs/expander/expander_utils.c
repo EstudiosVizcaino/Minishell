@@ -39,7 +39,7 @@ char	*expand_var(char *str, int *i, t_shell *shell)
 	return (val);
 }
 
-static char	*join_free(char *s1, char *s2)
+char	*join_free(char *s1, char *s2)
 {
 	char	*tmp;
 
@@ -49,74 +49,4 @@ static char	*join_free(char *s1, char *s2)
 	if (!tmp)
 		fatal_error("malloc");
 	return (tmp);
-}
-
-static char	*expand_single_quote(char *str, int *i)
-{
-	char	*result;
-	int		start;
-
-	(*i)++;
-	start = *i;
-	while (str[*i] && str[*i] != '\'')
-		(*i)++;
-	result = ft_substr(str, start, *i - start);
-	if (str[*i] == '\'')
-		(*i)++;
-	return (result);
-}
-
-static char	*expand_double_quote(char *str, int *i, t_shell *shell)
-{
-	char	*result;
-	char	*part;
-	char	buf[2];
-
-	result = ft_strdup("");
-	(*i)++;
-	while (str[*i] && str[*i] != '"')
-	{
-		if (str[*i] == '$')
-			part = expand_var(str, i, shell);
-		else
-		{
-			buf[0] = str[(*i)++];
-			buf[1] = '\0';
-			part = ft_strdup(buf);
-		}
-		result = join_free(result, part);
-	}
-	if (str[*i] == '"')
-		(*i)++;
-	return (result);
-}
-
-char	*expand_str(char *str, t_shell *shell)
-{
-	char	*result;
-	char	*part;
-	char	buf[2];
-	int		i;
-
-	if (!str)
-		return (ft_strdup(""));
-	result = ft_strdup("");
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'')
-			part = expand_single_quote(str, &i);
-		else if (str[i] == '"')
-			part = expand_double_quote(str, &i, shell);
-		else if (str[i] == '$')
-			part = expand_var(str, &i, shell);
-		else
-		{
-			buf[0] = str[i++];
-			buf[1] = '\0';
-			part = ft_strdup(buf);
-		}
-		result = join_free(result, part);
-	}
-	return (result);
 }

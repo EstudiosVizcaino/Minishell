@@ -1,31 +1,35 @@
 #include "minishell.h"
 
+static int	open_redir_fd(t_redir *redir)
+{
+	if (!redir->file)
+		return (-1);
+	if (redir->type == TOKEN_REDIR_IN)
+		return (open(redir->file, O_RDONLY));
+	if (redir->type == TOKEN_REDIR_OUT)
+		return (open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644));
+	return (-1);
+}
+
 static int	apply_one_redir(t_redir *redir)
 {
 	int	fd;
+	int	target;
 
+	if (!redir->file)
+		return (1);
+	fd = open_redir_fd(redir);
+	if (fd < 0)
+	{
+		perror(redir->file);
+		return (1);
+	}
 	if (redir->type == TOKEN_REDIR_IN)
-	{
-		fd = open(redir->file, O_RDONLY);
-		if (fd < 0)
-		{
-			perror(redir->file);
-			return (1);
-		}
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-	}
-	else if (redir->type == TOKEN_REDIR_OUT)
-	{
-		fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd < 0)
-		{
-			perror(redir->file);
-			return (1);
-		}
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
-	}
+		target = STDIN_FILENO;
+	else
+		target = STDOUT_FILENO;
+	dup2(fd, target);
+	close(fd);
 	return (0);
 }
 
@@ -33,6 +37,8 @@ static int	apply_append(t_redir *redir)
 {
 	int	fd;
 
+	if (!redir->file)
+		return (1);
 	fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 	{
@@ -85,6 +91,7 @@ int	apply_redirs(t_redir *redirs)
 			{
 				dup2(r->heredoc_fd, STDIN_FILENO);
 				close(r->heredoc_fd);
+				r->heredoc_fd = -1;
 			}
 		}
 		else if (r->type == TOKEN_APPEND)

@@ -26,20 +26,6 @@ t_cmd	*new_cmd(void)
 	return (cmd);
 }
 
-t_ast	*parser(t_token *tokens)
-{
-	t_token	*tok;
-
-	tok = tokens;
-	if (!tok)
-		return (NULL);
-#ifdef BONUS
-	return (parse_and_or(&tok));
-#else
-	return (parse_pipeline(&tok));
-#endif
-}
-
 t_ast	*parse_pipeline(t_token **tokens)
 {
 	t_ast	*left;

@@ -7,6 +7,8 @@ void	free_redir(t_redir *redir)
 	while (redir)
 	{
 		next = redir->next;
+		if (redir->heredoc_fd >= 0)
+			close(redir->heredoc_fd);
 		free(redir->file);
 		free(redir);
 		redir = next;
@@ -44,7 +46,7 @@ void	free_ast(t_ast *node)
 	free(node);
 }
 
-static t_redir	*make_redir(t_token **tokens)
+t_redir	*make_redir(t_token **tokens)
 {
 	t_redir	*redir;
 
