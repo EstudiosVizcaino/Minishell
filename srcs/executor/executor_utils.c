@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+/**
+ * @brief Searches for an executable in PATH directories.
+ *
+ * @param name The command name to search for.
+ * @param paths The array of directory paths to search in.
+ * @return The full path to the executable, or NULL if not found.
+ */
 static char	*search_in_paths(char *name, char **paths)
 {
 	char	*candidate;
@@ -24,6 +31,13 @@ static char	*search_in_paths(char *name, char **paths)
 	return (NULL);
 }
 
+/**
+ * @brief Resolves the full path of an executable command.
+ *
+ * @param name The command name to resolve.
+ * @param env The environment list to look up PATH.
+ * @return The full path to the executable, or NULL if not found.
+ */
 char	*find_executable(char *name, t_env *env)
 {
 	char	*path_env;
@@ -40,6 +54,13 @@ char	*find_executable(char *name, t_env *env)
 	return (search_in_paths(name, paths));
 }
 
+/**
+ * @brief Executes a command via execve in a child process.
+ *
+ * @param path The full path to the executable.
+ * @param cmd The command structure containing arguments.
+ * @param shell The shell state.
+ */
 static void	exec_child_run(char *path, t_cmd *cmd, t_shell *shell)
 {
 	char		**envp;
@@ -61,6 +82,12 @@ static void	exec_child_run(char *path, t_cmd *cmd, t_shell *shell)
 	exit(126);
 }
 
+/**
+ * @brief Sets up and executes an external command in a child process.
+ *
+ * @param cmd The command structure containing arguments and redirections.
+ * @param shell The shell state.
+ */
 void	exec_child(t_cmd *cmd, t_shell *shell)
 {
 	char	*path;
@@ -78,6 +105,13 @@ void	exec_child(t_cmd *cmd, t_shell *shell)
 	exec_child_run(path, cmd, shell);
 }
 
+/**
+ * @brief Executes a builtin command with redirections, saving and restoring fds.
+ *
+ * @param cmd The command structure containing the builtin and redirections.
+ * @param shell The shell state.
+ * @param ret Pointer to store the exit status of the builtin.
+ */
 void	exec_builtin_redir(t_cmd *cmd, t_shell *shell, int *ret)
 {
 	int	saved_in;
