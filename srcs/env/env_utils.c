@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/**
+ * @brief Parses a single "KEY=VALUE" string into an env node.
+ *
+ * @param entry The environment string to parse.
+ * @return A pointer to the new env node, or NULL on failure.
+ */
 t_env	*env_parse_entry(char *entry)
 {
 	t_env	*node;
@@ -25,6 +31,14 @@ t_env	*env_parse_entry(char *entry)
 	return (node);
 }
 
+/**
+ * @brief Sets or updates an environment variable.
+ *
+ * @param env A pointer to the head pointer of the environment linked list.
+ * @param key The key of the environment variable.
+ * @param value The value to set.
+ * @return 0 on success, or 1 on failure.
+ */
 int	env_set(t_env **env, char *key, char *value)
 {
 	t_env	*node;
@@ -52,6 +66,12 @@ int	env_set(t_env **env, char *key, char *value)
 	return (0);
 }
 
+/**
+ * @brief Removes an environment variable by key.
+ *
+ * @param env A pointer to the head pointer of the environment linked list.
+ * @param key The key of the environment variable to remove.
+ */
 void	env_unset(t_env **env, char *key)
 {
 	t_env	*curr;
@@ -77,6 +97,12 @@ void	env_unset(t_env **env, char *key)
 	}
 }
 
+/**
+ * @brief Fills a string array with "KEY=VALUE" entries from the env list.
+ *
+ * @param env The head of the environment linked list.
+ * @param arr The string array to fill.
+ */
 static void	env_arr_fill(t_env *env, char **arr)
 {
 	t_env	*curr;
@@ -98,6 +124,12 @@ static void	env_arr_fill(t_env *env, char **arr)
 	}
 }
 
+/**
+ * @brief Converts the environment linked list to a NULL-terminated string array.
+ *
+ * @param env The head of the environment linked list.
+ * @return A NULL-terminated array of "KEY=VALUE" strings, or NULL on failure.
+ */
 char	**env_to_array(t_env *env)
 {
 	t_env	*curr;
