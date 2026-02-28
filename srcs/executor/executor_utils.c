@@ -36,8 +36,10 @@ char	*find_executable(char *name, t_env *env)
 
 static void	exec_child(t_cmd *cmd, t_shell *shell)
 {
-	char	*path;
-	char	**envp;
+	char		*path;
+	char		**envp;
+	struct stat	st;
+	int			err;
 
 	setup_signals_child();
 	if (apply_redirs(cmd->redirs))
@@ -49,11 +51,18 @@ static void	exec_child(t_cmd *cmd, t_shell *shell)
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		exit(126);
+	}
 	envp = env_to_array(shell->env);
 	execve(path, cmd->args, envp);
+	err = errno;
 	perror(path);
-	free(path);
-	free_array(envp);
+	if (err == ENOENT)
+		exit(127);
 	exit(126);
 }
 

@@ -42,6 +42,11 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 		return (0);
 	}
 	path = cmd->args[1];
+	if (cmd->args[2])
+	{
+		ft_putstr_fd("cd: too many arguments\n", STDERR_FILENO);
+		return (1);
+	}
 	if (chdir(path) != 0)
 	{
 		ft_putstr_fd("cd: ", STDERR_FILENO);

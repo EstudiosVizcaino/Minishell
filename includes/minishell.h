@@ -104,6 +104,7 @@ void		free_redir(t_redir *redir);
 t_ast		*parse_pipeline(t_token **tokens);
 t_ast		*parse_command(t_token **tokens);
 t_redir		*parse_redir(t_token **tokens);
+t_redir		*make_redir(t_token **tokens);
 
 /* Expander */
 void		expand_ast(t_ast *ast, t_shell *shell);

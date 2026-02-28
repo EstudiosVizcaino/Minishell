@@ -44,7 +44,7 @@ void	free_ast(t_ast *node)
 	free(node);
 }
 
-static t_redir	*make_redir(t_token **tokens)
+t_redir	*make_redir(t_token **tokens)
 {
 	t_redir	*redir;
 
