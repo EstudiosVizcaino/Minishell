@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Minishell — Functional & Technical Documentation</title>
+  <title>Minishell — Complete Functional & Technical Documentation</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -14,6 +14,7 @@
       --accent: #22d3ee;
       --good: #34d399;
       --warn: #fbbf24;
+      --danger: #f87171;
       --border: #1f2937;
       --code: #0b1220;
     }
@@ -26,23 +27,28 @@
         --accent: #0ea5e9;
         --good: #047857;
         --warn: #b45309;
+        --danger: #b91c1c;
         --border: #e5e7eb;
         --code: #f3f4f6;
       }
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.55;
+      line-height: 1.6;
     }
+
     .layout {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 300px 1fr;
       min-height: 100vh;
     }
+
     nav {
       position: sticky;
       top: 0;
@@ -52,21 +58,39 @@
       padding: 1rem;
       background: var(--panel);
     }
-    nav h1 { font-size: 1rem; margin: 0 0 1rem; }
+
+    nav h1 {
+      font-size: 1rem;
+      margin: 0 0 0.75rem;
+      line-height: 1.4;
+    }
+
+    nav p {
+      margin-top: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
     nav a {
       display: block;
       color: var(--muted);
       text-decoration: none;
       margin: 0.35rem 0;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
+      padding: 0.1rem 0;
     }
-    nav a:hover { color: var(--accent); }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
     main {
       padding: 1.25rem;
-      max-width: 1000px;
+      max-width: 1080px;
       width: 100%;
       margin: 0 auto;
     }
+
     section {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -74,17 +98,50 @@
       padding: 1rem 1.2rem;
       margin-bottom: 1rem;
     }
+
     h2 { margin-top: 0; }
+    h3 { margin-bottom: 0.35rem; }
+
+    .lead {
+      font-size: 1.04rem;
+      color: color-mix(in srgb, var(--text) 93%, var(--muted));
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 0.75rem;
     }
+
     .card {
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 0.75rem;
+      background: color-mix(in srgb, var(--panel) 86%, var(--code));
     }
+
+    .timeline {
+      border-left: 2px solid var(--border);
+      margin-left: 0.5rem;
+      padding-left: 1rem;
+    }
+
+    .step {
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .step::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      left: -1.35rem;
+      top: 0.35rem;
+    }
+
     .tag {
       display: inline-block;
       background: color-mix(in srgb, var(--accent) 20%, transparent);
@@ -92,32 +149,66 @@
       font-size: 0.75rem;
       border-radius: 999px;
       padding: 0.2rem 0.55rem;
-      margin-right: 0.35rem;
+      margin: 0 0.3rem 0.35rem 0;
     }
+
     .good { color: var(--good); }
     .warn { color: var(--warn); }
+    .danger { color: var(--danger); }
+
     pre {
       white-space: pre-wrap;
       background: var(--code);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.7rem;
+      padding: 0.75rem;
       overflow-x: auto;
     }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0.65rem;
+      vertical-align: top;
+    }
+
+    th {
+      background: color-mix(in srgb, var(--accent) 16%, var(--code));
+    }
+
     details {
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 0.6rem;
       margin: 0.5rem 0;
+      background: color-mix(in srgb, var(--panel) 85%, var(--code));
     }
-    summary { cursor: pointer; font-weight: 600; }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
     .io {
       display: grid;
       grid-template-columns: 1fr;
       gap: 0.5rem;
     }
-    input, button {
+
+    input, button, textarea {
       width: 100%;
       border-radius: 8px;
       border: 1px solid var(--border);
@@ -126,139 +217,580 @@
       padding: 0.6rem;
       font: inherit;
     }
+
     button {
       background: color-mix(in srgb, var(--accent) 25%, var(--code));
       cursor: pointer;
       font-weight: 700;
     }
-    @media (max-width: 900px) {
+
+    .faq dt {
+      font-weight: 700;
+      margin-top: 0.7rem;
+    }
+
+    .faq dd {
+      margin-left: 0;
+      margin-top: 0.3rem;
+      color: color-mix(in srgb, var(--text) 92%, var(--muted));
+    }
+
+    .small {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 960px) {
       .layout { grid-template-columns: 1fr; }
-      nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+      nav {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
     }
   </style>
 </head>
 <body>
   <div class="layout">
     <nav>
-      <h1>📘 Minishell Docs</h1>
-      <a href="#purpose">1. Purpose & Scope</a>
-      <a href="#functional">2. Functional Specification</a>
-      <a href="#technical">3. Technical Architecture</a>
-      <a href="#evaluation">4. 42 Evaluation Mapping</a>
-      <a href="#learning">5. Learning Path</a>
-      <a href="#playground">6. Interactive Playground</a>
+      <h1>📘 Minishell Complete Guide</h1>
+      <p>Functional + technical + beginner teaching format.</p>
+      <a href="#how-to-read">0. How to use this document</a>
+      <a href="#project-why">1. Why this project exists</a>
+      <a href="#non-coder">2. Minishell for non-coders</a>
+      <a href="#functional-spec">3. Functional specification</a>
+      <a href="#technical-spec">4. Technical specification</a>
+      <a href="#architecture">5. Internal architecture map</a>
+      <a href="#journey">6. One command from start to finish</a>
+      <a href="#module-deep-dive">7. Module-by-module deep dive</a>
+      <a href="#42-defense">8. 42 evaluation defense pack</a>
+      <a href="#study-plan">9. Step-by-step study plan</a>
+      <a href="#mistakes">10. Common mistakes and fixes</a>
+      <a href="#playground">11. Interactive playground</a>
+      <a href="#glossary">12. Plain-language glossary</a>
+      <a href="#faq">13. FAQ</a>
+      <a href="#final">14. Final checklist</a>
     </nav>
 
     <main>
-      <section id="purpose">
-        <h2>1) Purpose & Scope</h2>
-        <p>This document justifies <strong>Minishell</strong> both functionally and technically for a 42 School evaluation. It is also designed as a learning guide to understand the project end-to-end.</p>
-        <div class="grid">
-          <div class="card"><span class="tag">Functional Goal</span><br />Provide a POSIX-like command interpreter with core shell behavior (parsing, execution, pipes, redirections, builtins).</div>
-          <div class="card"><span class="tag">Technical Goal</span><br />Design a robust lexer/parser/executor pipeline in C with proper memory, signal, and process management.</div>
-          <div class="card"><span class="tag">Pedagogical Goal</span><br />Make shell internals understandable through examples, flow explanations, and a small interactive parser demo.</div>
-        </div>
-      </section>
-
-      <section id="functional">
-        <h2>2) Functional Specification</h2>
-        <h3>Supported behavior</h3>
-        <ul>
-          <li>Prompt loop, command reading, and execution.</li>
-          <li>Builtins: <code>echo</code>, <code>cd</code>, <code>pwd</code>, <code>export</code>, <code>unset</code>, <code>env</code>, <code>exit</code>.</li>
-          <li>Pipes (<code>|</code>), redirections (<code>&lt;</code>, <code>&gt;</code>, <code>&gt;&gt;</code>, <code>&lt;&lt;</code>).</li>
-          <li>Environment expansion (<code>$VAR</code>, <code>$?</code>), quote handling, and signal behavior.</li>
-          <li>Bonus behavior in this repository: logical operators <code>&amp;&amp;</code>/<code>||</code>, parentheses grouping, wildcard <code>*</code>.</li>
-        </ul>
-        <h3>Command examples</h3>
-        <pre><code>echo "hello minishell"
-export USERNAME=student
-cat infile | grep minishell &gt; outfile
-false || echo "fallback"
-(cd /tmp &amp;&amp; pwd) | cat</code></pre>
-        <h3>Non-functional requirements</h3>
-        <ul>
-          <li class="good">Reliability: predictable exit statuses and robust syntax error reporting.</li>
-          <li class="good">Correctness: behavior aligned with minishell subject expectations.</li>
-          <li class="good">Code quality: modular source tree (lexer/parser/expander/executor/builtins).</li>
-          <li class="warn">Portability note: depends on <code>readline</code> headers/libraries in local environment.</li>
-        </ul>
-      </section>
-
-      <section id="technical">
-        <h2>3) Technical Architecture</h2>
-        <p><strong>Processing pipeline:</strong></p>
-        <pre><code>Readline input
-  -> Lexer (tokens)
-  -> Parser (command/AST-like structures)
-  -> Expander (variables, quote-aware string handling)
-  -> Executor (builtins, fork/execve, redirections, pipes)
-  -> Status code update and loop</code></pre>
+      <section id="how-to-read">
+        <h2>0) How to use this document</h2>
+        <p class="lead">This is intentionally long and complete. It is written for two audiences at the same time: (1) evaluator/teacher and (2) student who is still learning coding fundamentals.</p>
         <div class="grid">
           <div class="card">
-            <h4>Lexer</h4>
-            <p>Transforms input into token stream while respecting quote state and special operators.</p>
+            <span class="tag">If you are a beginner</span>
+            Read sections 2, 6, 9, 12 first. They are written with plain language and analogies.
           </div>
           <div class="card">
-            <h4>Parser</h4>
-            <p>Creates command structures and redirection links; bonus parser extends with <code>&amp;&amp;</code>, <code>||</code>, and grouping.</p>
+            <span class="tag">If you are preparing oral defense</span>
+            Focus on sections 3, 4, 5, 8 and use section 14 as final rehearsal checklist.
           </div>
           <div class="card">
-            <h4>Executor</h4>
-            <p>Runs builtins in-process when needed, external commands via <code>fork + execve</code>, orchestrates pipelines and FDs.</p>
+            <span class="tag">If you need quick revision</span>
+            Use section 12 glossary and the command journey in section 6 to refresh core concepts fast.
           </div>
         </div>
-
-        <details>
-          <summary>FD and process model (why it matters)</summary>
-          <p>Pipes and redirections require precise file descriptor duplication (<code>dup2</code>) and closure order. A wrong order can deadlock pipelines or leak descriptors.</p>
-        </details>
-
-        <details>
-          <summary>Signal strategy (interactive shell expectations)</summary>
-          <p>Main loop and child processes usually need different signal handling policies. The project’s signal module centralizes this behavior.</p>
-        </details>
-
-        <details>
-          <summary>Error-handling philosophy</summary>
-          <p>Report syntax/runtime errors clearly, keep shell alive when possible, and always preserve a meaningful last exit status for <code>$?</code>.</p>
-        </details>
+        <p class="small">Important: this documentation is outside the project source implementation and exists only as study/support material.</p>
       </section>
 
-      <section id="evaluation">
-        <h2>4) 42 Evaluation Mapping</h2>
-        <p>Use this quick checklist during defense:</p>
+      <section id="project-why">
+        <h2>1) Why this project exists (functional & educational justification)</h2>
+        <p>At 42, Minishell is not just about “making commands run.” The project is a full exercise in <strong>systems thinking</strong>: memory, processes, file descriptors, parser logic, and user interaction under Unix constraints. A student who passes this project proves they can reason about real operating system behavior.</p>
+
+        <h3>1.1 Functional justification</h3>
         <ul>
-          <li>Can you explain the full input-to-execution flow without looking at code?</li>
-          <li>Can you justify where and why builtins run in parent vs child process?</li>
-          <li>Can you walk through one pipeline command and one heredoc command?</li>
-          <li>Can you explain quote behavior and variable expansion edge cases?</li>
-          <li>Can you show one syntax error path and status code behavior?</li>
+          <li>A shell is the bridge between the human and the operating system.</li>
+          <li>Without a shell, users cannot easily chain programs, redirect data, or automate tasks.</li>
+          <li>Minishell reproduces key shell behavior in controlled scope, making core concepts testable.</li>
         </ul>
-        <p><strong>Defense tip:</strong> start with architecture, then a concrete command trace, then edge cases (signals, quotes, redirections).</p>
+
+        <h3>1.2 Technical justification</h3>
+        <ul>
+          <li>Teaches process creation (<code>fork</code>) and program replacement (<code>execve</code>).</li>
+          <li>Teaches low-level I/O routing (<code>dup2</code>, pipes, redirections).</li>
+          <li>Teaches robust parsing, quote semantics, and error strategy.</li>
+          <li>Teaches signal behavior and interactive program design.</li>
+        </ul>
+
+        <h3>1.3 Pedagogical justification</h3>
+        <p>Minishell forces the student to connect many isolated topics into one coherent mental model. That “integration skill” is often what determines whether someone can later work confidently in backend, infrastructure, or systems engineering.</p>
       </section>
 
-      <section id="learning">
-        <h2>5) Learning Path (Fast & Practical)</h2>
+      <section id="non-coder">
+        <h2>2) Minishell explained for non-coders</h2>
+        <p>Imagine a restaurant:</p>
+        <ul>
+          <li><strong>You</strong> are the customer giving an order (a command line).</li>
+          <li><strong>Reception</strong> is the <em>lexer</em> that splits your sentence into pieces.</li>
+          <li><strong>Kitchen manager</strong> is the <em>parser</em> that decides the execution plan.</li>
+          <li><strong>Prep team</strong> is the <em>expander</em> that replaces placeholders (like <code>$USER</code>) with real values.</li>
+          <li><strong>Cooks/runners</strong> are the <em>executor</em> and child processes that actually do the work.</li>
+          <li><strong>Status board</strong> is the exit code (<code>$?</code>) indicating success/failure.</li>
+        </ul>
+
+        <p>When you type something such as:</p>
+        <pre><code>cat report.txt | grep "error" > errors_only.txt</code></pre>
+        <p>you are effectively saying:</p>
         <ol>
-          <li><strong>Map the folders:</strong> identify one responsibility per module.</li>
-          <li><strong>Single-command trace:</strong> follow <code>echo $USER</code> through lexer → parser → expander → executor.</li>
-          <li><strong>Pipe trace:</strong> follow <code>cat file | grep x</code>, documenting each process and fd.</li>
-          <li><strong>Redirection trace:</strong> compare <code>&gt;</code> vs <code>&gt;&gt;</code> open flags and behavior.</li>
-          <li><strong>Bonus logic trace:</strong> prove short-circuit behavior of <code>&amp;&amp;</code>/<code>||</code>.</li>
+          <li>Open the file and read it.</li>
+          <li>Send the text to a second tool that filters lines containing “error”.</li>
+          <li>Put final result into a file instead of printing to screen.</li>
         </ol>
-        <p>Repeat traces until you can explain behavior from memory in less than 2 minutes each.</p>
+
+        <p>Minishell’s purpose is to understand and execute this type of instruction reliably.</p>
+      </section>
+
+      <section id="functional-spec">
+        <h2>3) Functional specification (what the program does)</h2>
+        <h3>3.1 Core behavior</h3>
+        <ul>
+          <li>Interactive prompt loop with command input.</li>
+          <li>Execution of binaries available in PATH.</li>
+          <li>Builtins: <code>echo</code>, <code>cd</code>, <code>pwd</code>, <code>export</code>, <code>unset</code>, <code>env</code>, <code>exit</code>.</li>
+          <li>Pipes and redirections including heredoc.</li>
+          <li>Environment and status expansion (<code>$VAR</code>, <code>$?</code>).</li>
+          <li>Quote-sensitive parsing behavior.</li>
+          <li>Signal handling appropriate for interactive shell context.</li>
+        </ul>
+
+        <h3>3.2 Bonus behavior in this repository</h3>
+        <ul>
+          <li>Logical operators: <code>&amp;&amp;</code> and <code>||</code>.</li>
+          <li>Parentheses for grouped command logic.</li>
+          <li>Wildcard <code>*</code> expansion in the current directory.</li>
+        </ul>
+
+        <h3>3.3 What this project intentionally does not try to be</h3>
+        <ul>
+          <li>Not a full Bash replacement.</li>
+          <li>Not a scripting language runtime with all Bash features.</li>
+          <li>Not intended as production enterprise shell.</li>
+        </ul>
+
+        <h3>3.4 Non-functional expectations</h3>
+        <ul>
+          <li><span class="good">Stability:</span> avoid crashes on invalid input.</li>
+          <li><span class="good">Consistency:</span> clear status codes and predictable behavior.</li>
+          <li><span class="good">Readability:</span> modular source folders by responsibility.</li>
+          <li><span class="warn">Environment dependency:</span> readline library must exist on the machine.</li>
+        </ul>
+      </section>
+
+      <section id="technical-spec">
+        <h2>4) Technical specification (how it is implemented)</h2>
+        <p>At high level, the shell runs an infinite loop:</p>
+        <pre><code>readline -> tokenize -> parse -> expand -> execute -> save exit status -> repeat</code></pre>
+
+        <h3>4.1 Data flow model</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Input</th>
+              <th>Output</th>
+              <th>Why this stage exists</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Lexer</td>
+              <td>Raw command string</td>
+              <td>Token list</td>
+              <td>Separates operators/words while respecting quotes.</td>
+            </tr>
+            <tr>
+              <td>Parser</td>
+              <td>Token list</td>
+              <td>Executable structures / command graph</td>
+              <td>Determines command relationships and syntax validity.</td>
+            </tr>
+            <tr>
+              <td>Expander</td>
+              <td>Parsed nodes + environment</td>
+              <td>Resolved arguments/redirections</td>
+              <td>Replaces variables and applies quote-aware transformations.</td>
+            </tr>
+            <tr>
+              <td>Executor</td>
+              <td>Resolved command structures</td>
+              <td>Processes, outputs, status code</td>
+              <td>Runs builtins and external programs with correct FD routing.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4.2 System calls and primitives (beginner interpretation)</h3>
+        <ul>
+          <li><code>fork</code>: creates a copy of current process (like duplicating a worker).</li>
+          <li><code>execve</code>: transforms process into another program (worker changes job).</li>
+          <li><code>pipe</code>: creates a data tunnel between processes.</li>
+          <li><code>dup2</code>: rewires input/output channels.</li>
+          <li><code>waitpid</code>: parent waits for child completion and exit status.</li>
+          <li><code>signal</code> handling: defines behavior for CTRL+C / CTRL+\.</li>
+        </ul>
+
+        <details>
+          <summary>Why not execute everything in one process?</summary>
+          <p>Because real shell semantics require isolation between commands and especially pipelines. Child processes avoid global state corruption and allow parallel command execution in pipes.</p>
+        </details>
+      </section>
+
+      <section id="architecture">
+        <h2>5) Internal architecture map (repository-oriented)</h2>
+        <p>This section ties conceptual stages to folder layout so you can navigate code during defense.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Responsibility</th>
+              <th>Defense sentence you can say</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>srcs/lexer</code></td>
+              <td>Token generation and lexical helpers</td>
+              <td>“This module converts user text into structured lexical units for parsing.”</td>
+            </tr>
+            <tr>
+              <td><code>srcs/parser</code></td>
+              <td>Command structure assembly and syntax validation</td>
+              <td>“Parser builds executable relationships and rejects invalid operator placement.”</td>
+            </tr>
+            <tr>
+              <td><code>srcs/expander</code></td>
+              <td>Variable/status expansion and quote-aware string handling</td>
+              <td>“Expander resolves dynamic values before final execution.”</td>
+            </tr>
+            <tr>
+              <td><code>srcs/executor</code></td>
+              <td>Builtins, forks, pipes, redirections, run logic</td>
+              <td>“Executor is the runtime engine that applies process/FD strategy.”</td>
+            </tr>
+            <tr>
+              <td><code>srcs/builtins</code></td>
+              <td>Builtin command implementations</td>
+              <td>“Builtins update shell state directly when needed (e.g., cd/export).”</td>
+            </tr>
+            <tr>
+              <td><code>srcs/signals</code></td>
+              <td>Signal behavior in shell context</td>
+              <td>“Signal policies differ between interactive shell and child commands.”</td>
+            </tr>
+            <tr>
+              <td><code>srcs_bonus</code></td>
+              <td>Bonus parser/executor logic and wildcard support</td>
+              <td>“Bonus extends grammar and expansion while preserving base behavior.”</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="journey">
+        <h2>6) One command from start to finish (trace-based learning)</h2>
+        <p>Take this command:</p>
+        <pre><code>export LOG=error && cat app.log | grep "$LOG" > errors.txt</code></pre>
+
+        <div class="timeline">
+          <div class="step">
+            <h3>Step 1 — Read line</h3>
+            <p>Shell receives full text as one string.</p>
+          </div>
+
+          <div class="step">
+            <h3>Step 2 — Lexing</h3>
+            <p>Text becomes tokens like words/operators: <code>export</code>, <code>LOG=error</code>, <code>&amp;&amp;</code>, <code>cat</code>, <code>|</code>, <code>grep</code>, <code>"$LOG"</code>, <code>&gt;</code>, <code>errors.txt</code>.</p>
+          </div>
+
+          <div class="step">
+            <h3>Step 3 — Parsing</h3>
+            <p>Parser builds command relationships: first command, then conditional execution, then pipeline, then output redirection.</p>
+          </div>
+
+          <div class="step">
+            <h3>Step 4 — Expansion</h3>
+            <p><code>$LOG</code> becomes <code>error</code> according to environment, while quote rules define how spaces/special characters would be treated.</p>
+          </div>
+
+          <div class="step">
+            <h3>Step 5 — Execution</h3>
+            <p>Shell runs builtin export, checks success; then creates pipeline children; re-routes output to file.</p>
+          </div>
+
+          <div class="step">
+            <h3>Step 6 — Status and loop</h3>
+            <p>Shell stores final exit code and shows prompt again.</p>
+          </div>
+        </div>
+
+        <details>
+          <summary>Why this trace is a great oral defense answer</summary>
+          <p>It shows grammar understanding, process model understanding, and practical behavior in one compact narrative.</p>
+        </details>
+      </section>
+
+      <section id="module-deep-dive">
+        <h2>7) Module-by-module deep dive (very detailed)</h2>
+
+        <h3>7.1 Lexer deep dive</h3>
+        <p>The lexer identifies semantic separators and operators while respecting quote context. If quote state is open, separators are interpreted as literal text until quote closes.</p>
+        <ul>
+          <li>Must distinguish single-char operators (<code>|</code>, <code>&lt;</code>, <code>&gt;</code>) from two-char operators (<code>&lt;&lt;</code>, <code>&gt;&gt;</code>, <code>&amp;&amp;</code>, <code>||</code> in bonus).</li>
+          <li>Must preserve token order exactly.</li>
+          <li>Must produce useful error info for unmatched quotes/syntax impossibilities.</li>
+        </ul>
+
+        <h3>7.2 Parser deep dive</h3>
+        <p>Parser transforms linear tokens into execution-ready structures.</p>
+        <ul>
+          <li>Builds command nodes with args + redirections.</li>
+          <li>Rejects illegal sequences (e.g., operator without operand).</li>
+          <li>In bonus mode, handles logical precedence and grouped expressions.</li>
+        </ul>
+
+        <h3>7.3 Expander deep dive</h3>
+        <p>Expander resolves dynamic references.</p>
+        <ul>
+          <li>Replaces <code>$VAR</code> and <code>$?</code>.</li>
+          <li>Handles quote-sensitive expansion behavior.</li>
+          <li>In bonus mode, wildcard expansion maps patterns to filenames.</li>
+        </ul>
+
+        <h3>7.4 Executor deep dive</h3>
+        <p>Executor is where Unix process mechanics become visible.</p>
+        <ul>
+          <li>Builtins that modify shell state are typically executed in parent context.</li>
+          <li>External commands require <code>fork + execve</code>.</li>
+          <li>Pipelines require careful opening/closing of file descriptors to avoid deadlocks/leaks.</li>
+          <li>Redirections must occur before running command payload.</li>
+        </ul>
+
+        <h3>7.5 Builtins deep dive</h3>
+        <p>Builtins are not external binaries. They are internal shell functions.</p>
+        <table>
+          <thead>
+            <tr><th>Builtin</th><th>Plain-language role</th><th>Subtle point</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>cd</code></td><td>Move current directory</td><td>Must affect shell process itself, not a temporary child.</td></tr>
+            <tr><td><code>export</code></td><td>Create/update environment variable</td><td>Validation rules matter for variable names.</td></tr>
+            <tr><td><code>unset</code></td><td>Remove variable</td><td>Should not crash on missing variable.</td></tr>
+            <tr><td><code>exit</code></td><td>Close shell with status</td><td>Numeric conversion and argument edge cases must be handled.</td></tr>
+            <tr><td><code>echo</code></td><td>Print text</td><td><code>-n</code> option changes newline behavior.</td></tr>
+            <tr><td><code>env</code></td><td>List environment</td><td>Output consistency useful for debugging.</td></tr>
+            <tr><td><code>pwd</code></td><td>Show current directory</td><td>Should reflect real shell state after cd.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="42-defense">
+        <h2>8) 42 evaluation defense pack</h2>
+        <p>Use this section to prepare your oral defense and peer evaluation conversations.</p>
+
+        <h3>8.1 Two-minute architecture pitch</h3>
+        <pre><code>“Minishell reads user input, lexes it into tokens, parses token relations,
+expands dynamic values like variables, then executes builtins or external
+commands with correct process and file descriptor management.
+The design is modular: lexer, parser, expander, executor, builtins, signals.
+This helps reliability, testing, and easier reasoning during edge cases.”</code></pre>
+
+        <h3>8.2 Questions evaluators often ask</h3>
+        <ul>
+          <li>Why does <code>cd</code> need parent-process execution?</li>
+          <li>How do pipes avoid deadlock?</li>
+          <li>What is the difference between <code>&gt;</code> and <code>&gt;&gt;</code>?</li>
+          <li>How does <code>$?</code> get its value?</li>
+          <li>What happens if syntax is invalid?</li>
+          <li>What signal behavior do you implement for CTRL+C?</li>
+        </ul>
+
+        <h3>8.3 Defense simulation script</h3>
+        <ol>
+          <li>Start with architecture map (section 5).</li>
+          <li>Trace one command (section 6).</li>
+          <li>Explain one parser error path and one executor edge case.</li>
+          <li>Demonstrate builtin behavior that modifies shell state.</li>
+          <li>Conclude with reliability/limitations summary.</li>
+        </ol>
+
+        <details>
+          <summary>How to answer “What was hardest?”</summary>
+          <p>A strong answer: “Ensuring parser correctness and FD lifecycle in pipelines, because tiny order mistakes can break correctness or leak resources. I solved this with modular responsibilities and trace-based debugging.”</p>
+        </details>
+      </section>
+
+      <section id="study-plan">
+        <h2>9) Step-by-step study plan (for students who feel overwhelmed)</h2>
+        <p>If you are anxious, follow this exact order and do not skip steps.</p>
+
+        <h3>Phase A — Build confidence (day 1)</h3>
+        <ul>
+          <li>Read section 2 (non-coder explanation) twice.</li>
+          <li>Memorize the pipeline sentence: read → lex → parse → expand → execute.</li>
+          <li>Use the glossary in section 12 to learn key words.</li>
+        </ul>
+
+        <h3>Phase B — Understand behavior (day 2–3)</h3>
+        <ul>
+          <li>Take three commands and manually tokenize them on paper.</li>
+          <li>For each, explain where parser, expander, and executor each contribute.</li>
+          <li>Practice with one invalid syntax command and explain expected error.</li>
+        </ul>
+
+        <h3>Phase C — Defense preparation (day 4–5)</h3>
+        <ul>
+          <li>Use section 8 Q&A.</li>
+          <li>Record yourself explaining one full command trace in under 2 minutes.</li>
+          <li>Repeat until clear and calm.</li>
+        </ul>
+
+        <h3>Phase D — Final rehearsal (day 6)</h3>
+        <ul>
+          <li>Run section 14 checklist end-to-end.</li>
+          <li>Do one mock evaluator session with a friend.</li>
+          <li>Fix weak explanations by revisiting matching section here.</li>
+        </ul>
+      </section>
+
+      <section id="mistakes">
+        <h2>10) Common mistakes and practical fixes</h2>
+        <table>
+          <thead>
+            <tr><th>Mistake</th><th>Symptom</th><th>Fix mindset</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Forgetting to close unused pipe ends</td>
+              <td>Pipeline hangs forever</td>
+              <td>Draw FD map per process and close what each side does not use.</td>
+            </tr>
+            <tr>
+              <td>Executing state-changing builtin in child</td>
+              <td><code>cd</code> seems to work but parent directory unchanged</td>
+              <td>Run shell-state updates in parent path.</td>
+            </tr>
+            <tr>
+              <td>Poor quote handling in lexer/expander</td>
+              <td>Unexpected splitting or wrong variable expansion</td>
+              <td>Track quote state explicitly and test mixed quote examples.</td>
+            </tr>
+            <tr>
+              <td>Weak syntax validation</td>
+              <td>Crash or undefined behavior on invalid input</td>
+              <td>Centralize parser entry checks and fail safely.</td>
+            </tr>
+            <tr>
+              <td>Not preserving exit status semantics</td>
+              <td><code>$?</code> reports confusing values</td>
+              <td>Define one clear status ownership rule after command completion.</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section id="playground">
-        <h2>6) Interactive Playground (Token intuition)</h2>
-        <p id="playground-help">Type a command to get a simplified tokenization preview. This does not replace the real parser, but helps learning. For readability, quote characters are not shown in output tokens.</p>
+        <h2>11) Interactive playground</h2>
+        <p id="playground-help">Type a shell command to see an educational token preview. This is a learning tool (not the real project parser). For readability, quote characters are not shown in output tokens.</p>
         <div class="io">
           <label for="cmd">Shell command to analyze</label>
-          <input id="cmd" value='echo "hello" | grep h > out.txt' aria-label="Shell command input for tokenization playground" aria-describedby="playground-help" />
+          <input
+            id="cmd"
+            value='export LOG=error && cat app.log | grep "$LOG" > errors.txt'
+            aria-label="Shell command input for tokenization playground"
+            aria-describedby="playground-help"
+          />
           <button id="run" type="button" aria-describedby="playground-help" aria-controls="out">Analyze command</button>
           <pre id="out"><code>Press "Analyze command" to inspect tokens.</code></pre>
         </div>
+
+        <details>
+          <summary>Suggested inputs to practice</summary>
+          <pre><code>echo "hello world"
+cat infile | grep 42 > out.txt
+cat << EOF
+ls *.c && echo done || echo failed
+(cd /tmp && pwd) | cat</code></pre>
+        </details>
+      </section>
+
+      <section id="glossary">
+        <h2>12) Plain-language glossary</h2>
+        <dl>
+          <dt>Shell</dt>
+          <dd>A program where you type commands to control your computer.</dd>
+
+          <dt>Command</dt>
+          <dd>An instruction to execute a tool or action.</dd>
+
+          <dt>Token</dt>
+          <dd>A smallest meaningful piece of a command line after lexing.</dd>
+
+          <dt>Parser</dt>
+          <dd>The component that turns tokens into an execution plan.</dd>
+
+          <dt>Environment variable</dt>
+          <dd>A named value shared with programs (example: <code>PATH</code>).</dd>
+
+          <dt>Exit status</dt>
+          <dd>A numeric result from command execution; <code>0</code> usually means success.</dd>
+
+          <dt>Pipe</dt>
+          <dd>A channel that sends output of one command directly into another.</dd>
+
+          <dt>Redirection</dt>
+          <dd>Changing where command input/output goes (file instead of terminal, etc.).</dd>
+
+          <dt>Heredoc</dt>
+          <dd>A way to provide multiline text as command input until a delimiter line is reached.</dd>
+
+          <dt>Builtin</dt>
+          <dd>A command implemented inside the shell itself, not launched as external binary.</dd>
+
+          <dt>Process</dt>
+          <dd>An instance of a running program.</dd>
+
+          <dt>File descriptor (FD)</dt>
+          <dd>A small integer identifier that the OS uses for open inputs/outputs.</dd>
+
+          <dt>Signal</dt>
+          <dd>An asynchronous notification sent to a process (for example CTRL+C interruption).</dd>
+        </dl>
+      </section>
+
+      <section id="faq">
+        <h2>13) FAQ</h2>
+        <dl class="faq">
+          <dt>Q: I am not strong in C yet. Can I still defend this project?</dt>
+          <dd>Yes. If you can clearly explain the architecture and one full command trace, evaluators can see your conceptual understanding even while you continue improving code fluency.</dd>
+
+          <dt>Q: What should I memorize first?</dt>
+          <dd>The five-stage pipeline and 2–3 representative command traces (simple command, pipeline + redirection, logical operators).</dd>
+
+          <dt>Q: How do I avoid panic in defense?</dt>
+          <dd>Use section 8 script and section 14 checklist. Practice aloud. Clarity and structure beat speed.</dd>
+
+          <dt>Q: What is the most common weak point?</dt>
+          <dd>Not being able to explain FD flow in pipes. Draw it as arrows from stdin/stdout before answering.</dd>
+
+          <dt>Q: Is this interactive playground exactly the real parser?</dt>
+          <dd>No. It is intentionally simplified for education. The source implementation remains authoritative.</dd>
+        </dl>
+      </section>
+
+      <section id="final">
+        <h2>14) Final checklist before evaluation</h2>
+        <ul>
+          <li>✅ I can define lexer, parser, expander, executor in one sentence each.</li>
+          <li>✅ I can explain why certain builtins must run in parent process.</li>
+          <li>✅ I can trace one pipeline command and mention FD handling.</li>
+          <li>✅ I can explain variable expansion and quote impact.</li>
+          <li>✅ I can explain how status code is produced and used by <code>$?</code>.</li>
+          <li>✅ I can describe one syntax error handling path.</li>
+          <li>✅ I can describe bonus logic behavior (<code>&amp;&amp;</code>, <code>||</code>, parentheses, wildcard).</li>
+        </ul>
+        <p class="lead">If you can confidently do everything above, you are not “just hoping” to pass — you are prepared with technical understanding and communication structure.</p>
+        <p class="small">Document generated as independent project support material in <code>/docs</code>.</p>
       </section>
     </main>
   </div>
@@ -269,15 +801,21 @@ false || echo "fallback"
       let cur = "";
       let quote = null;
       let expectHeredocDelim = false;
+
       const flushWord = () => {
         if (!cur) return;
-        tokens.push({ type: expectHeredocDelim ? "HEREDOC_DELIM" : "WORD", value: cur });
+        tokens.push({
+          type: expectHeredocDelim ? "HEREDOC_DELIM" : "WORD",
+          value: cur,
+        });
         cur = "";
         expectHeredocDelim = false;
       };
+
       for (let i = 0; i < input.length; i++) {
         const ch = input[i];
         const two = input.slice(i, i + 2);
+
         if (!quote && (two === "&&" || two === "||" || two === ">>" || two === "<<")) {
           flushWord();
           tokens.push({ type: "OP", value: two });
@@ -285,21 +823,26 @@ false || echo "fallback"
           i++;
           continue;
         }
+
         if (!quote && (ch === "|" || ch === "<" || ch === ">" || ch === "(" || ch === ")")) {
           flushWord();
           tokens.push({ type: "OP", value: ch });
           continue;
         }
+
         if ((ch === '"' || ch === "'") && (!quote || quote === ch)) {
           quote = quote ? null : ch;
           continue;
         }
+
         if (!quote && /[ \t]/.test(ch)) {
           flushWord();
           continue;
         }
+
         cur += ch;
       }
+
       flushWord();
       return tokens;
     }
