@@ -168,7 +168,7 @@
           <li>Builtins: <code>echo</code>, <code>cd</code>, <code>pwd</code>, <code>export</code>, <code>unset</code>, <code>env</code>, <code>exit</code>.</li>
           <li>Pipes (<code>|</code>), redirections (<code>&lt;</code>, <code>&gt;</code>, <code>&gt;&gt;</code>, <code>&lt;&lt;</code>).</li>
           <li>Environment expansion (<code>$VAR</code>, <code>$?</code>), quote handling, and signal behavior.</li>
-          <li>Bonus behavior in this repository: logical operators <code>&amp;&amp;</code>/<code>||</code>, parenthesis grouping, wildcard <code>*</code>.</li>
+          <li>Bonus behavior in this repository: logical operators <code>&amp;&amp;</code>/<code>||</code>, parentheses grouping, wildcard <code>*</code>.</li>
         </ul>
         <h3>Command examples</h3>
         <pre><code>echo "hello minishell"
@@ -254,7 +254,7 @@ false || echo "fallback"
         <h2>6) Interactive Playground (Token intuition)</h2>
         <p>Type a command to get a simplified tokenization preview. This does not replace the real parser, but helps learning.</p>
         <div class="io">
-          <input id="cmd" value='echo "hello" | grep h > out.txt' aria-label="command input" />
+          <input id="cmd" value='echo "hello" | grep h > out.txt' aria-label="Shell command input for tokenization playground" />
           <button id="run" type="button">Analyze command</button>
           <pre id="out"><code>Press "Analyze command" to inspect tokens.</code></pre>
         </div>
