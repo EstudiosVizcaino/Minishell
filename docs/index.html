@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minishell — Functional & Technical Documentation</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22d3ee;
+      --good: #34d399;
+      --warn: #fbbf24;
+      --border: #1f2937;
+      --code: #0b1220;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --panel: #ffffff;
+        --text: #111827;
+        --muted: #6b7280;
+        --accent: #0ea5e9;
+        --good: #047857;
+        --warn: #b45309;
+        --border: #e5e7eb;
+        --code: #f3f4f6;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 1rem;
+      background: var(--panel);
+    }
+    nav h1 { font-size: 1rem; margin: 0 0 1rem; }
+    nav a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0.35rem 0;
+      font-size: 0.95rem;
+    }
+    nav a:hover { color: var(--accent); }
+    main {
+      padding: 1.25rem;
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1rem;
+    }
+    h2 { margin-top: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.75rem;
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem;
+    }
+    .tag {
+      display: inline-block;
+      background: color-mix(in srgb, var(--accent) 20%, transparent);
+      color: var(--accent);
+      font-size: 0.75rem;
+      border-radius: 999px;
+      padding: 0.2rem 0.55rem;
+      margin-right: 0.35rem;
+    }
+    .good { color: var(--good); }
+    .warn { color: var(--warn); }
+    pre {
+      white-space: pre-wrap;
+      background: var(--code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7rem;
+      overflow-x: auto;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    details {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem;
+      margin: 0.5rem 0;
+    }
+    summary { cursor: pointer; font-weight: 600; }
+    .io {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    input, button {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--code);
+      color: var(--text);
+      padding: 0.6rem;
+      font: inherit;
+    }
+    button {
+      background: color-mix(in srgb, var(--accent) 25%, var(--code));
+      cursor: pointer;
+      font-weight: 700;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <h1>📘 Minishell Docs</h1>
+      <a href="#purpose">1. Purpose & Scope</a>
+      <a href="#functional">2. Functional Specification</a>
+      <a href="#technical">3. Technical Architecture</a>
+      <a href="#evaluation">4. 42 Evaluation Mapping</a>
+      <a href="#learning">5. Learning Path</a>
+      <a href="#playground">6. Interactive Playground</a>
+    </nav>
+
+    <main>
+      <section id="purpose">
+        <h2>1) Purpose & Scope</h2>
+        <p>This document justifies <strong>Minishell</strong> both functionally and technically for a 42 School evaluation. It is also designed as a learning guide to understand the project end-to-end.</p>
+        <div class="grid">
+          <div class="card"><span class="tag">Functional Goal</span><br />Provide a POSIX-like command interpreter with core shell behavior (parsing, execution, pipes, redirections, builtins).</div>
+          <div class="card"><span class="tag">Technical Goal</span><br />Design a robust lexer/parser/executor pipeline in C with proper memory, signal, and process management.</div>
+          <div class="card"><span class="tag">Pedagogical Goal</span><br />Make shell internals understandable through examples, flow explanations, and a small interactive parser demo.</div>
+        </div>
+      </section>
+
+      <section id="functional">
+        <h2>2) Functional Specification</h2>
+        <h3>Supported behavior</h3>
+        <ul>
+          <li>Prompt loop, command reading, and execution.</li>
+          <li>Builtins: <code>echo</code>, <code>cd</code>, <code>pwd</code>, <code>export</code>, <code>unset</code>, <code>env</code>, <code>exit</code>.</li>
+          <li>Pipes (<code>|</code>), redirections (<code>&lt;</code>, <code>&gt;</code>, <code>&gt;&gt;</code>, <code>&lt;&lt;</code>).</li>
+          <li>Environment expansion (<code>$VAR</code>, <code>$?</code>), quote handling, and signal behavior.</li>
+          <li>Bonus behavior in this repository: logical operators <code>&amp;&amp;</code>/<code>||</code>, parenthesis grouping, wildcard <code>*</code>.</li>
+        </ul>
+        <h3>Command examples</h3>
+        <pre><code>echo "hello minishell"
+export USERNAME=student
+cat infile | grep minishell &gt; outfile
+false || echo "fallback"
+(cd /tmp &amp;&amp; pwd) | cat</code></pre>
+        <h3>Non-functional requirements</h3>
+        <ul>
+          <li class="good">Reliability: predictable exit statuses and robust syntax error reporting.</li>
+          <li class="good">Correctness: behavior aligned with minishell subject expectations.</li>
+          <li class="good">Code quality: modular source tree (lexer/parser/expander/executor/builtins).</li>
+          <li class="warn">Portability note: depends on <code>readline</code> headers/libraries in local environment.</li>
+        </ul>
+      </section>
+
+      <section id="technical">
+        <h2>3) Technical Architecture</h2>
+        <p><strong>Processing pipeline:</strong></p>
+        <pre><code>Readline input
+  -> Lexer (tokens)
+  -> Parser (command/AST-like structures)
+  -> Expander (variables, quote-aware string handling)
+  -> Executor (builtins, fork/execve, redirections, pipes)
+  -> Status code update and loop</code></pre>
+        <div class="grid">
+          <div class="card">
+            <h4>Lexer</h4>
+            <p>Transforms input into token stream while respecting quote state and special operators.</p>
+          </div>
+          <div class="card">
+            <h4>Parser</h4>
+            <p>Creates command structures and redirection links; bonus parser extends with <code>&amp;&amp;</code>, <code>||</code>, and grouping.</p>
+          </div>
+          <div class="card">
+            <h4>Executor</h4>
+            <p>Runs builtins in-process when needed, external commands via <code>fork + execve</code>, orchestrates pipelines and FDs.</p>
+          </div>
+        </div>
+
+        <details>
+          <summary>FD and process model (why it matters)</summary>
+          <p>Pipes and redirections require precise file descriptor duplication (<code>dup2</code>) and closure order. A wrong order can deadlock pipelines or leak descriptors.</p>
+        </details>
+
+        <details>
+          <summary>Signal strategy (interactive shell expectations)</summary>
+          <p>Main loop and child processes usually need different signal handling policies. The project’s signal module centralizes this behavior.</p>
+        </details>
+
+        <details>
+          <summary>Error-handling philosophy</summary>
+          <p>Report syntax/runtime errors clearly, keep shell alive when possible, and always preserve a meaningful last exit status for <code>$?</code>.</p>
+        </details>
+      </section>
+
+      <section id="evaluation">
+        <h2>4) 42 Evaluation Mapping</h2>
+        <p>Use this quick checklist during defense:</p>
+        <ul>
+          <li>Can you explain the full input-to-execution flow without looking at code?</li>
+          <li>Can you justify where and why builtins run in parent vs child process?</li>
+          <li>Can you walk through one pipeline command and one heredoc command?</li>
+          <li>Can you explain quote behavior and variable expansion edge cases?</li>
+          <li>Can you show one syntax error path and status code behavior?</li>
+        </ul>
+        <p><strong>Defense tip:</strong> start with architecture, then a concrete command trace, then edge cases (signals, quotes, redirections).</p>
+      </section>
+
+      <section id="learning">
+        <h2>5) Learning Path (Fast & Practical)</h2>
+        <ol>
+          <li><strong>Map the folders:</strong> identify one responsibility per module.</li>
+          <li><strong>Single-command trace:</strong> follow <code>echo $USER</code> through lexer → parser → expander → executor.</li>
+          <li><strong>Pipe trace:</strong> follow <code>cat file | grep x</code>, documenting each process and fd.</li>
+          <li><strong>Redirection trace:</strong> compare <code>&gt;</code> vs <code>&gt;&gt;</code> open flags and behavior.</li>
+          <li><strong>Bonus logic trace:</strong> prove short-circuit behavior of <code>&amp;&amp;</code>/<code>||</code>.</li>
+        </ol>
+        <p>Repeat traces until you can explain behavior from memory in less than 2 minutes each.</p>
+      </section>
+
+      <section id="playground">
+        <h2>6) Interactive Playground (Token intuition)</h2>
+        <p>Type a command to get a simplified tokenization preview. This does not replace the real parser, but helps learning.</p>
+        <div class="io">
+          <input id="cmd" value='echo "hello" | grep h > out.txt' aria-label="command input" />
+          <button id="run" type="button">Analyze command</button>
+          <pre id="out"><code>Press "Analyze command" to inspect tokens.</code></pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function tokenize(input) {
+      const tokens = [];
+      let cur = "";
+      let quote = null;
+      for (let i = 0; i < input.length; i++) {
+        const ch = input[i];
+        const two = input.slice(i, i + 2);
+        if (!quote && (two === "&&" || two === "||" || two === ">>" || two === "<<")) {
+          if (cur) tokens.push({ type: "WORD", value: cur }), (cur = "");
+          tokens.push({ type: "OP", value: two });
+          i++;
+          continue;
+        }
+        if (!quote && (ch === "|" || ch === "<" || ch === ">" || ch === "(" || ch === ")")) {
+          if (cur) tokens.push({ type: "WORD", value: cur }), (cur = "");
+          tokens.push({ type: "OP", value: ch });
+          continue;
+        }
+        if ((ch === '"' || ch === "'") && (!quote || quote === ch)) {
+          quote = quote ? null : ch;
+          continue;
+        }
+        if (!quote && /\s/.test(ch)) {
+          if (cur) tokens.push({ type: "WORD", value: cur }), (cur = "");
+          continue;
+        }
+        cur += ch;
+      }
+      if (cur) tokens.push({ type: "WORD", value: cur });
+      return tokens;
+    }
+
+    document.getElementById("run").addEventListener("click", () => {
+      const input = document.getElementById("cmd").value;
+      const tokens = tokenize(input);
+      const lines = tokens.map((t, i) => `${String(i + 1).padStart(2, "0")}. ${t.type} -> ${t.value}`);
+      document.getElementById("out").textContent = lines.join("\n") || "(no tokens)";
+    });
+  </script>
+</body>
+</html>
