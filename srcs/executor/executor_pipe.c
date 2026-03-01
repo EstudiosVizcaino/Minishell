@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   executor_pipe.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 14:25:42 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/19 20:23:28 by adherrer         ###   ########.fr       */
+/*   Updated: 2026/03/01 22:15:32 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Waits for two child processes and returns the exit status of the second.
+ * @brief Waits for two child processes and returns exit status of the second.
  *
  * @param pid1 The process ID of the first child.
  * @param pid2 The process ID of the second child.

@@ -6,7 +6,7 @@
 /*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:38:12 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/05 12:23:48 by cvizcain         ###   ########.fr       */
+/*   Updated: 2026/03/01 22:14:56 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ static void	fill_cmd(t_cmd *cmd, t_token **tokens)
  * @brief Parses a single command from the token stream.
  *
  * @param tokens A pointer to the current position in the token list.
- * @return A pointer to the AST node representing the command, or NULL on failure.
+ * @return A pointer to the AST node representing the command, or NULL
+ * 			on failure.
  */
 t_ast	*parse_command(t_token **tokens)
 {

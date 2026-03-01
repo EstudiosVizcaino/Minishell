@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:34:08 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/20 21:59:56 by adherrer         ###   ########.fr       */
+/*   Updated: 2026/03/01 22:15:07 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Implements the env builtin, printing all environment variables with values.
+ * @brief Implements the env builtin, printing all environment variables
+ * 			with values.
  *
  * @param shell Pointer to the shell structure.
  * @return 0 on success.
