@@ -252,10 +252,11 @@ false || echo "fallback"
 
       <section id="playground">
         <h2>6) Interactive Playground (Token intuition)</h2>
-        <p>Type a command to get a simplified tokenization preview. This does not replace the real parser, but helps learning.</p>
+        <p id="playground-help">Type a command to get a simplified tokenization preview. This does not replace the real parser, but helps learning. For readability, quote characters are not shown in output tokens.</p>
         <div class="io">
-          <input id="cmd" value='echo "hello" | grep h > out.txt' aria-label="Shell command input for tokenization playground" />
-          <button id="run" type="button">Analyze command</button>
+          <label for="cmd">Shell command to analyze</label>
+          <input id="cmd" value='echo "hello" | grep h > out.txt' aria-label="Shell command input for tokenization playground" aria-describedby="playground-help" />
+          <button id="run" type="button" aria-describedby="playground-help" aria-controls="out">Analyze command</button>
           <pre id="out"><code>Press "Analyze command" to inspect tokens.</code></pre>
         </div>
       </section>
@@ -267,17 +268,25 @@ false || echo "fallback"
       const tokens = [];
       let cur = "";
       let quote = null;
+      let expectHeredocDelim = false;
+      const flushWord = () => {
+        if (!cur) return;
+        tokens.push({ type: expectHeredocDelim ? "HEREDOC_DELIM" : "WORD", value: cur });
+        cur = "";
+        expectHeredocDelim = false;
+      };
       for (let i = 0; i < input.length; i++) {
         const ch = input[i];
         const two = input.slice(i, i + 2);
         if (!quote && (two === "&&" || two === "||" || two === ">>" || two === "<<")) {
-          if (cur) tokens.push({ type: "WORD", value: cur }), (cur = "");
+          flushWord();
           tokens.push({ type: "OP", value: two });
+          if (two === "<<") expectHeredocDelim = true;
           i++;
           continue;
         }
         if (!quote && (ch === "|" || ch === "<" || ch === ">" || ch === "(" || ch === ")")) {
-          if (cur) tokens.push({ type: "WORD", value: cur }), (cur = "");
+          flushWord();
           tokens.push({ type: "OP", value: ch });
           continue;
         }
@@ -285,13 +294,13 @@ false || echo "fallback"
           quote = quote ? null : ch;
           continue;
         }
-        if (!quote && /\s/.test(ch)) {
-          if (cur) tokens.push({ type: "WORD", value: cur }), (cur = "");
+        if (!quote && /[ \t]/.test(ch)) {
+          flushWord();
           continue;
         }
         cur += ch;
       }
-      if (cur) tokens.push({ type: "WORD", value: cur });
+      flushWord();
       return tokens;
     }
 
