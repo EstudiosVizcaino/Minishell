@@ -36,6 +36,7 @@ make
 ### Extremely detailed step-by-step explanation (HTML)
 - Open `docs/index.html` in your browser.
 - This document explains, in detail and step by step, how Minishell works from input reading to execution.
+- Additional focused walkthrough file: `docs/study-step-by-step.html`.
 
 ### Built-in commands
 - `echo [-n]` – Print text to stdout

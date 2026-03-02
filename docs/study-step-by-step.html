@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minishell - Step-by-Step Study Guide</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --accent: #22d3ee;
+      --code: #0b1220;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --panel: #ffffff;
+        --text: #111827;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --accent: #0369a1;
+        --code: #f3f4f6;
+      }
+    }
+    body {
+      margin: 0;
+      padding: 1rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.65;
+    }
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    h1, h2, h3 { margin-top: 0; }
+    .muted { color: var(--muted); }
+    pre, code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    pre {
+      background: var(--code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      white-space: pre-wrap;
+    }
+    .step {
+      border-left: 3px solid var(--accent);
+      padding-left: 0.75rem;
+      margin-bottom: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>Minishell: Very Detailed Step-by-Step Guide</h1>
+      <p class="muted">
+        This file is an additional study document focused on tiny, explicit steps.
+        It follows one full example from typing to process execution, and also lists other supported options.
+      </p>
+    </section>
+
+    <section>
+      <h2>0) What this project is</h2>
+      <p>
+        Minishell is a small shell (command interpreter). It reads your line, understands its syntax,
+        expands variables, and executes builtins or external programs while handling pipes/redirections.
+      </p>
+      <p>
+        Main flow in this repository:
+      </p>
+      <pre><code>readline -> lexer -> parser -> expander -> executor -> exit status saved -> loop again</code></pre>
+    </section>
+
+    <section>
+      <h2>1) Files and modules (where each stage lives)</h2>
+      <ul>
+        <li><code>srcs/main.c</code> - prompt loop and high-level orchestration.</li>
+        <li><code>srcs/lexer</code> - tokenization.</li>
+        <li><code>srcs/parser</code> - syntax structure and command nodes.</li>
+        <li><code>srcs/expander</code> - <code>$VAR</code> and <code>$?</code> expansion.</li>
+        <li><code>srcs/executor</code> - builtins, forks, pipes, redirections, command run.</li>
+        <li><code>srcs/builtins</code> - builtin commands like <code>cd</code>, <code>export</code>.</li>
+        <li><code>srcs/signals</code> - signal behavior.</li>
+        <li><code>srcs_bonus</code> - bonus logic: <code>&amp;&amp;</code>, <code>||</code>, <code>()</code>, wildcard.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2) Worked example used for this walkthrough</h2>
+      <p>We will follow this exact line:</p>
+      <pre><code>export LOG=error && cat app.log | grep "$LOG" > errors.txt</code></pre>
+      <p class="muted">
+        Why this is a good example: it touches builtin execution, logical AND, pipeline, quote-aware expansion, and output redirection.
+      </p>
+    </section>
+
+    <section>
+      <h2>3) Micro-steps: from keyboard input to prompt return</h2>
+
+      <div class="step">
+        <h3>Step 1 - Prompt is waiting</h3>
+        <p>Program is inside the main loop and waits for user input through readline.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 2 - User types characters</h3>
+        <p>Every character is read as part of one raw string. Enter finishes the line.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 3 - Raw string handed to lexer</h3>
+        <p>Lexer scans left to right and groups characters into tokens, preserving quote context.</p>
+        <pre><code>[export] [LOG=error] [&&] [cat] [app.log] [|] [grep] ["$LOG"] [>] [errors.txt]</code></pre>
+      </div>
+
+      <div class="step">
+        <h3>Step 4 - Parser validates grammar and builds structure</h3>
+        <p>Parser checks operator placement and creates executable relations:</p>
+        <ul>
+          <li>Left side command: <code>export LOG=error</code></li>
+          <li>Connector: <code>&amp;&amp;</code> (execute right side only if left side succeeds)</li>
+          <li>Right side pipeline: <code>cat app.log | grep "$LOG"</code></li>
+          <li>Final redirection: <code>&gt; errors.txt</code> applied to pipeline output</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h3>Step 5 - Expander resolves variables</h3>
+        <p><code>"$LOG"</code> becomes <code>"error"</code> using current shell environment.</p>
+        <p>Important detail: because the variable is in double quotes, it expands but remains one argument.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 6 - Executor starts left side of AND</h3>
+        <p><code>export</code> is a builtin, so it runs in shell logic (not as external binary) and updates shell environment.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 7 - AND condition check</h3>
+        <p>If <code>export</code> exit code is <code>0</code>, right side is executed. Otherwise it is skipped.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 8 - Pipeline process preparation</h3>
+        <p>Executor creates a pipe and forks children as needed for <code>cat</code> and <code>grep</code>.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 9 - File descriptor wiring</h3>
+        <ul>
+          <li><code>cat</code> stdout is connected to pipe write end.</li>
+          <li><code>grep</code> stdin is connected to pipe read end.</li>
+          <li>Because of <code>&gt; errors.txt</code>, grep stdout is redirected to the file.</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h3>Step 10 - External commands executed</h3>
+        <p>Children call exec-family logic to run real binaries found through PATH.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 11 - Parent waits and collects status</h3>
+        <p>Parent shell waits for children, computes resulting status, stores it in shell state (<code>$?</code>).</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 12 - Cleanup + next prompt</h3>
+        <p>Temporary resources are closed/freed. Shell returns to prompt for the next command line.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>4) Additional options/features (mentioning even if not used above)</h2>
+      <h3>Base features</h3>
+      <ul>
+        <li><code>|</code> pipe: send stdout of one command to stdin of next.</li>
+        <li><code>&lt;</code> input redirection from file.</li>
+        <li><code>&gt;</code> output redirection (truncate file).</li>
+        <li><code>&gt;&gt;</code> output append redirection.</li>
+        <li><code>&lt;&lt;</code> heredoc: multiline input until delimiter.</li>
+        <li>Variable expansion: <code>$VAR</code> and status expansion <code>$?</code>.</li>
+        <li>Quotes:
+          <ul>
+            <li>Single quotes block expansion.</li>
+            <li>Double quotes allow expansion but preserve grouped text.</li>
+          </ul>
+        </li>
+        <li>Builtins: <code>echo</code>, <code>cd</code>, <code>pwd</code>, <code>export</code>, <code>unset</code>, <code>env</code>, <code>exit</code>.</li>
+      </ul>
+
+      <h3>Bonus features (when built with <code>make bonus</code>)</h3>
+      <ul>
+        <li><code>&amp;&amp;</code> logical AND with short-circuit behavior.</li>
+        <li><code>||</code> logical OR with short-circuit behavior.</li>
+        <li><code>()</code> parentheses for grouped command logic/precedence.</li>
+        <li><code>*</code> wildcard expansion in current directory.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5) Mini mental model for study</h2>
+      <pre><code>1. Read text
+2. Split text into meaningful pieces (tokens)
+3. Build execution plan from those pieces
+4. Resolve dynamic values (variables, status)
+5. Run plan with process + FD rules
+6. Save status and loop</code></pre>
+      <p>If you can explain these six points clearly, you already understand the heart of this Minishell project.</p>
+    </section>
+  </main>
+</body>
+</html>
