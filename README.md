@@ -34,7 +34,7 @@ make
 ```
 
 ### Extremely detailed step-by-step explanation (HTML)
-- Open `/home/runner/work/Minishell/Minishell/docs/index.html` in your browser.
+- Open `docs/index.html` in your browser.
 - This document explains, in detail and step by step, how Minishell works from input reading to execution.
 
 ### Built-in commands
