@@ -62,6 +62,20 @@
       padding-left: 0.75rem;
       margin-bottom: 0.9rem;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5rem 0 1rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      text-align: left;
+      padding: 0.45rem 0.55rem;
+      vertical-align: top;
+    }
+    th {
+      background: var(--code);
+    }
   </style>
 </head>
 <body>
@@ -69,125 +83,291 @@
     <section>
       <h1>Minishell: Very Detailed Step-by-Step Guide</h1>
       <p class="muted">
-        This file is an additional study document focused on tiny, explicit steps.
-        It follows one full example from typing to process execution, and also lists other supported options.
+        This file is intentionally extended. It explains the project in tiny steps, then drills into the
+        functions involved in each phase, and iterates one full command walkthrough end-to-end.
       </p>
     </section>
 
     <section>
-      <h2>0) What this project is</h2>
+      <h2>0) What this project is (core idea)</h2>
       <p>
         Minishell is a small shell (command interpreter). It reads your line, understands its syntax,
         expands variables, and executes builtins or external programs while handling pipes/redirections.
       </p>
-      <p>
-        Main flow in this repository:
-      </p>
-      <pre><code>readline -> lexer -> parser -> expander -> executor -> exit status saved -> loop again</code></pre>
+      <pre><code>readline -> lexer -> parser -> expander -> executor -> update $? -> prompt again</code></pre>
     </section>
 
     <section>
-      <h2>1) Files and modules (where each stage lives)</h2>
+      <h2>1) Source map (where each phase lives)</h2>
       <ul>
-        <li><code>srcs/main.c</code> - prompt loop and high-level orchestration.</li>
-        <li><code>srcs/lexer</code> - tokenization.</li>
-        <li><code>srcs/parser</code> - syntax structure and command nodes.</li>
-        <li><code>srcs/expander</code> - <code>$VAR</code> and <code>$?</code> expansion.</li>
-        <li><code>srcs/executor</code> - builtins, forks, pipes, redirections, command run.</li>
-        <li><code>srcs/builtins</code> - builtin commands like <code>cd</code>, <code>export</code>.</li>
-        <li><code>srcs/signals</code> - signal behavior.</li>
-        <li><code>srcs_bonus</code> - bonus logic: <code>&amp;&amp;</code>, <code>||</code>, <code>()</code>, wildcard.</li>
+        <li><code>srcs/main.c</code> and <code>srcs_bonus/main_bonus.c</code>: loop + orchestration.</li>
+        <li><code>srcs/lexer/*.c</code> (+ <code>srcs_bonus/lexer_utils_bonus.c</code>): lexical analysis.</li>
+        <li><code>srcs/parser/*.c</code> (+ <code>srcs_bonus/parser*_bonus.c</code>, <code>parse_andor_bonus.c</code>): AST construction + syntax checks.</li>
+        <li><code>srcs/expander/*.c</code> (+ <code>srcs_bonus/expander*_bonus.c</code>, wildcard files): expansions.</li>
+        <li><code>srcs/executor/*.c</code> (+ <code>srcs_bonus/executor_bonus.c</code>): command execution.</li>
+        <li><code>srcs/builtins/*.c</code>: builtin command behavior.</li>
+        <li><code>srcs/env/*.c</code>: environment linked list utilities.</li>
+        <li><code>srcs/signals/signals.c</code>: SIGINT/SIGQUIT handling.</li>
       </ul>
     </section>
 
     <section>
-      <h2>2) Worked example used for this walkthrough</h2>
-      <p>We will follow this exact line:</p>
+      <h2>2) Worked command we will follow</h2>
+      <p><strong>Bonus walkthrough command:</strong></p>
       <pre><code>export LOG=error && cat app.log | grep "$LOG" > errors.txt</code></pre>
       <p class="muted">
-        Why this is a good example: it touches builtin execution, logical AND, pipeline, quote-aware expansion, and output redirection.
+        This line touches: builtin (<code>export</code>), logical <code>&amp;&amp;</code>, pipeline, variable expansion in quotes, and output redirection.
+      </p>
+      <p class="muted">
+        Note: <code>&amp;&amp;</code> is bonus syntax, so this specific line requires <code>make bonus</code>.
+        All individual pieces (<code>export</code>, pipe, quotes, redirection) are still useful to understand the base flow.
       </p>
     </section>
 
     <section>
-      <h2>3) Micro-steps: from keyboard input to prompt return</h2>
+      <h2>3) Data structures used while processing</h2>
+      <table>
+        <tr><th>Type</th><th>Meaning</th><th>Where defined</th></tr>
+        <tr><td><code>t_token</code></td><td>One lexer token (<code>TOKEN_WORD</code>, <code>TOKEN_PIPE</code>, etc.)</td><td><code>includes/minishell.h</code></td></tr>
+        <tr><td><code>t_redir</code></td><td>One redirection (<code>&lt;</code>, <code>&gt;</code>, <code>&gt;&gt;</code>, <code>&lt;&lt;</code>) + file/heredoc FD</td><td><code>includes/minishell.h</code></td></tr>
+        <tr><td><code>t_cmd</code></td><td>Command payload: <code>args</code> and redirection list</td><td><code>includes/minishell.h</code></td></tr>
+        <tr><td><code>t_ast</code></td><td>Execution tree node: <code>NODE_CMD</code>, <code>NODE_PIPE</code>, <code>NODE_AND</code>, <code>NODE_OR</code></td><td><code>includes/minishell.h</code></td></tr>
+        <tr><td><code>t_env</code></td><td>Environment linked-list node (<code>key=value</code>)</td><td><code>includes/minishell.h</code></td></tr>
+        <tr><td><code>t_shell</code></td><td>Global shell runtime state (env, <code>last_exit</code>, heredoc state)</td><td><code>includes/minishell.h</code></td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>4) Ultra-granular flow: from Enter key to next prompt</h2>
 
       <div class="step">
         <h3>Step 1 - Prompt is waiting</h3>
-        <p>Program is inside the main loop and waits for user input through readline.</p>
+        <p><code>main()</code> initializes <code>t_shell</code>, then enters <code>main_loop()</code>.</p>
+        <p>In each iteration, <code>setup_signals()</code> is called, then <code>readline("minishell&gt; ")</code> waits.</p>
       </div>
 
       <div class="step">
         <h3>Step 2 - User types characters</h3>
-        <p>Every character is read as part of one raw string. Enter finishes the line.</p>
+        <p>The full line becomes one raw <code>char *</code>. If non-empty, it is pushed with <code>add_history()</code>.</p>
       </div>
 
       <div class="step">
-        <h3>Step 3 - Raw string handed to lexer</h3>
-        <p>Lexer scans left to right and groups characters into tokens, preserving quote context.</p>
+        <h3>Step 3 - run_line() orchestrates pipeline</h3>
+        <p><code>run_line()</code> performs: <code>lexer -&gt; parser -&gt; expand_ast -&gt; execute</code>, then frees AST.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 4 - Lexer generates tokens</h3>
+        <p><code>lexer()</code> loops over input. It delegates to:</p>
+        <ul>
+          <li><code>is_operator()</code> to classify operator starts</li>
+          <li><code>handle_operator()</code> to emit tokens like <code>TOKEN_AND</code>, <code>TOKEN_PIPE</code>, redirs</li>
+          <li><code>handle_word()</code> and <code>word_end()</code> for words and quoted ranges</li>
+          <li><code>quote_len()</code> to skip complete quoted blocks safely</li>
+        </ul>
         <pre><code>[export] [LOG=error] [&&] [cat] [app.log] [|] [grep] ["$LOG"] [>] [errors.txt]</code></pre>
       </div>
 
       <div class="step">
-        <h3>Step 4 - Parser validates grammar and builds structure</h3>
-        <p>Parser checks operator placement and creates executable relations:</p>
+        <h3>Step 5 - Syntax validation (bonus path)</h3>
+        <p>In bonus main: <code>check_syntax()</code> runs before parsing. It rejects invalid operator chains and invalid redirect targets.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 6 - Parser builds AST</h3>
+        <p>Base parser entry: <code>parser() -&gt; parse_pipeline()</code>.</p>
+        <p>Bonus parser entry: <code>parser() -&gt; parse_and_or()</code>, which internally uses <code>parse_parens()</code> and <code>parse_pipeline()</code>.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 7 - parse_command() fills command payloads</h3>
+        <p><code>parse_command()</code> allocates <code>t_cmd</code>, counts argument words via <code>count_word_tokens()</code>, and fills:</p>
         <ul>
-          <li>Left side command: <code>export LOG=error</code></li>
-          <li>Connector: <code>&amp;&amp;</code> (execute right side only if left side succeeds)</li>
-          <li>Right side pipeline: <code>cat app.log | grep "$LOG"</code></li>
-          <li>Final redirection: <code>&gt; errors.txt</code> applied to pipeline output</li>
+          <li><code>args</code> array (duplicated strings)</li>
+          <li><code>redirs</code> list via <code>make_redir()</code> / <code>add_redir()</code></li>
         </ul>
       </div>
 
       <div class="step">
-        <h3>Step 5 - Expander resolves variables</h3>
-        <p><code>"$LOG"</code> becomes <code>"error"</code> using current shell environment.</p>
-        <p>Important detail: because the variable is in double quotes, it expands but remains one argument.</p>
+        <h3>Step 8 - AST for our line</h3>
+        <pre><code>NODE_AND
+├── NODE_CMD      (export LOG=error)
+└── NODE_PIPE
+    ├── NODE_CMD  (cat app.log)
+    └── NODE_CMD  (grep "$LOG" with redir > errors.txt)</code></pre>
       </div>
 
       <div class="step">
-        <h3>Step 6 - Executor starts left side of AND</h3>
-        <p><code>export</code> is a builtin, so it runs in shell logic (not as external binary) and updates shell environment.</p>
-      </div>
-
-      <div class="step">
-        <h3>Step 7 - AND condition check</h3>
-        <p>If <code>export</code> exit code is <code>0</code>, right side is executed. Otherwise it is skipped.</p>
-      </div>
-
-      <div class="step">
-        <h3>Step 8 - Pipeline process preparation</h3>
-        <p>Executor creates a pipe and forks children as needed for <code>cat</code> and <code>grep</code>.</p>
-      </div>
-
-      <div class="step">
-        <h3>Step 9 - File descriptor wiring</h3>
+        <h3>Step 9 - Expander rewrites args and redirs</h3>
+        <p><code>expand_ast()</code> recursively walks AST and for each command executes:</p>
         <ul>
-          <li><code>cat</code> stdout is connected to pipe write end.</li>
-          <li><code>grep</code> stdin is connected to pipe read end.</li>
-          <li>Because of <code>&gt; errors.txt</code>, grep stdout is redirected to the file.</li>
+          <li><code>expand_args()</code> for command args</li>
+          <li><code>expand_redirs()</code> for redirect file targets (except heredoc delimiters)</li>
+        </ul>
+        <p>String-level behavior is done by <code>expand_str()</code>, <code>expand_one()</code>, <code>expand_var()</code>, and <code>join_free()</code>.</p>
+        <p><code>"$LOG"</code> expands to <code>"error"</code>; single quotes are not expanded.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 10 - Bonus wildcard pass (if built in bonus mode)</h3>
+        <p><code>expand_wildcards_cmd()</code> scans each argument with <code>*</code> and calls <code>expand_wildcard()</code>, <code>merge_args()</code>, and unmask helpers.</p>
+        <p><code>expand_wildcard_redir()</code> does the same for redirection targets; multiple matches become "ambiguous redirect".</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 11 - Executor dispatches by AST node type</h3>
+        <p><code>execute()</code> (bonus version) dispatches to:</p>
+        <ul>
+          <li><code>exec_and_or()</code> for <code>NODE_AND</code>/<code>NODE_OR</code></li>
+          <li><code>exec_pipe()</code> for <code>NODE_PIPE</code></li>
+          <li><code>exec_cmd()</code> for <code>NODE_CMD</code></li>
         </ul>
       </div>
 
       <div class="step">
-        <h3>Step 10 - External commands executed</h3>
-        <p>Children call exec-family logic to run real binaries found through PATH.</p>
+        <h3>Step 12 - exec_and_or() short-circuit behavior</h3>
+        <p><code>exec_and_or()</code> executes left branch first.</p>
+        <ul>
+          <li>For <code>&amp;&amp;</code>, if left fails (non-zero), right is skipped.</li>
+          <li>For <code>||</code>, if left succeeds (0), right is skipped.</li>
+        </ul>
+        <p>For our example, successful <code>export</code> makes the right pipeline execute.</p>
       </div>
 
       <div class="step">
-        <h3>Step 11 - Parent waits and collects status</h3>
-        <p>Parent shell waits for children, computes resulting status, stores it in shell state (<code>$?</code>).</p>
+        <h3>Step 13 - exec_cmd() path for builtin export</h3>
+        <p><code>exec_cmd()</code> checks builtin via <code>is_builtin()</code>, then uses <code>exec_builtin_redir()</code> so redirections (if any) are handled safely.</p>
+        <p><code>exec_builtin()</code> dispatches to <code>builtin_export()</code>.</p>
       </div>
 
       <div class="step">
-        <h3>Step 12 - Cleanup + next prompt</h3>
-        <p>Temporary resources are closed/freed. Shell returns to prompt for the next command line.</p>
+        <h3>Step 14 - builtin_export() internals</h3>
+        <p>Relevant functions inside <code>builtin_export.c</code>:</p>
+        <ul>
+          <li><code>builtin_export()</code>: loops over export arguments</li>
+          <li><code>export_one()</code>: splits "KEY=VALUE" or key-only path</li>
+          <li><code>is_valid_key()</code>: validates identifier format</li>
+          <li><code>export_with_value()</code>: writes into env list via <code>env_set()</code></li>
+          <li><code>print_export()</code>: prints declared vars when no args</li>
+        </ul>
+        <p>Here, <code>LOG=error</code> is inserted/updated in <code>shell-&gt;env</code>.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 15 - exec_pipe() creates process graph</h3>
+        <p><code>exec_pipe()</code> creates one OS pipe, forks left and right children:</p>
+        <ul>
+          <li><code>child_left()</code>: <code>dup2(pipefd[1], STDOUT_FILENO)</code>, executes left subtree</li>
+          <li><code>child_right()</code>: <code>dup2(pipefd[0], STDIN_FILENO)</code>, executes right subtree</li>
+          <li><code>wait_children()</code>: waits and returns right-side status</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h3>Step 16 - Left command in pipe: cat app.log</h3>
+        <p><code>exec_cmd()</code> sees non-builtin and forks. Child runs <code>exec_child()</code>:</p>
+        <ul>
+          <li><code>setup_signals_child()</code></li>
+          <li><code>apply_redirs()</code> (none for this side)</li>
+          <li><code>find_executable()</code> (PATH lookup)</li>
+          <li><code>execve()</code> through internal child-run logic</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h3>Step 17 - Right command in pipe: grep "$LOG" (runtime arg: "error") &gt; errors.txt</h3>
+        <p>Before command launch, <code>apply_redirs()</code> processes <code>TOKEN_REDIR_OUT</code> with <code>open(...O_TRUNC)</code> and <code>dup2(fd, STDOUT_FILENO)</code>.</p>
+        <p>So grep reads from pipe stdin and writes file output to <code>errors.txt</code>.</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 18 - Parent waits + status propagation</h3>
+        <p>Parent waits children, computes exit codes (<code>WIFEXITED</code>/<code>WIFSIGNALED</code>), stores final status in <code>shell-&gt;last_exit</code>.</p>
+        <p>Then run loop frees AST/tokens/line and returns to prompt.</p>
       </div>
     </section>
 
     <section>
-      <h2>4) Additional options/features (mentioning even if not used above)</h2>
-      <h3>Base features</h3>
+      <h2>5) Function-by-function reference by module</h2>
+      <h3>Main/runtime orchestration</h3>
+      <table>
+        <tr><th>Function</th><th>Role</th></tr>
+        <tr><td><code>main()</code></td><td>Initialize shell state/env and enter loop.</td></tr>
+        <tr><td><code>main_loop()</code></td><td>Prompt/readline/history loop.</td></tr>
+        <tr><td><code>run_line()</code></td><td>Per-line pipeline: lex, parse, expand, execute, cleanup.</td></tr>
+      </table>
+
+      <h3>Lexer functions used</h3>
+      <table>
+        <tr><th>Function</th><th>Role</th></tr>
+        <tr><td><code>lexer()</code></td><td>Main tokenizer loop building token list.</td></tr>
+        <tr><td><code>new_token()</code></td><td>Allocates one token node.</td></tr>
+        <tr><td><code>free_tokens()</code></td><td>Releases token linked list.</td></tr>
+        <tr><td><code>is_operator()</code></td><td>Operator start classifier (base/bonus variants).</td></tr>
+        <tr><td><code>handle_operator()</code></td><td>Builds operator tokens (<code>|</code>, redirects, bonus ops).</td></tr>
+        <tr><td><code>handle_word()</code></td><td>Builds <code>TOKEN_WORD</code>.</td></tr>
+        <tr><td><code>quote_len()</code></td><td>Skips quoted blocks while scanning words.</td></tr>
+      </table>
+
+      <h3>Parser functions used</h3>
+      <table>
+        <tr><th>Function</th><th>Role</th></tr>
+        <tr><td><code>parser()</code></td><td>Entry point (<code>parse_pipeline</code> base, <code>parse_and_or</code> bonus).</td></tr>
+        <tr><td><code>new_ast_node()</code></td><td>Allocates AST node.</td></tr>
+        <tr><td><code>new_cmd()</code></td><td>Allocates command payload.</td></tr>
+        <tr><td><code>parse_pipeline()</code></td><td>Builds recursive pipe nodes.</td></tr>
+        <tr><td><code>parse_command()</code></td><td>Collects args/redirections for one command.</td></tr>
+        <tr><td><code>parse_redir()</code> / <code>make_redir()</code></td><td>Builds redirection nodes.</td></tr>
+        <tr><td><code>parse_and_or()</code> (bonus)</td><td>Builds logical operator AST.</td></tr>
+        <tr><td><code>check_syntax()</code> (bonus)</td><td>Pre-parse syntax validation.</td></tr>
+        <tr><td><code>free_ast()</code>, <code>free_cmd()</code>, <code>free_redir()</code></td><td>Tree and payload cleanup.</td></tr>
+      </table>
+
+      <h3>Expander functions used</h3>
+      <table>
+        <tr><th>Function</th><th>Role</th></tr>
+        <tr><td><code>expand_ast()</code></td><td>Recursive AST expansion traversal.</td></tr>
+        <tr><td><code>expand_args()</code></td><td>Expands each command argument.</td></tr>
+        <tr><td><code>expand_redirs()</code></td><td>Expands redirect target names (except heredoc delimiter).</td></tr>
+        <tr><td><code>expand_str()</code></td><td>Main string expansion engine.</td></tr>
+        <tr><td><code>expand_var()</code></td><td>Handles <code>$VAR</code> and <code>$?</code>.</td></tr>
+        <tr><td><code>get_var_value()</code></td><td>Reads values from environment list.</td></tr>
+        <tr><td><code>join_free()</code></td><td>Concatenate fragments while freeing old pieces.</td></tr>
+        <tr><td><code>expand_wildcards_cmd()</code> (bonus)</td><td>Argument wildcard expansion.</td></tr>
+        <tr><td><code>expand_wildcard_redir()</code> (bonus)</td><td>Redirection wildcard handling + ambiguity check.</td></tr>
+        <tr><td><code>expand_wildcard()</code> / <code>match_wildcard()</code> (bonus)</td><td>Filesystem pattern expansion and matcher.</td></tr>
+      </table>
+
+      <h3>Executor functions used</h3>
+      <table>
+        <tr><th>Function</th><th>Role</th></tr>
+        <tr><td><code>execute()</code></td><td>Dispatch by AST node type.</td></tr>
+        <tr><td><code>exec_and_or()</code> (bonus)</td><td>Short-circuit boolean execution.</td></tr>
+        <tr><td><code>exec_pipe()</code></td><td>Pipe setup + two forks + wait.</td></tr>
+        <tr><td><code>exec_cmd()</code></td><td>Builtin/external/redir-only command handling.</td></tr>
+        <tr><td><code>open_heredocs()</code> / <code>open_heredoc()</code></td><td>Prepare heredoc input streams.</td></tr>
+        <tr><td><code>apply_redirs()</code></td><td>Apply all redirections with <code>dup2</code>.</td></tr>
+        <tr><td><code>is_builtin()</code> / <code>exec_builtin()</code></td><td>Builtin dispatch.</td></tr>
+        <tr><td><code>exec_builtin_redir()</code></td><td>Runs builtin with FD save/restore.</td></tr>
+        <tr><td><code>find_executable()</code></td><td>PATH lookup for external commands.</td></tr>
+        <tr><td><code>exec_child()</code></td><td>Child-side external launch path.</td></tr>
+      </table>
+
+      <h3>Builtins and env/signal helpers touched in execution</h3>
+      <table>
+        <tr><th>Function</th><th>Role</th></tr>
+        <tr><td><code>builtin_export()</code></td><td>Add/update environment variables.</td></tr>
+        <tr><td><code>builtin_cd()</code></td><td>Directory change + PWD/OLDPWD updates.</td></tr>
+        <tr><td><code>builtin_echo()</code></td><td>Echo text with optional <code>-n</code>.</td></tr>
+        <tr><td><code>builtin_exit()</code></td><td>Shell termination with status handling.</td></tr>
+        <tr><td><code>env_get()</code>, <code>env_set()</code>, <code>env_unset()</code>, <code>env_to_array()</code></td><td>Environment list operations and export to execve format.</td></tr>
+        <tr><td><code>setup_signals()</code>, <code>setup_signals_child()</code>, <code>setup_signals_heredoc()</code></td><td>Different signal profiles for interactive shell, child, and heredoc modes.</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>6) Additional options/features (including unused ones)</h2>
+      <h3>Base features (non-bonus)</h3>
       <ul>
         <li><code>|</code> pipe: send stdout of one command to stdin of next.</li>
         <li><code>&lt;</code> input redirection from file.</li>
@@ -214,14 +394,15 @@
     </section>
 
     <section>
-      <h2>5) Mini mental model for study</h2>
-      <pre><code>1. Read text
-2. Split text into meaningful pieces (tokens)
-3. Build execution plan from those pieces
-4. Resolve dynamic values (variables, status)
-5. Run plan with process + FD rules
-6. Save status and loop</code></pre>
-      <p>If you can explain these six points clearly, you already understand the heart of this Minishell project.</p>
+      <h2>7) Compact memory checklist</h2>
+      <pre><code>1) readline gets raw line
+2) lexer builds token linked list
+3) parser converts tokens into AST
+4) expander rewrites args/redirs
+5) executor walks AST and runs nodes
+6) parent stores exit status in shell->last_exit
+7) loop returns to prompt</code></pre>
+      <p>If you can narrate those seven points and name the core functions for each, you understand the project architecture.</p>
     </section>
   </main>
 </body>
