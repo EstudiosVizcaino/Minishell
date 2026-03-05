@@ -82,14 +82,17 @@ static int	apply_append(t_redir *redir)
 
 /**
  * @brief Reads heredoc input until the delimiter and stores it in a pipe.
+ *        Variables in the body are expanded unless the delimiter was quoted.
  *
  * @param redir The redirection structure containing the heredoc delimiter.
+ * @param shell The shell context used for variable expansion.
  * @return 0 on success, 1 on failure.
  */
-int	open_heredoc(t_redir *redir)
+int	open_heredoc(t_redir *redir, t_shell *shell)
 {
 	int		pipefd[2];
 	char	*line;
+	char	*expanded;
 
 	if (pipe(pipefd) == -1)
 		return (1);
@@ -102,7 +105,14 @@ int	open_heredoc(t_redir *redir)
 			free(line);
 			break ;
 		}
-		write(pipefd[1], line, ft_strlen(line));
+		if (!redir->quoted)
+		{
+			expanded = expand_str(line, shell);
+			write(pipefd[1], expanded, ft_strlen(expanded));
+			free(expanded);
+		}
+		else
+			write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
 		free(line);
 	}

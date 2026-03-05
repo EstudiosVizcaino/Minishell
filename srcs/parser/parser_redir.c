@@ -89,6 +89,7 @@ t_redir	*make_redir(t_token **tokens)
 	redir->type = (*tokens)->type;
 	redir->file = NULL;
 	redir->heredoc_fd = -1;
+	redir->quoted = 0;
 	redir->next = NULL;
 	*tokens = (*tokens)->next;
 	if (*tokens && (*tokens)->type == TOKEN_WORD)

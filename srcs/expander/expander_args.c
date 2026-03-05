@@ -13,6 +13,27 @@
 #include "minishell.h"
 
 /**
+ * @brief Checks if a heredoc delimiter string contains any quote characters
+ *        or backslashes, which disable variable expansion in the heredoc body.
+ *
+ * @param delim The raw delimiter token value.
+ * @return 1 if the delimiter is quoted (expansion disabled), 0 otherwise.
+ */
+static int	is_quoted_delimiter(char *delim)
+{
+	int	i;
+
+	i = 0;
+	while (delim[i])
+	{
+		if (delim[i] == '\'' || delim[i] == '"' || delim[i] == '\\')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+/**
  * @brief Expands variables in redirection file targets.
  *
  * @param redir The linked list of redirections to expand.
@@ -24,7 +45,14 @@ void	expand_redirs(t_redir *redir, t_shell *shell)
 
 	while (redir)
 	{
-		if (redir->type != TOKEN_HEREDOC && redir->file)
+		if (redir->type == TOKEN_HEREDOC && redir->file)
+		{
+			redir->quoted = is_quoted_delimiter(redir->file);
+			expanded = expand_str(redir->file, shell);
+			free(redir->file);
+			redir->file = expanded;
+		}
+		else if (redir->file)
 		{
 			expanded = expand_str(redir->file, shell);
 			free(redir->file);
