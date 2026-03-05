@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/10 13:04:57 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/22 10:55:21 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/10 13:04:57 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/22 10:55:21 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static int	cd_home(t_shell *shell)
 
 /**
  * @brief Updates PWD and OLDPWD environment variables after a directory change.
+ *        OLDPWD is only updated if it already exists in the environment,
+ *        so that an explicit 'unset OLDPWD' is respected.
  *
  * @param shell Pointer to the shell structure.
  */
@@ -47,7 +49,7 @@ static void	update_pwd(t_shell *shell)
 	char	*old;
 
 	old = env_get(shell->env, "PWD");
-	if (old)
+	if (old && env_find(shell->env, "OLDPWD"))
 		env_set(&shell->env, "OLDPWD", old);
 	if (getcwd(buf, sizeof(buf)))
 		env_set(&shell->env, "PWD", buf);

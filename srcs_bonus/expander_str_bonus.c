@@ -13,7 +13,8 @@
 #include "minishell.h"
 
 /**
- * @brief Replaces asterisk characters with a mask byte to prevent wildcard expansion.
+ * @brief Replaces asterisk characters with a mask byte to prevent
+ *        wildcard expansion.
  *
  * @param s The string in which to mask wildcards.
  */

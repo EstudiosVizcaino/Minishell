@@ -25,12 +25,16 @@ static int	wait_children(pid_t pid1, pid_t pid2)
 	int	exit_code;
 
 	exit_code = 0;
+	setup_signals_wait();
 	waitpid(pid1, &status, 0);
 	waitpid(pid2, &status, 0);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		exit_code = 128 + WTERMSIG(status);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
+	g_signal = 0;
 	return (exit_code);
 }
 

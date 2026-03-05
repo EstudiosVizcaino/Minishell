@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_match_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/22 17:32:58 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/27 18:10:03 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/22 17:32:58 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/27 18:10:03 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

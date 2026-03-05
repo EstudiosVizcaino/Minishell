@@ -3,37 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/12 16:12:06 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/23 11:42:27 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/12 16:12:06 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/23 11:42:27 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Prints all environment variables in export format.
- *
- * @param env Pointer to the environment variable list.
- */
-static void	print_export(t_env *env)
-{
-	while (env)
-	{
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putstr_fd(env->key, STDOUT_FILENO);
-		if (env->value)
-		{
-			ft_putchar_fd('=', STDOUT_FILENO);
-			ft_putchar_fd('"', STDOUT_FILENO);
-			ft_putstr_fd(env->value, STDOUT_FILENO);
-			ft_putchar_fd('"', STDOUT_FILENO);
-		}
-		ft_putchar_fd('\n', STDOUT_FILENO);
-		env = env->next;
-	}
-}
 
 /**
  * @brief Validates an environment variable key name.

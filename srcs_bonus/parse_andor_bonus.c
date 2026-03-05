@@ -13,23 +13,32 @@
 #include "minishell.h"
 
 /**
- * @brief Parses a parenthesized subexpression or falls through to pipeline parsing.
+ * @brief Parses a parenthesized subexpression as a subshell node, or
+ *        falls through to pipeline parsing.
  *
  * @param tokens Pointer to the current token list position.
- * @return The parsed AST node.
+ * @return The parsed AST node (NODE_SUBSHELL or pipeline node).
  */
 static t_ast	*parse_parens(t_token **tokens)
 {
+	t_ast	*inner;
 	t_ast	*node;
 
 	if (!*tokens || (*tokens)->type != TOKEN_LPAREN)
 		return (parse_pipeline(tokens));
 	*tokens = (*tokens)->next;
-	node = parse_and_or(tokens);
-	if (!node)
+	inner = parse_and_or(tokens);
+	if (!inner)
 		return (NULL);
 	if (*tokens && (*tokens)->type == TOKEN_RPAREN)
 		*tokens = (*tokens)->next;
+	node = new_ast_node(NODE_SUBSHELL);
+	if (!node)
+	{
+		free_ast(inner);
+		return (NULL);
+	}
+	node->left = inner;
 	return (node);
 }
 

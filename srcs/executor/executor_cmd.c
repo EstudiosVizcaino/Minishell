@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/04 18:48:46 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/17 21:12:45 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/04 18:48:46 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/17 21:12:45 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,10 @@
  */
 void	open_heredocs(t_redir *redir, t_shell *shell)
 {
-	(void)shell;
 	while (redir)
 	{
 		if (redir->type == TOKEN_HEREDOC)
-			open_heredoc(redir);
+			open_heredoc(redir, shell);
 		redir = redir->next;
 	}
 }
@@ -40,6 +39,7 @@ static int	wait_for_child(pid_t pid)
 	int	status;
 	int	exit_code;
 
+	setup_signals_wait();
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
@@ -47,7 +47,7 @@ static int	wait_for_child(pid_t pid)
 		exit_code = 128 + WTERMSIG(status);
 	else
 		exit_code = 1;
-	if (g_signal == SIGINT)
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		write(STDOUT_FILENO, "\n", 1);
 	g_signal = 0;
 	return (exit_code);

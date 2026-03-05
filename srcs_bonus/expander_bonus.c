@@ -13,7 +13,8 @@
 #include "minishell.h"
 
 /**
- * @brief Expands variables and wildcards in a command's arguments and redirections.
+ * @brief Expands variables and wildcards in a command's arguments and
+ *        redirections.
  *
  * @param cmd The command structure to expand.
  * @param shell The shell state structure.

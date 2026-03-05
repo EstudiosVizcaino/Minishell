@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/04 13:00:04 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/15 21:40:03 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/04 13:00:04 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/15 21:40:03 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,15 @@ static void	exec_child_run(char *path, t_cmd *cmd, t_shell *shell)
 	{
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		free(path);
 		exit(126);
 	}
 	envp = env_to_array(shell->env);
 	execve(path, cmd->args, envp);
 	err = errno;
+	free_array(envp);
 	perror(path);
+	free(path);
 	if (err == ENOENT)
 		exit(127);
 	exit(126);

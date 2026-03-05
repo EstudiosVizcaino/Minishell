@@ -55,6 +55,7 @@ typedef struct s_redir
 	t_token_type		type;
 	char				*file;
 	int					heredoc_fd;
+	int					quoted;
 	struct s_redir		*next;
 }	t_redir;
 
@@ -69,7 +70,8 @@ typedef enum e_node_type
 	NODE_CMD,
 	NODE_PIPE,
 	NODE_AND,
-	NODE_OR
+	NODE_OR,
+	NODE_SUBSHELL
 }	t_node_type;
 
 typedef struct s_ast
@@ -93,6 +95,7 @@ typedef struct s_shell
 	int					last_exit;
 	char				*input;
 	int					in_heredoc;
+	t_ast				*ast;
 }	t_shell;
 
 extern int	g_signal;
@@ -126,6 +129,7 @@ char		*get_var_value(char *name, t_shell *shell);
 char		*join_free(char *s1, char *s2);
 void		expand_args(t_cmd *cmd, t_shell *shell);
 void		expand_redirs(t_redir *redir, t_shell *shell);
+char		**word_split(char *s);
 
 /* Executor */
 int			execute(t_ast *ast, t_shell *shell);
@@ -135,7 +139,7 @@ int			exec_builtin(t_cmd *cmd, t_shell *shell);
 int			is_builtin(char *name);
 char		*find_executable(char *name, t_env *env);
 int			apply_redirs(t_redir *redirs);
-int			open_heredoc(t_redir *redir);
+int			open_heredoc(t_redir *redir, t_shell *shell);
 void		open_heredocs(t_redir *redir, t_shell *shell);
 void		exec_child(t_cmd *cmd, t_shell *shell);
 void		exec_builtin_redir(t_cmd *cmd, t_shell *shell, int *ret);
@@ -145,6 +149,7 @@ int			builtin_echo(t_cmd *cmd);
 int			builtin_cd(t_cmd *cmd, t_shell *shell);
 int			builtin_pwd(void);
 int			builtin_export(t_cmd *cmd, t_shell *shell);
+void		print_export(t_env *env);
 int			builtin_unset(t_cmd *cmd, t_shell *shell);
 int			builtin_env(t_shell *shell);
 int			builtin_exit(t_cmd *cmd, t_shell *shell);
@@ -164,6 +169,7 @@ t_env		*env_find(t_env *env, char *key);
 void		setup_signals(void);
 void		setup_signals_child(void);
 void		setup_signals_heredoc(void);
+void		setup_signals_wait(void);
 void		sig_handler(int sig);
 void		sig_heredoc(int sig);
 

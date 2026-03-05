@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/03 18:55:38 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/18 16:13:59 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/03 18:55:38 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/18 16:13:59 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

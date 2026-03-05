@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/12 19:36:30 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/24 13:50:30 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/12 19:36:30 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/24 13:50:30 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,11 @@ static int	all_digits(char *s)
  */
 static void	do_exit(t_shell *shell, int code)
 {
+	if (shell->ast)
+		free_ast(shell->ast);
+	if (shell->input)
+		free(shell->input);
 	env_free(shell->env);
-	shell->env = NULL;
 	rl_clear_history();
 	exit(code);
 }
@@ -64,15 +67,15 @@ int	builtin_exit(t_cmd *cmd, t_shell *shell)
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (!cmd->args[1])
 		do_exit(shell, shell->last_exit);
-	if (cmd->args[2])
-	{
-		ft_putstr_fd("exit: too many arguments\n", STDERR_FILENO);
-		return (1);
-	}
 	if (!all_digits(cmd->args[1]))
 	{
 		ft_putstr_fd("exit: numeric argument required\n", STDERR_FILENO);
 		do_exit(shell, 2);
+	}
+	if (cmd->args[2])
+	{
+		ft_putstr_fd("exit: too many arguments\n", STDERR_FILENO);
+		return (1);
 	}
 	code = ft_atoi(cmd->args[1]) & 0xFF;
 	do_exit(shell, code);

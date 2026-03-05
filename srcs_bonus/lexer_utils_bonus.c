@@ -13,7 +13,8 @@
 #include "minishell.h"
 
 /**
- * @brief Checks if a character is a shell operator (bonus version with &&, ||, parentheses).
+ * @brief Checks if a character is a shell operator (bonus version with
+ *        &&, ||, parentheses).
  *
  * @param c The character to check.
  * @return 1 if the character is an operator, 0 otherwise.

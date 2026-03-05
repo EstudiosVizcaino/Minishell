@@ -15,6 +15,26 @@
 int	g_signal = 0;
 
 /**
+ * @brief Checks if a string contains only whitespace characters.
+ *
+ * @param line The string to check.
+ * @return 1 if the string is blank (all whitespace), 0 otherwise.
+ */
+static int	is_blank_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!ft_isspace(line[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+/**
  * @brief Tokenizes, parses, expands, and executes a single input line.
  *
  * @param line The raw input line to process.
@@ -23,18 +43,18 @@ int	g_signal = 0;
 static void	run_line(char *line, t_shell *shell)
 {
 	t_token	*tokens;
-	t_ast	*ast;
 
 	tokens = lexer(line);
 	if (!tokens)
 		return ;
-	ast = parser(tokens);
+	shell->ast = parser(tokens);
 	free_tokens(tokens);
-	if (!ast)
+	if (!shell->ast)
 		return ;
-	expand_ast(ast, shell);
-	shell->last_exit = execute(ast, shell);
-	free_ast(ast);
+	expand_ast(shell->ast, shell);
+	shell->last_exit = execute(shell->ast, shell);
+	free_ast(shell->ast);
+	shell->ast = NULL;
 }
 
 /**
@@ -44,21 +64,25 @@ static void	run_line(char *line, t_shell *shell)
  */
 static void	main_loop(t_shell *shell)
 {
-	char	*line;
-
 	while (1)
 	{
 		setup_signals();
-		line = readline("minishell> ");
-		if (!line)
+		shell->input = readline("minishell> ");
+		if (!shell->input)
 		{
 			ft_putstr_fd("exit\n", STDOUT_FILENO);
 			break ;
 		}
-		if (*line)
-			add_history(line);
-		run_line(line, shell);
-		free(line);
+		if (is_blank_line(shell->input))
+		{
+			free(shell->input);
+			shell->input = NULL;
+			continue ;
+		}
+		add_history(shell->input);
+		run_line(shell->input, shell);
+		free(shell->input);
+		shell->input = NULL;
 	}
 }
 
@@ -80,6 +104,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.last_exit = 0;
 	shell.input = NULL;
 	shell.in_heredoc = 0;
+	shell.ast = NULL;
 	main_loop(&shell);
 	env_free(shell.env);
 	rl_clear_history();
