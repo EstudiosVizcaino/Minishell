@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_run.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/06 15:01:37 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/20 18:14:37 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/06 15:01:37 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/20 18:14:37 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

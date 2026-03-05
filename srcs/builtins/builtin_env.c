@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 13:34:08 by adherrer          #+#    #+#             */
-/*   Updated: 2026/03/01 22:15:07 by gisidro-         ###   ########.fr       */
+/*   Updated: 2026/03/01 22:15:07 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

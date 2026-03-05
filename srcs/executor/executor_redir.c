@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/05 18:28:07 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/18 13:14:04 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/05 18:28:07 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/18 13:14:04 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

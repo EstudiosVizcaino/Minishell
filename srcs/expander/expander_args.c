@@ -6,61 +6,11 @@
 /*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 13:56:36 by gisidro-          #+#    #+#             */
-/*   Updated: 2026/02/11 11:05:46 by gisidro-         ###   ########.fr       */
+/*   Updated: 2026/03/05 19:00:00 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Checks if a heredoc delimiter string contains any quote characters
- *        or backslashes, which disable variable expansion in the heredoc body.
- *
- * @param delim The raw delimiter token value.
- * @return 1 if the delimiter is quoted (expansion disabled), 0 otherwise.
- */
-static int	is_quoted_delimiter(char *delim)
-{
-	int	i;
-
-	i = 0;
-	while (delim[i])
-	{
-		if (delim[i] == '\'' || delim[i] == '"' || delim[i] == '\\')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-/**
- * @brief Expands variables in redirection file targets.
- *
- * @param redir The linked list of redirections to expand.
- * @param shell The shell context containing environment variables.
- */
-void	expand_redirs(t_redir *redir, t_shell *shell)
-{
-	char	*expanded;
-
-	while (redir)
-	{
-		if (redir->type == TOKEN_HEREDOC && redir->file)
-		{
-			redir->quoted = is_quoted_delimiter(redir->file);
-			expanded = expand_str(redir->file, shell);
-			free(redir->file);
-			redir->file = expanded;
-		}
-		else if (redir->file)
-		{
-			expanded = expand_str(redir->file, shell);
-			free(redir->file);
-			redir->file = expanded;
-		}
-		redir = redir->next;
-	}
-}
 
 /**
  * @brief Checks if a string consists entirely of variable references.
@@ -96,35 +46,140 @@ static int	is_only_vars(char *str)
 }
 
 /**
- * @brief Expands variables in all command arguments, removing empty expansions.
+ * @brief Expands one arg, inserting words into dst[] via word splitting
+ *        when the original token was a bare variable reference.
  *
- * @param cmd The command whose arguments to expand.
+ * @param dst  The destination argument array.
+ * @param j    Pointer to the current write index in dst.
+ * @param orig The original (unexpanded) argument string.
+ * @param shell The shell context for variable expansion.
+ */
+static void	fill_one_arg(char **dst, int *j, char *orig, t_shell *shell)
+{
+	char	*exp;
+	char	**words;
+	int		k;
+
+	exp = expand_str(orig, shell);
+	if (is_only_vars(orig) && *exp)
+	{
+		words = word_split(exp);
+		free(exp);
+		if (!words)
+			return ;
+		k = 0;
+		while (words[k])
+			dst[(*j)++] = words[k++];
+		free(words);
+		return ;
+	}
+	if (*exp || !is_only_vars(orig))
+		dst[(*j)++] = exp;
+	else
+		free(exp);
+}
+
+/**
+ * @brief Counts total arguments after expansion and word splitting.
+ *
+ * @param args  The original NULL-terminated argument array.
+ * @param shell The shell context for variable expansion.
+ * @return The number of arguments after expansion and splitting.
+ */
+static int	count_new_args(char **args, t_shell *shell)
+{
+	char	*exp;
+	char	**words;
+	int		i;
+	int		total;
+
+	i = 0;
+	total = 0;
+	while (args[i])
+	{
+		exp = expand_str(args[i], shell);
+		if (is_only_vars(args[i]) && *exp)
+		{
+			words = word_split(exp);
+			total += array_len(words);
+			free_array(words);
+		}
+		else if (*exp || !is_only_vars(args[i]))
+			total++;
+		free(exp);
+		i++;
+	}
+	return (total);
+}
+
+/**
+ * @brief Expands variables in all command arguments, applying word splitting
+ *        for unquoted bare variable references.
+ *
+ * @param cmd   The command whose arguments to expand.
  * @param shell The shell context containing environment variables.
  */
 void	expand_args(t_cmd *cmd, t_shell *shell)
 {
-	char	*expanded;
-	char	*orig;
+	char	**new;
+	int		n;
 	int		i;
 	int		j;
 
+	n = count_new_args(cmd->args, shell);
+	new = malloc((n + 1) * sizeof(char *));
+	if (!new)
+		return ;
 	i = 0;
 	j = 0;
 	while (cmd->args[i])
 	{
-		orig = cmd->args[i];
-		expanded = expand_str(orig, shell);
-		if (*expanded == '\0' && is_only_vars(orig))
-			free(expanded);
-		else
-			cmd->args[j++] = expanded;
-		free(orig);
+		fill_one_arg(new, &j, cmd->args[i], shell);
+		free(cmd->args[i]);
 		i++;
 	}
-	cmd->args[j] = NULL;
+	new[j] = NULL;
+	free(cmd->args);
+	cmd->args = new;
 	if (j == 0)
 	{
-		free(cmd->args);
+		free(new);
 		cmd->args = NULL;
+	}
+}
+
+/**
+ * @brief Expands variables in redirection file targets and marks heredoc
+ *        delimiters as quoted if they contain quote or backslash characters.
+ *
+ * @param redir The linked list of redirections to expand.
+ * @param shell The shell context containing environment variables.
+ */
+void	expand_redirs(t_redir *redir, t_shell *shell)
+{
+	char	*exp;
+	int		i;
+
+	while (redir)
+	{
+		i = 0;
+		redir->quoted = 0;
+		if (redir->type == TOKEN_HEREDOC && redir->file)
+		{
+			while (redir->file[i])
+			{
+				if (redir->file[i] == '\'' || redir->file[i] == '"'
+					|| redir->file[i] == '\\')
+					redir->quoted = 1;
+				i++;
+			}
+		}
+		if (redir->file)
+		{
+			exp = expand_str(redir->file, shell);
+			free(redir->file);
+			redir->file = exp;
+		}
+		redir = redir->next;
 	}
 }

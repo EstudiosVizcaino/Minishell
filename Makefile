@@ -34,6 +34,7 @@ SRCS =	srcs/main.c \
 	srcs/expander/expander_args.c \
 	srcs/expander/expander_utils.c \
 	srcs/expander/expander_str.c \
+	srcs/expander/expander_word_split.c \
 	srcs/executor/executor.c \
 	srcs/executor/executor_run.c \
 	srcs/executor/executor_pipe.c \

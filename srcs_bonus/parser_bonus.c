@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 12:24:00 by gisidro-          #+#    #+#             */
-/*   Updated: 2026/02/28 16:16:59 by gisidro-         ###   ########.fr       */
+/*   Created: 2026/02/19 12:24:00 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/28 16:16:59 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

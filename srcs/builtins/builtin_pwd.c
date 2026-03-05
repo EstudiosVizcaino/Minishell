@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/11 15:27:26 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/19 17:55:46 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/11 15:27:26 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/19 17:55:46 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

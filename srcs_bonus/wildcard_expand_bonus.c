@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_expand_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/22 10:47:20 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/28 10:03:37 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/22 10:47:20 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/28 10:03:37 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

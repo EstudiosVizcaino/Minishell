@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_wait.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/05 18:15:04 by gisidro-          #+#    #+#             */
-/*   Updated: 2026/03/05 18:15:04 by gisidro-         ###   ########.fr       */
+/*   Created: 2026/03/05 18:15:04 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/03/05 18:15:04 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

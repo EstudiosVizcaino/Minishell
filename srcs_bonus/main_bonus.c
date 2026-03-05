@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/17 13:34:28 by gisidro-          #+#    #+#             */
-/*   Updated: 2026/02/27 12:27:11 by gisidro-         ###   ########.fr       */
+/*   Created: 2026/02/17 13:34:28 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/27 12:27:11 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

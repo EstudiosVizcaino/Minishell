@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/12 16:12:06 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/23 11:42:27 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/12 16:12:06 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/23 11:42:27 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

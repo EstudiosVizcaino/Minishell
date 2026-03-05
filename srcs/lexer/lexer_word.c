@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/15 21:16:32 by gisidro-          #+#    #+#             */
-/*   Updated: 2026/01/29 12:32:58 by gisidro-         ###   ########.fr       */
+/*   Created: 2026/01/15 21:16:32 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/01/29 12:32:58 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

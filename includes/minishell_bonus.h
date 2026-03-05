@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/17 16:57:37 by gisidro-          #+#    #+#             */
-/*   Updated: 2026/02/27 16:23:14 by gisidro-         ###   ########.fr       */
+/*   Created: 2026/02/17 16:57:37 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/27 16:23:14 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

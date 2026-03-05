@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_pipe.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 14:25:42 by adherrer          #+#    #+#             */
-/*   Updated: 2026/03/01 22:15:32 by gisidro-         ###   ########.fr       */
+/*   Updated: 2026/03/01 22:15:32 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

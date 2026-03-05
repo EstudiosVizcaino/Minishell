@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/07 21:35:34 by gisidro-          #+#    #+#             */
-/*   Updated: 2026/02/25 14:47:37 by gisidro-         ###   ########.fr       */
+/*   Created: 2026/01/07 21:35:34 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/25 14:47:37 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ char		*get_var_value(char *name, t_shell *shell);
 char		*join_free(char *s1, char *s2);
 void		expand_args(t_cmd *cmd, t_shell *shell);
 void		expand_redirs(t_redir *redir, t_shell *shell);
+char		**word_split(char *s);
 
 /* Executor */
 int			execute(t_ast *ast, t_shell *shell);
