@@ -70,7 +70,8 @@ typedef enum e_node_type
 	NODE_CMD,
 	NODE_PIPE,
 	NODE_AND,
-	NODE_OR
+	NODE_OR,
+	NODE_SUBSHELL
 }	t_node_type;
 
 typedef struct s_ast

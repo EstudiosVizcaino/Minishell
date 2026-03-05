@@ -15,6 +15,26 @@
 int	g_signal = 0;
 
 /**
+ * @brief Checks if a string contains only whitespace characters.
+ *
+ * @param line The string to check.
+ * @return 1 if the string is blank (all whitespace), 0 otherwise.
+ */
+static int	is_blank_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!ft_isspace(line[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+/**
  * @brief Tokenizes, syntax-checks, parses, expands, and executes an
  *        input line.
  *
@@ -62,8 +82,12 @@ static void	main_loop(t_shell *shell)
 			ft_putstr_fd("exit\n", STDOUT_FILENO);
 			break ;
 		}
-		if (*line)
-			add_history(line);
+		if (is_blank_line(line))
+		{
+			free(line);
+			continue ;
+		}
+		add_history(line);
 		run_line(line, shell);
 		free(line);
 	}
@@ -87,6 +111,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.last_exit = 0;
 	shell.input = NULL;
 	shell.in_heredoc = 0;
+	shell.ast = NULL;
 	main_loop(&shell);
 	env_free(shell.env);
 	rl_clear_history();
