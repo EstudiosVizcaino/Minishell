@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/12 19:36:30 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/24 13:50:30 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/12 19:36:30 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/24 13:50:30 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

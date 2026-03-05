@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/07 21:35:34 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/25 14:47:37 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/01/07 21:35:34 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/25 14:47:37 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ int			builtin_echo(t_cmd *cmd);
 int			builtin_cd(t_cmd *cmd, t_shell *shell);
 int			builtin_pwd(void);
 int			builtin_export(t_cmd *cmd, t_shell *shell);
+void		print_export(t_env *env);
 int			builtin_unset(t_cmd *cmd, t_shell *shell);
 int			builtin_env(t_shell *shell);
 int			builtin_exit(t_cmd *cmd, t_shell *shell);

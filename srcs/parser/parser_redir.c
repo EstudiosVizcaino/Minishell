@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/23 19:20:31 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/08 10:07:59 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/01/23 19:20:31 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/08 10:07:59 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

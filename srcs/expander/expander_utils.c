@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/30 12:42:30 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/10 18:10:16 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/01/30 12:42:30 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/10 18:10:16 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   parse_andor_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 17:30:13 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/27 16:57:03 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/19 17:30:13 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/27 16:57:03 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Parses a parenthesized subexpression or falls through to pipeline parsing.
+ * @brief Parses a parenthesized subexpression or falls through to
+ *        pipeline parsing.
  *
  * @param tokens Pointer to the current token list position.
  * @return The parsed AST node.

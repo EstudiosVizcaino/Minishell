@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/14 16:10:29 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/01/28 10:46:56 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/01/14 16:10:29 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/01/28 10:46:56 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

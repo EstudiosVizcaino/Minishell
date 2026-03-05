@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/04 13:00:04 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/15 21:40:03 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/04 13:00:04 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/15 21:40:03 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

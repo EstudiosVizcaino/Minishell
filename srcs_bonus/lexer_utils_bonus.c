@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/17 10:05:59 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/25 13:10:26 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/17 10:05:59 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/25 13:10:26 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Checks if a character is a shell operator (bonus version with &&, ||, parentheses).
+ * @brief Checks if a character is a shell operator (bonus version with
+ *        &&, ||, parentheses).
  *
  * @param c The character to check.
  * @return 1 if the character is an operator, 0 otherwise.

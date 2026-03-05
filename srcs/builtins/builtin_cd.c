@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/10 13:04:57 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/22 10:55:21 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/10 13:04:57 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/22 10:55:21 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

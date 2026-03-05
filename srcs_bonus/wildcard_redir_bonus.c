@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_redir_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 18:05:54 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/28 12:04:38 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/23 18:05:54 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/28 12:04:38 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

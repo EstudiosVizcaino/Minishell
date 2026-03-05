@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/20 18:42:45 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/27 17:09:12 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/20 18:42:45 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/27 17:09:12 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ int	exec_and_or(t_ast *ast, t_shell *shell)
 }
 
 /**
- * @brief Dispatches AST node execution based on node type (bonus version with AND/OR support).
+ * @brief Dispatches AST node execution based on node type (bonus version
+ *        with AND/OR support).
  *
  * @param ast The AST node to execute.
  * @param shell The shell state structure.

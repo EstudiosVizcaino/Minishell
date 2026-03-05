@@ -3,31 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/05 18:28:07 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/18 13:14:04 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/05 18:28:07 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/18 13:14:04 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Opens a file descriptor for a redirection based on its type.
- *
- * @param redir The redirection structure containing file and type info.
- * @return The opened file descriptor, or -1 on failure.
- */
-static int	open_redir_fd(t_redir *redir)
-{
-	if (!redir->file)
-		return (-1);
-	if (redir->type == TOKEN_REDIR_IN)
-		return (open(redir->file, O_RDONLY));
-	if (redir->type == TOKEN_REDIR_OUT)
-		return (open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644));
-	return (-1);
-}
 
 /**
  * @brief Applies a single input or output redirection.
@@ -42,7 +25,10 @@ static int	apply_one_redir(t_redir *redir)
 
 	if (!redir->file)
 		return (1);
-	fd = open_redir_fd(redir);
+	if (redir->type == TOKEN_REDIR_IN)
+		fd = open(redir->file, O_RDONLY);
+	else
+		fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
 		perror(redir->file);
@@ -55,6 +41,29 @@ static int	apply_one_redir(t_redir *redir)
 	dup2(fd, target);
 	close(fd);
 	return (0);
+}
+
+/**
+ * @brief Writes one heredoc line to the pipe, expanding vars if unquoted.
+ *
+ * @param fd The write end of the heredoc pipe.
+ * @param line The input line to write.
+ * @param shell The shell context for variable expansion.
+ * @param quoted Whether the heredoc delimiter was quoted.
+ */
+static void	write_heredoc_line(int fd, char *line, t_shell *shell, int quoted)
+{
+	char	*expanded;
+
+	if (!quoted)
+	{
+		expanded = expand_str(line, shell);
+		write(fd, expanded, ft_strlen(expanded));
+		free(expanded);
+	}
+	else
+		write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
 }
 
 /**
@@ -92,7 +101,6 @@ int	open_heredoc(t_redir *redir, t_shell *shell)
 {
 	int		pipefd[2];
 	char	*line;
-	char	*expanded;
 
 	if (pipe(pipefd) == -1)
 		return (1);
@@ -105,15 +113,7 @@ int	open_heredoc(t_redir *redir, t_shell *shell)
 			free(line);
 			break ;
 		}
-		if (!redir->quoted)
-		{
-			expanded = expand_str(line, shell);
-			write(pipefd[1], expanded, ft_strlen(expanded));
-			free(expanded);
-		}
-		else
-			write(pipefd[1], line, ft_strlen(line));
-		write(pipefd[1], "\n", 1);
+		write_heredoc_line(pipefd[1], line, shell, redir->quoted);
 		free(line);
 	}
 	setup_signals();

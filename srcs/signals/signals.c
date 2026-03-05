@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/07 16:46:21 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/21 11:15:12 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/07 16:46:21 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/21 11:15:12 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,6 @@ void	setup_signals_child(void)
 }
 
 /**
- * @brief Handles SIGINT while the shell waits for a child process.
- *        Only records the signal; does not touch readline state.
- *
- * @param sig The signal number received.
- */
-static void	sig_handler_wait(int sig)
-{
-	if (sig == SIGINT)
-		g_signal = sig;
-}
-
-/**
  * @brief Sets up signal handlers for heredoc input mode.
  */
 void	setup_signals_heredoc(void)
@@ -90,23 +78,6 @@ void	setup_signals_heredoc(void)
 	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = sig_heredoc;
 	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-/**
- * @brief Sets up signal handlers while waiting for a foreground child.
- *        SIGINT is recorded but readline display functions are not called,
- *        preventing spurious prompt redraws in the parent process.
- */
-void	setup_signals_wait(void)
-{
-	struct sigaction	sa;
-
-	ft_memset(&sa, 0, sizeof(sa));
-	sa.sa_handler = sig_handler_wait;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
 }

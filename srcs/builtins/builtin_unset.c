@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/13 10:43:41 by adherrer          #+#    #+#             */
-/*   Updated: 2026/02/22 20:06:03 by adherrer         ###   ########.fr       */
+/*   Created: 2026/02/13 10:43:41 by cvizcain          #+#    #+#             */
+/*   Updated: 2026/02/22 20:06:03 by cvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

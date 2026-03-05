@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/29 17:52:04 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/13 18:49:08 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/01/29 17:52:04 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/13 18:49:08 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

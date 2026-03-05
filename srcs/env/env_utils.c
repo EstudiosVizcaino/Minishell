@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/09 16:38:04 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/01/30 16:24:38 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/01/09 16:38:04 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/01/30 16:24:38 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

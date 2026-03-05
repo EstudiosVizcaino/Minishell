@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/18 14:29:15 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/26 11:28:51 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/18 14:29:15 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/26 11:28:51 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Expands variables and wildcards in a command's arguments and redirections.
+ * @brief Expands variables and wildcards in a command's arguments and
+ *        redirections.
  *
  * @param cmd The command structure to expand.
  * @param shell The shell state structure.

@@ -20,6 +20,7 @@ endif
 
 SRCS =	srcs/main.c \
 	srcs/signals/signals.c \
+	srcs/signals/signals_wait.c \
 	srcs/env/env.c \
 	srcs/env/env_utils.c \
 	srcs/lexer/lexer.c \
@@ -43,6 +44,7 @@ SRCS =	srcs/main.c \
 	srcs/builtins/builtin_cd.c \
 	srcs/builtins/builtin_pwd.c \
 	srcs/builtins/builtin_export.c \
+	srcs/builtins/builtin_export_print.c \
 	srcs/builtins/builtin_unset.c \
 	srcs/builtins/builtin_env.c \
 	srcs/builtins/builtin_exit.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cvizcain <cvizcain@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: gisidro- <gisidro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/17 13:34:28 by cvizcain          #+#    #+#             */
-/*   Updated: 2026/02/27 12:27:11 by cvizcain         ###   ########.fr       */
+/*   Created: 2026/02/17 13:34:28 by gisidro-          #+#    #+#             */
+/*   Updated: 2026/02/27 12:27:11 by gisidro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 int	g_signal = 0;
 
 /**
- * @brief Tokenizes, syntax-checks, parses, expands, and executes a single input line.
+ * @brief Tokenizes, syntax-checks, parses, expands, and executes an
+ *        input line.
  *
  * @param line The input line to process.
  * @param shell The shell state structure.
