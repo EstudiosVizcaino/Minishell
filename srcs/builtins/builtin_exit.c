@@ -44,8 +44,11 @@ static int	all_digits(char *s)
  */
 static void	do_exit(t_shell *shell, int code)
 {
+	if (shell->ast)
+		free_ast(shell->ast);
+	if (shell->input)
+		free(shell->input);
 	env_free(shell->env);
-	shell->env = NULL;
 	rl_clear_history();
 	exit(code);
 }

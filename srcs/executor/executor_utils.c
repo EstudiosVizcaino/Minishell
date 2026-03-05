@@ -83,12 +83,15 @@ static void	exec_child_run(char *path, t_cmd *cmd, t_shell *shell)
 	{
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		free(path);
 		exit(126);
 	}
 	envp = env_to_array(shell->env);
 	execve(path, cmd->args, envp);
 	err = errno;
+	free_array(envp);
 	perror(path);
+	free(path);
 	if (err == ENOENT)
 		exit(127);
 	exit(126);

@@ -93,6 +93,7 @@ typedef struct s_shell
 	int					last_exit;
 	char				*input;
 	int					in_heredoc;
+	t_ast				*ast;
 }	t_shell;
 
 extern int	g_signal;
