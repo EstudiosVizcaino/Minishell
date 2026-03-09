@@ -13,11 +13,13 @@
 #include "minishell.h"
 
 /**
- * @brief Implements the unset builtin command.
+ * @brief The unset builtin.
  *
- * @param cmd Pointer to the command structure.
- * @param shell Pointer to the shell structure.
- * @return 0 on success.
+ * Removes each given variable from the env list.
+ *
+ * @param cmd   The command struct.
+ * @param shell The shell context.
+ * @return Always 0.
  */
 int	builtin_unset(t_cmd *cmd, t_shell *shell)
 {

@@ -13,10 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Opens a file descriptor for a redirection based on its type.
+ * @brief Opens the right fd for a redir.
  *
- * @param redir The redirection structure containing file and type info.
- * @return The opened file descriptor, or -1 on failure.
+ * Handles input (<) and output (>) redirections.
+ *
+ * @param redir The redir node with file and type.
+ * @return Opened fd, or -1 on error.
  */
 static int	open_redir_fd(t_redir *redir)
 {
@@ -30,9 +32,12 @@ static int	open_redir_fd(t_redir *redir)
 }
 
 /**
- * @brief Applies a single input or output redirection.
+ * @brief Applies a single input or output redir.
  *
- * @param redir The redirection structure to apply.
+ * Opens the file, dups the fd onto stdin or
+ * stdout, then closes the original fd.
+ *
+ * @param redir The redir to apply.
  * @return 0 on success, 1 on failure.
  */
 static int	apply_one_redir(t_redir *redir)
@@ -58,9 +63,12 @@ static int	apply_one_redir(t_redir *redir)
 }
 
 /**
- * @brief Applies an append redirection.
+ * @brief Applies an append (>>) redirection.
  *
- * @param redir The redirection structure to apply.
+ * Opens the file with O_APPEND and dups onto
+ * stdout.
+ *
+ * @param redir The redir to apply.
  * @return 0 on success, 1 on failure.
  */
 static int	apply_append(t_redir *redir)
@@ -81,9 +89,12 @@ static int	apply_append(t_redir *redir)
 }
 
 /**
- * @brief Reads heredoc input until the delimiter and stores it in a pipe.
+ * @brief Reads heredoc input until the delimiter.
  *
- * @param redir The redirection structure containing the heredoc delimiter.
+ * Uses readline in a loop, writing each line into
+ * a pipe. Stores the read-end fd in redir.
+ *
+ * @param redir The heredoc redir with the delimiter.
  * @return 0 on success, 1 on failure.
  */
 int	open_heredoc(t_redir *redir)
@@ -113,9 +124,12 @@ int	open_heredoc(t_redir *redir)
 }
 
 /**
- * @brief Applies all redirections in a redirection list.
+ * @brief Applies all redirs in a list.
  *
- * @param redirs The head of the redirection list.
+ * Goes through each redir node and applies it
+ * (heredoc, append, or normal in/out).
+ *
+ * @param redirs Head of the redir list.
  * @return 0 on success, non-zero on failure.
  */
 int	apply_redirs(t_redir *redirs)

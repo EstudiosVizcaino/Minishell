@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Allocates and initializes a new token node.
+ * @brief Creates a new token node.
  *
- * @param type The type of the token.
- * @param value The string value of the token.
- * @return A pointer to the newly created token, or NULL on failure.
+ * Mallocs a t_token, sets its type and dups the
+ * value string. Returns NULL if malloc fails.
+ *
+ * @param type  Token type (WORD, PIPE, etc.).
+ * @param value The string value to store.
+ * @return New token or NULL on failure.
  */
 t_token	*new_token(t_token_type type, char *value)
 {
@@ -36,9 +39,11 @@ t_token	*new_token(t_token_type type, char *value)
 }
 
 /**
- * @brief Frees an entire linked list of tokens.
+ * @brief Frees a whole token linked list.
  *
- * @param tokens The head of the token linked list to free.
+ * Walks through each node, frees value and node.
+ *
+ * @param tokens Head of the list to free.
  */
 void	free_tokens(t_token *tokens)
 {
@@ -54,12 +59,15 @@ void	free_tokens(t_token *tokens)
 }
 
 /**
- * @brief Appends a token to the end of a token linked list.
+ * @brief Adds a token at the end of the list.
  *
- * @param head A pointer to the head pointer of the token list.
- * @param tail A pointer to the tail pointer of the token list.
- * @param tok The token to append.
- * @return The appended token, or NULL if tok is NULL.
+ * Updates head if the list was empty, otherwise
+ * links it after the current tail.
+ *
+ * @param head Pointer to the head pointer.
+ * @param tail Pointer to the tail pointer.
+ * @param tok  The token to add.
+ * @return The added token, or NULL if tok is NULL.
  */
 static t_token	*append_token(t_token **head, t_token **tail, t_token *tok)
 {
@@ -74,10 +82,13 @@ static t_token	*append_token(t_token **head, t_token **tail, t_token *tok)
 }
 
 /**
- * @brief Tokenizes an input string into a linked list of tokens.
+ * @brief Main lexer function, turns input into tokens.
  *
- * @param input The input string to tokenize.
- * @return A pointer to the head of the token linked list, or NULL on failure.
+ * Skips whitespace, then checks if the next char is
+ * an operator or a word and creates the right token.
+ *
+ * @param input The raw input string.
+ * @return Head of the token list, or NULL on error.
  */
 t_token	*lexer(char *input)
 {

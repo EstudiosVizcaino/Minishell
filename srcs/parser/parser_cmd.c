@@ -13,10 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Checks if a token type is a redirection.
+ * @brief Checks if a token is a redirection type.
+ *
+ * Returns true for <, >, << and >>.
  *
  * @param type The token type to check.
- * @return Non-zero if the token type is a redirection, 0 otherwise.
+ * @return Non-zero if redir, 0 otherwise.
  */
 static int	is_redir_token(t_token_type type)
 {
@@ -25,10 +27,13 @@ static int	is_redir_token(t_token_type type)
 }
 
 /**
- * @brief Counts the number of word tokens for argument allocation.
+ * @brief Counts how many word tokens there are.
  *
- * @param tok The starting token to count from.
- * @return The number of word tokens found.
+ * Skips over redir tokens (and their filename) so
+ * we only count actual command arguments.
+ *
+ * @param tok Token to start counting from.
+ * @return Number of word tokens found.
  */
 static int	count_word_tokens(t_token *tok)
 {
@@ -53,11 +58,14 @@ static int	count_word_tokens(t_token *tok)
 }
 
 /**
- * @brief Adds a redirection to a command's redirection list.
+ * @brief Appends a redir node to the command.
  *
- * @param cmd The command to add the redirection to.
- * @param tail A pointer to the tail of the redirection list.
- * @param tokens A pointer to the current position in the token list.
+ * Calls make_redir and links it at the end of
+ * the redir list.
+ *
+ * @param cmd  The command we are building.
+ * @param tail Pointer to the tail of the redir list.
+ * @param tokens Current token position.
  */
 static void	add_redir(t_cmd *cmd, t_redir **tail, t_token **tokens)
 {
@@ -72,10 +80,13 @@ static void	add_redir(t_cmd *cmd, t_redir **tail, t_token **tokens)
 }
 
 /**
- * @brief Fills a command structure with arguments and redirections from tokens.
+ * @brief Fills a cmd struct with args and redirs.
  *
- * @param cmd The command structure to fill.
- * @param tokens A pointer to the current position in the token list.
+ * Walks the token list, separating words (args)
+ * from redirection operators.
+ *
+ * @param cmd    The command struct to fill.
+ * @param tokens Current token position.
  */
 static void	fill_cmd(t_cmd *cmd, t_token **tokens)
 {
@@ -101,11 +112,14 @@ static void	fill_cmd(t_cmd *cmd, t_token **tokens)
 }
 
 /**
- * @brief Parses a single command from the token stream.
+ * @brief Parses one simple command from the tokens.
  *
- * @param tokens A pointer to the current position in the token list.
- * @return A pointer to the AST node representing the command, or NULL
- * 			on failure.
+ * Creates the AST node and cmd struct, counts
+ * the args, mallocs the args array, and calls
+ * fill_cmd to do the actual parsing.
+ *
+ * @param tokens Current token position.
+ * @return AST node for the command, or NULL.
  */
 t_ast	*parse_command(t_token **tokens)
 {

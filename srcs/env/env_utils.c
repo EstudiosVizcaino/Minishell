@@ -13,76 +13,13 @@
 #include "minishell.h"
 
 /**
- * @brief Parses a single "KEY=VALUE" string into an env node.
+ * @brief Removes an env var by key.
  *
- * @param entry The environment string to parse.
- * @return A pointer to the new env node, or NULL on failure.
- */
-t_env	*env_parse_entry(char *entry)
-{
-	t_env	*node;
-	char	*eq;
-	char	*key;
-	char	*value;
-
-	eq = ft_strchr(entry, '=');
-	if (!eq)
-		return (NULL);
-	key = ft_substr(entry, 0, eq - entry);
-	if (!key)
-		return (NULL);
-	value = ft_strdup(eq + 1);
-	if (!value)
-	{
-		free(key);
-		return (NULL);
-	}
-	node = env_new(key, value);
-	free(key);
-	free(value);
-	return (node);
-}
-
-/**
- * @brief Sets or updates an environment variable.
+ * Finds the node, unlinks it from the list,
+ * and frees its memory.
  *
- * @param env A pointer to the head pointer of the environment linked list.
- * @param key The key of the environment variable.
- * @param value The value to set.
- * @return 0 on success, or 1 on failure.
- */
-int	env_set(t_env **env, char *key, char *value)
-{
-	t_env	*node;
-	t_env	*new;
-	char	*val;
-
-	node = env_find(*env, key);
-	if (node)
-	{
-		if (value)
-			val = ft_strdup(value);
-		else
-			val = NULL;
-		if (value && !val)
-			return (1);
-		free(node->value);
-		node->value = val;
-		return (0);
-	}
-	new = env_new(key, value);
-	if (!new)
-		return (1);
-	new->next = *env;
-	*env = new;
-	return (0);
-}
-
-/**
- * @brief Removes an environment variable by key.
- *
- * @param env A pointer to the head pointer of the environment linked list.
- * @param key The key of the environment variable to remove.
+ * @param env Pointer to the env list head.
+ * @param key The key to remove.
  */
 void	env_unset(t_env **env, char *key)
 {

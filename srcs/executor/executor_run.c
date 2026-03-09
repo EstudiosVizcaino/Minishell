@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Dispatches AST node execution based on node type.
+ * @brief Main execute dispatcher.
  *
- * @param ast The AST node to execute.
- * @param shell The shell state.
- * @return The exit status of the executed node.
+ * Checks the node type (pipe or cmd) and calls
+ * the right handler.
+ *
+ * @param ast   The AST node to execute.
+ * @param shell The shell context.
+ * @return Exit status of the node.
  */
 int	execute(t_ast *ast, t_shell *shell)
 {

@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Finds the end index of a word token in the input.
+ * @brief Finds where a word token ends.
  *
- * @param input The input string being tokenized.
- * @param i The starting index of the word.
- * @return The index past the end of the word.
+ * Walks forward until it hits a space, tab, or
+ * operator. Quoted segments are skipped over.
+ *
+ * @param input The input string.
+ * @param i     Start index of the word.
+ * @return Index right after the last char of the word.
  */
 static int	word_end(char *input, int i)
 {
@@ -33,11 +36,14 @@ static int	word_end(char *input, int i)
 }
 
 /**
- * @brief Extracts and tokenizes a word from the input string.
+ * @brief Extracts a word and creates its token.
  *
- * @param input The input string being tokenized.
- * @param i A pointer to the current index in the input string.
- * @return A pointer to the newly created word token, or NULL on failure.
+ * Uses word_end to know how far the word goes, then
+ * does a substr and wraps it in a TOKEN_WORD.
+ *
+ * @param input The input string.
+ * @param i     Current index pointer (updated).
+ * @return The word token, or NULL on malloc fail.
  */
 t_token	*handle_word(char *input, int *i)
 {

@@ -13,10 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Changes directory to the HOME env variable.
+ * @brief Tries to cd to $HOME.
  *
- * @param shell Pointer to the shell structure.
- * @return 0 on success, 1 on failure.
+ * Gets HOME from env and calls chdir on it.
+ *
+ * @param shell The shell context.
+ * @return 0 on success, 1 if HOME is not set.
  */
 static int	cd_home(t_shell *shell)
 {
@@ -37,9 +39,12 @@ static int	cd_home(t_shell *shell)
 }
 
 /**
- * @brief Updates PWD and OLDPWD environment variables after a directory change.
+ * @brief Updates PWD and OLDPWD after cd.
  *
- * @param shell Pointer to the shell structure.
+ * Saves old PWD as OLDPWD, then sets PWD to
+ * the current working directory.
+ *
+ * @param shell The shell context.
  */
 static void	update_pwd(t_shell *shell)
 {
@@ -54,9 +59,11 @@ static void	update_pwd(t_shell *shell)
 }
 
 /**
- * @brief Prints a cd error message with the path and errno string.
+ * @brief Prints an error when cd fails.
  *
- * @param path The path that caused the error.
+ * Shows "cd: <path>: <error>" on stderr.
+ *
+ * @param path The path that failed.
  * @return 1 to indicate failure.
  */
 static int	cd_error(char *path)
@@ -70,10 +77,13 @@ static int	cd_error(char *path)
 }
 
 /**
- * @brief Implements the cd builtin command.
+ * @brief The cd builtin.
  *
- * @param cmd Pointer to the command structure.
- * @param shell Pointer to the shell structure.
+ * With no args goes to HOME. Otherwise tries to
+ * chdir to the given path and updates the env.
+ *
+ * @param cmd   The command struct (args[1] = path).
+ * @param shell The shell context.
  * @return 0 on success, 1 on failure.
  */
 int	builtin_cd(t_cmd *cmd, t_shell *shell)

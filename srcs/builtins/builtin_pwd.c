@@ -13,9 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Implements the pwd builtin command.
+ * @brief The pwd builtin.
  *
- * @return 0 on success, 1 on failure.
+ * Gets the current working directory with getcwd
+ * and prints it.
+ *
+ * @return 0 on success, 1 on error.
  */
 int	builtin_pwd(void)
 {

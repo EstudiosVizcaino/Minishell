@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Searches for an executable in PATH directories.
+ * @brief Looks for the command in PATH dirs.
  *
- * @param name The command name to search for.
- * @param paths The array of directory paths to search in.
- * @return The full path to the executable, or NULL if not found.
+ * Tries each directory, joining it with the name.
+ * Returns the first match with execute permission.
+ *
+ * @param name  Command name.
+ * @param paths Array of PATH directories.
+ * @return Full path to the executable, or NULL.
  */
 static char	*search_in_paths(char *name, char **paths)
 {
@@ -44,11 +47,14 @@ static char	*search_in_paths(char *name, char **paths)
 }
 
 /**
- * @brief Resolves the full path of an executable command.
+ * @brief Resolves the full path of a command.
  *
- * @param name The command name to resolve.
- * @param env The environment list to look up PATH.
- * @return The full path to the executable, or NULL if not found.
+ * If the name has a slash we just dup it. Otherwise
+ * we split PATH and search each directory.
+ *
+ * @param name Command name.
+ * @param env  The env list (to read PATH).
+ * @return Full path, or NULL if not found.
  */
 char	*find_executable(char *name, t_env *env)
 {
@@ -67,11 +73,14 @@ char	*find_executable(char *name, t_env *env)
 }
 
 /**
- * @brief Executes a command via execve in a child process.
+ * @brief Actually runs execve in the child.
  *
- * @param path The full path to the executable.
- * @param cmd The command structure containing arguments.
- * @param shell The shell state.
+ * Checks if path is a directory first, then calls
+ * execve. If execve fails we exit 126 or 127.
+ *
+ * @param path  Full path to the binary.
+ * @param cmd   The command struct.
+ * @param shell The shell context.
  */
 static void	exec_child_run(char *path, t_cmd *cmd, t_shell *shell)
 {
@@ -95,10 +104,13 @@ static void	exec_child_run(char *path, t_cmd *cmd, t_shell *shell)
 }
 
 /**
- * @brief Sets up and executes an external command in a child process.
+ * @brief Sets up and runs an external cmd in child.
  *
- * @param cmd The command structure containing arguments and redirections.
- * @param shell The shell state.
+ * Applies redirs, finds the executable, and
+ * calls exec_child_run. Exits 127 if not found.
+ *
+ * @param cmd   The command struct.
+ * @param shell The shell context.
  */
 void	exec_child(t_cmd *cmd, t_shell *shell)
 {
@@ -118,11 +130,14 @@ void	exec_child(t_cmd *cmd, t_shell *shell)
 }
 
 /**
- * @brief Executes a builtin command with redirections, saving and restoring fds.
+ * @brief Runs a builtin with redirs, saving fds.
  *
- * @param cmd The command structure containing the builtin and redirections.
- * @param shell The shell state.
- * @param ret Pointer to store the exit status of the builtin.
+ * Saves stdin/stdout, applies redirs, runs the
+ * builtin, then restores the saved fds.
+ *
+ * @param cmd   The command struct.
+ * @param shell The shell context.
+ * @param ret   Pointer to store the exit status.
  */
 void	exec_builtin_redir(t_cmd *cmd, t_shell *shell, int *ret)
 {

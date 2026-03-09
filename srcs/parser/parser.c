@@ -13,10 +13,13 @@
 #include "minishell.h"
 
 /**
- * @brief Allocates and initializes a new AST node.
+ * @brief Creates a new AST node.
  *
- * @param type The type of the AST node to create.
- * @return A pointer to the new AST node, or NULL on allocation failure.
+ * Mallocs a t_ast, sets its type, and NULLs
+ * the cmd, left and right pointers.
+ *
+ * @param type The kind of node (CMD, PIPE, etc.).
+ * @return The new node, or NULL on malloc fail.
  */
 t_ast	*new_ast_node(t_node_type type)
 {
@@ -33,9 +36,12 @@ t_ast	*new_ast_node(t_node_type type)
 }
 
 /**
- * @brief Allocates and initializes a new command structure.
+ * @brief Creates a new empty command struct.
  *
- * @return A pointer to the new command structure, or NULL on allocation failure.
+ * Sets args and redirs to NULL so they can be
+ * filled later by the parser.
+ *
+ * @return The new cmd, or NULL on malloc fail.
  */
 t_cmd	*new_cmd(void)
 {
@@ -50,10 +56,13 @@ t_cmd	*new_cmd(void)
 }
 
 /**
- * @brief Parses a pipeline of commands connected by pipes.
+ * @brief Parses a pipeline (commands joined by |).
  *
- * @param tokens A pointer to the current position in the token list.
- * @return A pointer to the AST representing the pipeline, or NULL on failure.
+ * Reads the first command, then if a pipe token
+ * follows, it recursively parses the rest.
+ *
+ * @param tokens Current position in the token list.
+ * @return AST subtree for the pipeline, or NULL.
  */
 t_ast	*parse_pipeline(t_token **tokens)
 {
