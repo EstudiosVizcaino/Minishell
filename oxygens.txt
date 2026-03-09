@@ -1,0 +1,1040 @@
+File: srcs/builtins/builtin_cd.c
+================================
+(line 15)
+/**
+ * @brief Tries to cd to $HOME.
+ *
+ * Gets HOME from env and calls chdir on it.
+ *
+ * @param shell The shell context.
+ * @return 0 on success, 1 if HOME is not set.
+ */
+
+(line 41)
+/**
+ * @brief Updates PWD and OLDPWD after cd.
+ *
+ * Saves old PWD as OLDPWD, then sets PWD to
+ * the current working directory.
+ *
+ * @param shell The shell context.
+ */
+
+(line 61)
+/**
+ * @brief Prints an error when cd fails.
+ *
+ * Shows "cd: <path>: <error>" on stderr.
+ *
+ * @param path The path that failed.
+ * @return 1 to indicate failure.
+ */
+
+(line 79)
+/**
+ * @brief The cd builtin.
+ *
+ * With no args goes to HOME. Otherwise tries to
+ * chdir to the given path and updates the env.
+ *
+ * @param cmd   The command struct (args[1] = path).
+ * @param shell The shell context.
+ * @return 0 on success, 1 on failure.
+ */
+
+
+File: srcs/builtins/builtin_echo.c
+==================================
+(line 15)
+/**
+ * @brief The echo builtin.
+ *
+ * Prints its args separated by spaces. The -n
+ * flag suppresses the trailing newline.
+ *
+ * @param cmd The command struct.
+ * @return Always 0.
+ */
+
+
+File: srcs/builtins/builtin_env.c
+=================================
+(line 15)
+/**
+ * @brief The env builtin.
+ *
+ * Walks the env list and prints each var in
+ * KEY=VALUE format. Skips entries with no value.
+ *
+ * @param shell The shell context.
+ * @return Always 0.
+ */
+
+
+File: srcs/builtins/builtin_exit.c
+==================================
+(line 15)
+/**
+ * @brief Checks if a string consists entirely of digits (with optional sign).
+ *
+ * @param s The string to check.
+ * @return 1 if valid numeric string, 0 otherwise.
+ */
+
+(line 39)
+/**
+ * @brief Cleans up shell resources and exits with the given code.
+ *
+ * @param shell Pointer to the shell structure.
+ * @param code The exit code to terminate with.
+ */
+
+(line 53)
+/**
+ * @brief Implements the exit builtin command.
+ *
+ * @param cmd Pointer to the command structure.
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success, 1 on failure.
+ */
+
+
+File: srcs/builtins/builtin_export.c
+====================================
+(line 15)
+/**
+ * @brief Prints all environment variables in export format.
+ *
+ * @param env Pointer to the environment variable list.
+ */
+
+(line 38)
+/**
+ * @brief Validates an environment variable key name.
+ *
+ * @param key The key string to validate.
+ * @return 1 if valid, 0 otherwise.
+ */
+
+(line 62)
+/**
+ * @brief Handles exporting a variable with an assigned value.
+ *
+ * @param arg The full argument string.
+ * @param eq Pointer to the '=' character in arg.
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success, 1 on failure.
+ */
+
+(line 90)
+/**
+ * @brief Exports a single variable argument.
+ *
+ * @param arg The argument string to export.
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success, 1 on failure.
+ */
+
+(line 115)
+/**
+ * @brief Implements the export builtin command.
+ *
+ * @param cmd Pointer to the command structure.
+ * @param shell Pointer to the shell structure.
+ * @return 0 on success, 1 if any export failed.
+ */
+
+
+File: srcs/builtins/builtin_pwd.c
+=================================
+(line 15)
+/**
+ * @brief The pwd builtin.
+ *
+ * Gets the current working directory with getcwd
+ * and prints it.
+ *
+ * @return 0 on success, 1 on error.
+ */
+
+
+File: srcs/builtins/builtin_unset.c
+===================================
+(line 15)
+/**
+ * @brief The unset builtin.
+ *
+ * Removes each given variable from the env list.
+ *
+ * @param cmd   The command struct.
+ * @param shell The shell context.
+ * @return Always 0.
+ */
+
+
+File: srcs/env/env.c
+====================
+(line 15)
+/**
+ * @brief Creates a new env node.
+ *
+ * Mallocs a t_env, sets key and value, and
+ * NULLs the next pointer.
+ *
+ * @param key   The variable name.
+ * @param value The variable value (can be NULL).
+ * @return The new node, or NULL on malloc fail.
+ */
+
+(line 48)
+/**
+ * @brief Finds an environment variable node by key.
+ *
+ * @param env The head of the environment linked list.
+ * @param key The key to search for.
+ * @return A pointer to the matching env node, or NULL if not found.
+ */
+
+(line 66)
+/**
+ * @brief Gets the value of an environment variable by key.
+ *
+ * @param env The head of the environment linked list.
+ * @param key The key to search for.
+ * @return The value string, or NULL if the key is not found.
+ */
+
+(line 83)
+/**
+ * @brief Initializes the environment linked list from the envp array.
+ *
+ * @param envp The array of environment strings.
+ * @return A pointer to the head of the environment linked list.
+ */
+
+(line 115)
+/**
+ * @brief Frees the entire environment linked list.
+ *
+ * @param env The head of the environment linked list.
+ */
+
+
+File: srcs/env/env_utils.c
+==========================
+(line 15)
+/**
+ * @brief Removes an env var by key.
+ *
+ * Finds the node, unlinks it from the list,
+ * and frees its memory.
+ *
+ * @param env Pointer to the env list head.
+ * @param key The key to remove.
+ */
+
+(line 49)
+/**
+ * @brief Fills a string array with "KEY=VALUE" entries from the env list.
+ *
+ * @param env The head of the environment linked list.
+ * @param arr The string array to fill.
+ */
+
+(line 76)
+/**
+ * @brief Converts the environment linked list to a NULL-terminated string array.
+ *
+ * @param env The head of the environment linked list.
+ * @return A NULL-terminated array of "KEY=VALUE" strings, or NULL on failure.
+ */
+
+
+File: srcs/executor/executor.c
+==============================
+(line 15)
+/**
+ * @brief Checks if a command name is a builtin.
+ *
+ * Compares against all 7 builtins we support.
+ *
+ * @param name The command name.
+ * @return 1 if builtin, 0 otherwise.
+ */
+
+(line 44)
+/**
+ * @brief Runs the matching builtin function.
+ *
+ * Compares cmd name and calls the right builtin
+ * handler (echo, cd, pwd, export, unset, env, exit).
+ *
+ * @param cmd  The command struct with name and args.
+ * @param shell The shell context.
+ * @return Exit status of the builtin.
+ */
+
+
+File: srcs/executor/executor_cmd.c
+==================================
+(line 15)
+/**
+ * @brief Opens all heredoc-type redirs in the list.
+ *
+ * Walks the redir list and calls open_heredoc
+ * for each TOKEN_HEREDOC entry.
+ *
+ * @param redir Head of the redir list.
+ * @param shell The shell context (unused here).
+ */
+
+(line 35)
+/**
+ * @brief Waits for a child and gets its exit code.
+ *
+ * Uses waitpid then checks WIFEXITED /
+ * WIFSIGNALED to figure out the real exit code.
+ *
+ * @param pid PID of the child.
+ * @return The exit status.
+ */
+
+(line 62)
+/**
+ * @brief Runs redirs when the command has no args.
+ *
+ * Just opens heredocs and applies the redirs.
+ *
+ * @param cmd  The command (only redirs matter).
+ * @param shell The shell context.
+ * @return 0 on success, non-zero on failure.
+ */
+
+(line 77)
+/**
+ * @brief Executes a single command AST node.
+ *
+ * Handles redir-only commands, builtins, and
+ * external commands (which get forked).
+ *
+ * @param ast  The command AST node.
+ * @param shell The shell context.
+ * @return Exit status of the command.
+ */
+
+
+File: srcs/executor/executor_pipe.c
+===================================
+(line 15)
+/**
+ * @brief Waits for both pipe children.
+ *
+ * Returns the exit status of the second child
+ * (the right side of the pipe).
+ *
+ * @param pid1 Left child PID.
+ * @param pid2 Right child PID.
+ * @return Exit status of pid2.
+ */
+
+(line 40)
+/**
+ * @brief Runs the left side of a pipe (child).
+ *
+ * Redirects stdout to the pipe write end, then
+ * executes and exits.
+ *
+ * @param ast    The pipe AST node.
+ * @param pipefd Pipe file descriptors.
+ * @param shell  The shell context.
+ */
+
+(line 62)
+/**
+ * @brief Runs the right side of a pipe (child).
+ *
+ * Redirects stdin from the pipe read end, then
+ * executes and exits.
+ *
+ * @param ast    The pipe AST node.
+ * @param pipefd Pipe file descriptors.
+ * @param shell  The shell context.
+ */
+
+(line 84)
+/**
+ * @brief Forks the right child and waits for both.
+ *
+ * Called after the left child is already forked.
+ * Closes pipe fds in the parent after forking.
+ *
+ * @param ast    The pipe AST node.
+ * @param pipefd Pipe file descriptors.
+ * @param shell  The shell context.
+ * @param p1     PID of the left child.
+ * @return Exit status of the right child.
+ */
+
+(line 115)
+/**
+ * @brief Executes a pipe: forks left and right.
+ *
+ * Creates a pipe, forks left child, then calls
+ * fork_right for the right child.
+ *
+ * @param ast   The pipe AST node.
+ * @param shell The shell context.
+ * @return Exit status of the right side.
+ */
+
+
+File: srcs/executor/executor_redir.c
+====================================
+(line 15)
+/**
+ * @brief Opens the right fd for a redir.
+ *
+ * Handles input (<) and output (>) redirections.
+ *
+ * @param redir The redir node with file and type.
+ * @return Opened fd, or -1 on error.
+ */
+
+(line 34)
+/**
+ * @brief Applies a single input or output redir.
+ *
+ * Opens the file, dups the fd onto stdin or
+ * stdout, then closes the original fd.
+ *
+ * @param redir The redir to apply.
+ * @return 0 on success, 1 on failure.
+ */
+
+(line 65)
+/**
+ * @brief Applies an append (>>) redirection.
+ *
+ * Opens the file with O_APPEND and dups onto
+ * stdout.
+ *
+ * @param redir The redir to apply.
+ * @return 0 on success, 1 on failure.
+ */
+
+(line 91)
+/**
+ * @brief Reads heredoc input until the delimiter.
+ *
+ * Uses readline in a loop, writing each line into
+ * a pipe. Stores the read-end fd in redir.
+ *
+ * @param redir The heredoc redir with the delimiter.
+ * @return 0 on success, 1 on failure.
+ */
+
+(line 126)
+/**
+ * @brief Applies all redirs in a list.
+ *
+ * Goes through each redir node and applies it
+ * (heredoc, append, or normal in/out).
+ *
+ * @param redirs Head of the redir list.
+ * @return 0 on success, non-zero on failure.
+ */
+
+
+File: srcs/executor/executor_run.c
+==================================
+(line 15)
+/**
+ * @brief Main execute dispatcher.
+ *
+ * Checks the node type (pipe or cmd) and calls
+ * the right handler.
+ *
+ * @param ast   The AST node to execute.
+ * @param shell The shell context.
+ * @return Exit status of the node.
+ */
+
+
+File: srcs/executor/executor_utils.c
+====================================
+(line 15)
+/**
+ * @brief Looks for the command in PATH dirs.
+ *
+ * Tries each directory, joining it with the name.
+ * Returns the first match with execute permission.
+ *
+ * @param name  Command name.
+ * @param paths Array of PATH directories.
+ * @return Full path to the executable, or NULL.
+ */
+
+(line 49)
+/**
+ * @brief Resolves the full path of a command.
+ *
+ * If the name has a slash we just dup it. Otherwise
+ * we split PATH and search each directory.
+ *
+ * @param name Command name.
+ * @param env  The env list (to read PATH).
+ * @return Full path, or NULL if not found.
+ */
+
+(line 75)
+/**
+ * @brief Actually runs execve in the child.
+ *
+ * Checks if path is a directory first, then calls
+ * execve. If execve fails we exit 126 or 127.
+ *
+ * @param path  Full path to the binary.
+ * @param cmd   The command struct.
+ * @param shell The shell context.
+ */
+
+(line 106)
+/**
+ * @brief Sets up and runs an external cmd in child.
+ *
+ * Applies redirs, finds the executable, and
+ * calls exec_child_run. Exits 127 if not found.
+ *
+ * @param cmd   The command struct.
+ * @param shell The shell context.
+ */
+
+(line 132)
+/**
+ * @brief Runs a builtin with redirs, saving fds.
+ *
+ * Saves stdin/stdout, applies redirs, runs the
+ * builtin, then restores the saved fds.
+ *
+ * @param cmd   The command struct.
+ * @param shell The shell context.
+ * @param ret   Pointer to store the exit status.
+ */
+
+
+File: srcs/expander/expander.c
+==============================
+(line 15)
+/**
+ * @brief Expands vars in a command's args and redirs.
+ *
+ * Calls expand_args for the arg list and
+ * expand_redirs for the redir filenames.
+ *
+ * @param cmd   The command to expand.
+ * @param shell The shell context (has env).
+ */
+
+(line 33)
+/**
+ * @brief Recursively expands the whole AST.
+ *
+ * For CMD nodes we expand the command. For pipes
+ * we recurse into left and right.
+ *
+ * @param ast   The AST node to process.
+ * @param shell The shell context (has env).
+ */
+
+
+File: srcs/expander/expander_args.c
+===================================
+(line 15)
+/**
+ * @brief Expands vars in redir filenames.
+ *
+ * Skips heredoc redirs (delimiter stays literal).
+ *
+ * @param redir Head of the redir list.
+ * @param shell The shell context (has env).
+ */
+
+(line 39)
+/**
+ * @brief Checks if a string is only $VAR refs.
+ *
+ * Used to decide whether an empty expansion means
+ * the arg should be removed entirely.
+ *
+ * @param str The string to check.
+ * @return 1 if only vars, 0 otherwise.
+ */
+
+(line 75)
+/**
+ * @brief Expands all args and drops empty ones.
+ *
+ * If a var like $EMPTY expands to nothing and the
+ * original was only vars, we skip that arg.
+ *
+ * @param cmd   The command with args to expand.
+ * @param shell The shell context (has env).
+ */
+
+
+File: srcs/expander/expander_str.c
+==================================
+(line 15)
+/**
+ * @brief Handles a single-quoted segment.
+ *
+ * Copies everything between the quotes literally,
+ * no variable expansion happens here.
+ *
+ * @param str The input string.
+ * @param i   Current index pointer.
+ * @return The text inside the quotes.
+ */
+
+(line 40)
+/**
+ * @brief Handles a double-quoted segment.
+ *
+ * Expands $VAR inside double quotes but keeps
+ * everything else literal.
+ *
+ * @param str   The input string.
+ * @param i     Current index pointer.
+ * @param shell The shell context (has env).
+ * @return The expanded text.
+ */
+
+(line 76)
+/**
+ * @brief Expands one token element.
+ *
+ * Delegates to the right handler depending on
+ * whether we see a quote, $ or a normal char.
+ *
+ * @param str   The input string.
+ * @param i     Current index pointer.
+ * @param shell The shell context (has env).
+ * @return The expanded element as a new string.
+ */
+
+(line 102)
+/**
+ * @brief Fully expands a string (vars + quotes).
+ *
+ * Walks the string char by char, calling expand_one
+ * and joining the pieces into one result.
+ *
+ * @param str   The raw input string.
+ * @param shell The shell context (has env).
+ * @return The fully expanded string.
+ */
+
+
+File: srcs/expander/expander_utils.c
+====================================
+(line 15)
+/**
+ * @brief Gets a var's value from the env.
+ *
+ * Handles $? as a special case (last exit code).
+ * Returns "" if the var is not set.
+ *
+ * @param name  The variable name.
+ * @param shell The shell context.
+ * @return The value string (caller must free).
+ */
+
+(line 39)
+/**
+ * @brief Parses and expands a $VAR from a string.
+ *
+ * Reads the var name after the $, looks it up,
+ * and returns the value. Advances the index past
+ * the variable name.
+ *
+ * @param str   The input string.
+ * @param i     Current index pointer.
+ * @param shell The shell context.
+ * @return The expanded value.
+ */
+
+(line 76)
+/**
+ * @brief Joins two strings and frees both.
+ *
+ * Calls ft_strjoin, then frees s1 and s2.
+ * Calls fatal_error if malloc fails.
+ *
+ * @param s1 First string (freed).
+ * @param s2 Second string (freed).
+ * @return The joined result.
+ */
+
+
+File: srcs/lexer/lexer.c
+========================
+(line 15)
+/**
+ * @brief Creates a new token node.
+ *
+ * Mallocs a t_token, sets its type and dups the
+ * value string. Returns NULL if malloc fails.
+ *
+ * @param type  Token type (WORD, PIPE, etc.).
+ * @param value The string value to store.
+ * @return New token or NULL on failure.
+ */
+
+(line 41)
+/**
+ * @brief Frees a whole token linked list.
+ *
+ * Walks through each node, frees value and node.
+ *
+ * @param tokens Head of the list to free.
+ */
+
+(line 61)
+/**
+ * @brief Adds a token at the end of the list.
+ *
+ * Updates head if the list was empty, otherwise
+ * links it after the current tail.
+ *
+ * @param head Pointer to the head pointer.
+ * @param tail Pointer to the tail pointer.
+ * @param tok  The token to add.
+ * @return The added token, or NULL if tok is NULL.
+ */
+
+(line 84)
+/**
+ * @brief Main lexer function, turns input into tokens.
+ *
+ * Skips whitespace, then checks if the next char is
+ * an operator or a word and creates the right token.
+ *
+ * @param input The raw input string.
+ * @return Head of the token list, or NULL on error.
+ */
+
+
+File: srcs/lexer/lexer_utils.c
+==============================
+(line 15)
+/**
+ * @brief Checks if a char is a shell operator.
+ *
+ * Operators are | < and >.
+ *
+ * @param c The character to check.
+ * @return 1 if operator, 0 otherwise.
+ */
+
+(line 30)
+/**
+ * @brief Handles << (heredoc) and >> (append).
+ *
+ * Checks the next two chars. If they match a double
+ * operator we advance i by 2 and return the token.
+ *
+ * @param input The input string.
+ * @param i     Current index pointer.
+ * @return Token for << or >>, or NULL if no match.
+ */
+
+(line 55)
+/**
+ * @brief Reads a single operator token from input.
+ *
+ * First tries double operators, then falls back to
+ * single | < or >.
+ *
+ * @param input The input string.
+ * @param i     Current index pointer.
+ * @return The operator token.
+ */
+
+(line 88)
+/**
+ * @brief Gets the length of a quoted segment.
+ *
+ * Counts chars from the opening quote to the closing
+ * one (both included).
+ *
+ * @param s The string with the quoted part.
+ * @param i Index of the opening quote.
+ * @return Total length of the quoted segment.
+ */
+
+
+File: srcs/lexer/lexer_word.c
+=============================
+(line 15)
+/**
+ * @brief Finds where a word token ends.
+ *
+ * Walks forward until it hits a space, tab, or
+ * operator. Quoted segments are skipped over.
+ *
+ * @param input The input string.
+ * @param i     Start index of the word.
+ * @return Index right after the last char of the word.
+ */
+
+(line 38)
+/**
+ * @brief Extracts a word and creates its token.
+ *
+ * Uses word_end to know how far the word goes, then
+ * does a substr and wraps it in a TOKEN_WORD.
+ *
+ * @param input The input string.
+ * @param i     Current index pointer (updated).
+ * @return The word token, or NULL on malloc fail.
+ */
+
+
+File: srcs/main.c
+=================
+(line 17)
+/**
+ * @brief Processes one line of user input.
+ *
+ * Takes the line through the full pipeline:
+ * lexer, parser, expander and executor.
+ * The exit code goes into shell->last_exit for $?.
+ *
+ * @param line  The raw input line.
+ * @param shell The shell context.
+ */
+
+(line 44)
+/**
+ * @brief Main loop of the shell (read-eval-print).
+ *
+ * Sets up signals, reads with readline, and sends
+ * lines to run_line. NULL from readline means EOF
+ * so we print "exit" and stop.
+ *
+ * @param shell The shell context.
+ */
+
+(line 73)
+/**
+ * @brief Entry point of the minishell program.
+ *
+ * Initialises the shell struct and env, runs 
+ * the main loop, then cleans up.
+ *
+ * @param argc The argument count (unused).
+ * @param argv The argument vector (unused).
+ * @param envp The environment variables.
+ * @return The last exit status.
+ */
+
+
+File: srcs/parser/parser.c
+==========================
+(line 15)
+/**
+ * @brief Creates a new AST node.
+ *
+ * Mallocs a t_ast, sets its type, and NULLs
+ * the cmd, left and right pointers.
+ *
+ * @param type The kind of node (CMD, PIPE, etc.).
+ * @return The new node, or NULL on malloc fail.
+ */
+
+(line 38)
+/**
+ * @brief Creates a new empty command struct.
+ *
+ * Sets args and redirs to NULL so they can be
+ * filled later by the parser.
+ *
+ * @return The new cmd, or NULL on malloc fail.
+ */
+
+(line 58)
+/**
+ * @brief Parses a pipeline (commands joined by |).
+ *
+ * Reads the first command, then if a pipe token
+ * follows, it recursively parses the rest.
+ *
+ * @param tokens Current position in the token list.
+ * @return AST subtree for the pipeline, or NULL.
+ */
+
+
+File: srcs/parser/parser_cmd.c
+==============================
+(line 15)
+/**
+ * @brief Checks if a token is a redirection type.
+ *
+ * Returns true for <, >, << and >>.
+ *
+ * @param type The token type to check.
+ * @return Non-zero if redir, 0 otherwise.
+ */
+
+(line 29)
+/**
+ * @brief Counts how many word tokens there are.
+ *
+ * Skips over redir tokens (and their filename) so
+ * we only count actual command arguments.
+ *
+ * @param tok Token to start counting from.
+ * @return Number of word tokens found.
+ */
+
+(line 60)
+/**
+ * @brief Appends a redir node to the command.
+ *
+ * Calls make_redir and links it at the end of
+ * the redir list.
+ *
+ * @param cmd  The command we are building.
+ * @param tail Pointer to the tail of the redir list.
+ * @param tokens Current token position.
+ */
+
+(line 82)
+/**
+ * @brief Fills a cmd struct with args and redirs.
+ *
+ * Walks the token list, separating words (args)
+ * from redirection operators.
+ *
+ * @param cmd    The command struct to fill.
+ * @param tokens Current token position.
+ */
+
+(line 114)
+/**
+ * @brief Parses one simple command from the tokens.
+ *
+ * Creates the AST node and cmd struct, counts
+ * the args, mallocs the args array, and calls
+ * fill_cmd to do the actual parsing.
+ *
+ * @param tokens Current token position.
+ * @return AST node for the command, or NULL.
+ */
+
+
+File: srcs/parser/parser_entry.c
+================================
+(line 15)
+/**
+ * @brief Entry point of the parser.
+ *
+ * Takes the token list and kicks off pipeline
+ * parsing. Returns the root of the AST.
+ *
+ * @param tokens The linked list of tokens.
+ * @return Root of the AST, or NULL if empty.
+ */
+
+
+File: srcs/parser/parser_redir.c
+================================
+(line 15)
+/**
+ * @brief Frees a linked list of redir nodes.
+ *
+ * Also closes any open heredoc fds.
+ *
+ * @param redir Head of the redir list.
+ */
+
+(line 37)
+/**
+ * @brief Frees a command struct and everything inside.
+ *
+ * Frees args array, redir list, and the cmd itself.
+ *
+ * @param cmd The command struct to free.
+ */
+
+(line 64)
+/**
+ * @brief Recursively frees the whole AST.
+ *
+ * Goes left, right, then frees the node's cmd.
+ *
+ * @param node Root of the subtree to free.
+ */
+
+(line 82)
+/**
+ * @brief Builds a redir node from the current token.
+ *
+ * Reads the redir type, advances past the token,
+ * then grabs the filename if the next token is
+ * a word.
+ *
+ * @param tokens Current token position.
+ * @return The new redir node, or NULL.
+ */
+
+(line 117)
+/**
+ * @brief Parses consecutive redir tokens into a list.
+ *
+ * Keeps reading redir tokens until it hits a
+ * word, pipe, EOF or another stop condition.
+ *
+ * @param tokens Current token position.
+ * @return Head of the redir list, or NULL.
+ */
+
+
+File: srcs/signals/signals.c
+============================
+(line 15)
+/**
+ * @brief Sets up signals for heredoc mode.
+ *
+ * SIGINT gets the heredoc handler and SIGQUIT
+ * is ignored.
+ */
+
+
+File: srcs/utils/free.c
+=======================
+(line 15)
+/**
+ * @brief Joins three strings into one.
+ *
+ * Joins s1+s2 first, then joins that with s3.
+ * The caller must free the result.
+ *
+ * @param s1 First string.
+ * @param s2 Second string.
+ * @param s3 Third string.
+ * @return The joined string, or NULL.
+ */
+
+
+File: srcs/utils/utils.c
+========================
+(line 15)
+/**
+ * @brief Prints an error and exits.
+ *
+ * Uses perror to show the message, then exits 1.
+ *
+ * @param msg The error message.
+ */
+
