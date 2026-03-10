@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Extracts text within single quotes without expansion.
+ * @brief Handles a single-quoted segment.
  *
- * @param str The input string containing the single-quoted text.
- * @param i Pointer to the current index in the string.
- * @return The extracted text inside the single quotes.
+ * Copies everything between the quotes literally,
+ * no variable expansion happens here.
+ *
+ * @param str The input string.
+ * @param i   Current index pointer.
+ * @return The text inside the quotes.
  */
 static char	*expand_single_quote(char *str, int *i)
 {
@@ -35,12 +38,15 @@ static char	*expand_single_quote(char *str, int *i)
 }
 
 /**
- * @brief Expands variables within double-quoted text.
+ * @brief Handles a double-quoted segment.
  *
- * @param str The input string containing the double-quoted text.
- * @param i Pointer to the current index in the string.
- * @param shell The shell context containing environment variables.
- * @return The expanded text inside the double quotes.
+ * Expands $VAR inside double quotes but keeps
+ * everything else literal.
+ *
+ * @param str   The input string.
+ * @param i     Current index pointer.
+ * @param shell The shell context (has env).
+ * @return The expanded text.
  */
 static char	*expand_double_quote(char *str, int *i, t_shell *shell)
 {
@@ -68,12 +74,15 @@ static char	*expand_double_quote(char *str, int *i, t_shell *shell)
 }
 
 /**
- * @brief Expands a single token element (quote, variable, or literal).
+ * @brief Expands one token element.
  *
- * @param str The input string to expand from.
- * @param i Pointer to the current index in the string.
- * @param shell The shell context containing environment variables.
- * @return The expanded token element as a new string.
+ * Delegates to the right handler depending on
+ * whether we see a quote, $ or a normal char.
+ *
+ * @param str   The input string.
+ * @param i     Current index pointer.
+ * @param shell The shell context (has env).
+ * @return The expanded element as a new string.
  */
 static char	*expand_one(char *str, int *i, t_shell *shell)
 {
@@ -91,11 +100,14 @@ static char	*expand_one(char *str, int *i, t_shell *shell)
 }
 
 /**
- * @brief Expands all variables and removes quotes from a string.
+ * @brief Fully expands a string (vars + quotes).
  *
- * @param str The input string to expand.
- * @param shell The shell context containing environment variables.
- * @return The fully expanded string with quotes removed.
+ * Walks the string char by char, calling expand_one
+ * and joining the pieces into one result.
+ *
+ * @param str   The raw input string.
+ * @param shell The shell context (has env).
+ * @return The fully expanded string.
  */
 char	*expand_str(char *str, t_shell *shell)
 {

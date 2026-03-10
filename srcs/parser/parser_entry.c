@@ -13,10 +13,13 @@
 #include "minishell.h"
 
 /**
- * @brief Entry point for the parser, converts tokens into an AST.
+ * @brief Entry point of the parser.
  *
- * @param tokens The linked list of tokens to parse.
- * @return A pointer to the root of the AST, or NULL if tokens are empty.
+ * Takes the token list and kicks off pipeline
+ * parsing. Returns the root of the AST.
+ *
+ * @param tokens The linked list of tokens.
+ * @return Root of the AST, or NULL if empty.
  */
 t_ast	*parser(t_token *tokens)
 {

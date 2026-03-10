@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Retrieves the value of a shell variable by name.
+ * @brief Gets a var's value from the env.
  *
- * @param name The variable name to look up.
- * @param shell The shell context containing environment variables.
- * @return The variable's value as a new string, or empty string if not found.
+ * Handles $? as a special case (last exit code).
+ * Returns "" if the var is not set.
+ *
+ * @param name  The variable name.
+ * @param shell The shell context.
+ * @return The value string (caller must free).
  */
 char	*get_var_value(char *name, t_shell *shell)
 {
@@ -34,12 +37,16 @@ char	*get_var_value(char *name, t_shell *shell)
 }
 
 /**
- * @brief Parses and expands a dollar variable from a string.
+ * @brief Parses and expands a $VAR from a string.
  *
- * @param str The input string containing the variable reference.
- * @param i Pointer to the current index in the string.
- * @param shell The shell context containing environment variables.
- * @return The expanded variable value as a new string.
+ * Reads the var name after the $, looks it up,
+ * and returns the value. Advances the index past
+ * the variable name.
+ *
+ * @param str   The input string.
+ * @param i     Current index pointer.
+ * @param shell The shell context.
+ * @return The expanded value.
  */
 char	*expand_var(char *str, int *i, t_shell *shell)
 {
@@ -67,11 +74,14 @@ char	*expand_var(char *str, int *i, t_shell *shell)
 }
 
 /**
- * @brief Joins two strings and frees both originals.
+ * @brief Joins two strings and frees both.
  *
- * @param s1 The first string (freed after join).
- * @param s2 The second string (freed after join).
- * @return The concatenated result as a new string.
+ * Calls ft_strjoin, then frees s1 and s2.
+ * Calls fatal_error if malloc fails.
+ *
+ * @param s1 First string (freed).
+ * @param s2 Second string (freed).
+ * @return The joined result.
  */
 char	*join_free(char *s1, char *s2)
 {

@@ -13,10 +13,13 @@
 #include "minishell.h"
 
 /**
- * @brief Opens all heredoc redirections in a redirection list.
+ * @brief Opens all heredoc-type redirs in the list.
  *
- * @param redir The head of the redirection list.
- * @param shell The shell state.
+ * Walks the redir list and calls open_heredoc
+ * for each TOKEN_HEREDOC entry.
+ *
+ * @param redir Head of the redir list.
+ * @param shell The shell context for expansion.
  */
 void	open_heredocs(t_redir *redir, t_shell *shell)
 {
@@ -29,10 +32,13 @@ void	open_heredocs(t_redir *redir, t_shell *shell)
 }
 
 /**
- * @brief Waits for a child process and returns its exit status.
+ * @brief Waits for a child and gets its exit code.
  *
- * @param pid The process ID of the child to wait for.
- * @return The exit status of the child process.
+ * Uses waitpid then checks WIFEXITED /
+ * WIFSIGNALED to figure out the real exit code.
+ *
+ * @param pid PID of the child.
+ * @return The exit status.
  */
 static int	wait_for_child(pid_t pid)
 {
@@ -54,10 +60,12 @@ static int	wait_for_child(pid_t pid)
 }
 
 /**
- * @brief Executes redirections for a command with no arguments.
+ * @brief Runs redirs when the command has no args.
  *
- * @param cmd The command structure containing redirections.
- * @param shell The shell state.
+ * Just opens heredocs and applies the redirs.
+ *
+ * @param cmd  The command (only redirs matter).
+ * @param shell The shell context.
  * @return 0 on success, non-zero on failure.
  */
 static int	exec_redir_only(t_cmd *cmd, t_shell *shell)
@@ -69,9 +77,12 @@ static int	exec_redir_only(t_cmd *cmd, t_shell *shell)
 /**
  * @brief Executes a single command AST node.
  *
- * @param ast The AST node representing the command.
- * @param shell The shell state.
- * @return The exit status of the executed command.
+ * Handles redir-only commands, builtins, and
+ * external commands (which get forked).
+ *
+ * @param ast  The command AST node.
+ * @param shell The shell context.
+ * @return Exit status of the command.
  */
 int	exec_cmd(t_ast *ast, t_shell *shell)
 {

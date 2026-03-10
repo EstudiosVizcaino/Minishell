@@ -13,10 +13,13 @@
 #include "minishell.h"
 
 /**
- * @brief Expands variables in a command's arguments and redirections.
+ * @brief Expands vars in a command's args and redirs.
  *
- * @param cmd The command whose args and redirections to expand.
- * @param shell The shell context containing environment variables.
+ * Calls expand_args for the arg list and
+ * expand_redirs for the redir filenames.
+ *
+ * @param cmd   The command to expand.
+ * @param shell The shell context (has env).
  */
 static void	expand_cmd(t_cmd *cmd, t_shell *shell)
 {
@@ -28,10 +31,13 @@ static void	expand_cmd(t_cmd *cmd, t_shell *shell)
 }
 
 /**
- * @brief Recursively expands variables in all commands of an AST.
+ * @brief Recursively expands the whole AST.
  *
- * @param ast The abstract syntax tree node to process.
- * @param shell The shell context containing environment variables.
+ * For CMD nodes we expand the command. For pipes
+ * we recurse into left and right.
+ *
+ * @param ast   The AST node to process.
+ * @param shell The shell context (has env).
  */
 void	expand_ast(t_ast *ast, t_shell *shell)
 {

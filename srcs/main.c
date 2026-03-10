@@ -35,10 +35,14 @@ static int	is_blank_line(char *line)
 }
 
 /**
- * @brief Tokenizes, parses, expands, and executes a single input line.
+ * @brief Processes one line of user input.
  *
- * @param line The raw input line to process.
- * @param shell The shell state structure.
+ * Takes the line through the full pipeline:
+ * lexer, parser, expander and executor.
+ * The exit code goes into shell->last_exit for $?.
+ *
+ * @param line  The raw input line.
+ * @param shell The shell context.
  */
 static void	run_line(char *line, t_shell *shell)
 {
@@ -90,9 +94,13 @@ static char	*read_full_input(void)
 }
 
 /**
- * @brief Runs the main read-eval-print loop of the shell.
+ * @brief Main loop of the shell (read-eval-print).
  *
- * @param shell The shell state structure.
+ * Sets up signals, reads with readline, and sends
+ * lines to run_line. NULL from readline means EOF
+ * so we print "exit" and stop.
+ *
+ * @param shell The shell context.
  */
 static void	main_loop(t_shell *shell)
 {
@@ -121,10 +129,13 @@ static void	main_loop(t_shell *shell)
 /**
  * @brief Entry point of the minishell program.
  *
- * @param argc The argument count.
- * @param argv The argument vector.
+ * Initialises the shell struct and env, runs
+ * the main loop, then cleans up.
+ *
+ * @param argc The argument count (unused).
+ * @param argv The argument vector (unused).
  * @param envp The environment variables.
- * @return The last exit status of the shell.
+ * @return The last exit status.
  */
 int	main(int argc, char **argv, char **envp)
 {

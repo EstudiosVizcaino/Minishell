@@ -13,9 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Applies a single input or output redirection.
+ * @brief Applies a single input or output redir.
  *
- * @param redir The redirection structure to apply.
+ * Opens the file, dups the fd onto stdin or
+ * stdout, then closes the original fd.
+ *
+ * @param redir The redir to apply.
  * @return 0 on success, 1 on failure.
  */
 static int	apply_one_redir(t_redir *redir)
@@ -67,9 +70,12 @@ static void	write_heredoc_line(int fd, char *line, t_shell *shell, int quoted)
 }
 
 /**
- * @brief Applies an append redirection.
+ * @brief Applies an append (>>) redirection.
  *
- * @param redir The redirection structure to apply.
+ * Opens the file with O_APPEND and dups onto
+ * stdout.
+ *
+ * @param redir The redir to apply.
  * @return 0 on success, 1 on failure.
  */
 static int	apply_append(t_redir *redir)
@@ -90,11 +96,13 @@ static int	apply_append(t_redir *redir)
 }
 
 /**
- * @brief Reads heredoc input until the delimiter and stores it in a pipe.
- *        Variables in the body are expanded unless the delimiter was quoted.
+ * @brief Reads heredoc input until the delimiter.
  *
- * @param redir The redirection structure containing the heredoc delimiter.
- * @param shell The shell context used for variable expansion.
+ * Uses readline in a loop, writing each line into
+ * a pipe. Stores the read-end fd in redir.
+ *
+ * @param redir The heredoc redir with the delimiter.
+ * @param shell The shell context for expansion.
  * @return 0 on success, 1 on failure.
  */
 int	open_heredoc(t_redir *redir, t_shell *shell)
@@ -123,9 +131,12 @@ int	open_heredoc(t_redir *redir, t_shell *shell)
 }
 
 /**
- * @brief Applies all redirections in a redirection list.
+ * @brief Applies all redirs in a list.
  *
- * @param redirs The head of the redirection list.
+ * Goes through each redir node and applies it
+ * (heredoc, append, or normal in/out).
+ *
+ * @param redirs Head of the redir list.
  * @return 0 on success, non-zero on failure.
  */
 int	apply_redirs(t_redir *redirs)

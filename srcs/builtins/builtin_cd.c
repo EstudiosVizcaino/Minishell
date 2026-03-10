@@ -61,9 +61,9 @@ static void	update_pwd(t_shell *shell)
 /**
  * @brief Prints an error when cd fails.
  *
- * Shows "cd: <path>: <strerror>" to stderr.
+ * Shows "cd: <path>: <error>" on stderr.
  *
- * @param path The path that caused the error.
+ * @param path The path that failed.
  * @return 1 to indicate failure.
  */
 static int	cd_error(char *path)
@@ -77,10 +77,13 @@ static int	cd_error(char *path)
 }
 
 /**
- * @brief Implements the cd builtin command.
+ * @brief The cd builtin.
  *
- * @param cmd Pointer to the command structure.
- * @param shell Pointer to the shell structure.
+ * With no args goes to HOME. Otherwise tries to
+ * chdir to the given path and updates the env.
+ *
+ * @param cmd   The command struct (args[1] = path).
+ * @param shell The shell context.
  * @return 0 on success, 1 on failure.
  */
 int	builtin_cd(t_cmd *cmd, t_shell *shell)
