@@ -84,3 +84,39 @@ char	*join_free(char *s1, char *s2)
 		fatal_error("malloc");
 	return (tmp);
 }
+
+/**
+ * @brief Expands variables in a heredoc body without quote interpretation.
+ *
+ * Expands $var references while treating single and double quote
+ * characters as literal characters, not as quoting constructs.
+ *
+ * @param str The heredoc line to expand.
+ * @param shell The shell context for variable lookup.
+ * @return The expanded string with quote characters preserved literally.
+ */
+char	*expand_heredoc_str(char *str, t_shell *shell)
+{
+	char	*result;
+	char	*part;
+	char	buf[2];
+	int		i;
+
+	if (!str)
+		return (ft_strdup(""));
+	result = ft_strdup("");
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$')
+			part = expand_var(str, &i, shell);
+		else
+		{
+			buf[0] = str[i++];
+			buf[1] = '\0';
+			part = ft_strdup(buf);
+		}
+		result = join_free(result, part);
+	}
+	return (result);
+}

@@ -26,6 +26,7 @@ SRCS =	srcs/main.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lexer_utils.c \
 	srcs/lexer/lexer_word.c \
+	srcs/lexer/lexer_check.c \
 	srcs/parser/parser.c \
 	srcs/parser/parser_entry.c \
 	srcs/parser/parser_cmd.c \
@@ -92,19 +93,22 @@ BONUS_CFLAGS = -Wall -Wextra -Werror -DBONUS
 BONUS_SRCS_ALL = $(filter-out $(BONUS_REPLACE), $(SRCS)) $(BONUS_SRCS)
 BONUS_OBJS_ALL = $(BONUS_SRCS_ALL:.c=.bo)
 
-bonus: fclean $(LIBFT) $(BONUS_OBJS_ALL)
+bonus: .bonus
+
+.bonus: $(LIBFT) $(BONUS_OBJS_ALL)
 	$(CC) $(BONUS_CFLAGS) $(BONUS_OBJS_ALL) -L$(LIBFT_DIR) -lft $(READLINE_LIB) -lreadline -o $(NAME)
+	@touch .bonus
 
 %.bo: %.c
 	$(CC) $(BONUS_CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -f $(OBJS) $(BONUS_OBJS_ALL)
+	rm -f $(OBJS) $(BONUS_OBJS_ALL) .bonus
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
-	rm -f $(NAME)
+	rm -f $(NAME) .bonus
 
 re: fclean all
 

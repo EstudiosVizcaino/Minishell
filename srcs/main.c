@@ -58,6 +58,38 @@ static void	run_line(char *line, t_shell *shell)
 }
 
 /**
+ * @brief Reads a full (possibly multi-line) input from the user.
+ *
+ * If the initial line has unclosed quotes, additional lines are read
+ * with a continuation prompt until all quotes are balanced.
+ *
+ * @return The assembled input string, or NULL on EOF.
+ */
+static char	*read_full_input(void)
+{
+	char	*line;
+	char	*cont;
+	char	*tmp;
+
+	line = readline("minishell> ");
+	if (!line)
+		return (NULL);
+	while (has_unclosed_quote(line))
+	{
+		cont = readline("> ");
+		if (!cont)
+			break ;
+		tmp = ft_strjoin3(line, "\n", cont);
+		free(line);
+		free(cont);
+		if (!tmp)
+			return (NULL);
+		line = tmp;
+	}
+	return (line);
+}
+
+/**
  * @brief Runs the main read-eval-print loop of the shell.
  *
  * @param shell The shell state structure.
@@ -67,7 +99,7 @@ static void	main_loop(t_shell *shell)
 	while (1)
 	{
 		setup_signals();
-		shell->input = readline("minishell> ");
+		shell->input = read_full_input();
 		if (!shell->input)
 		{
 			ft_putstr_fd("exit\n", STDOUT_FILENO);

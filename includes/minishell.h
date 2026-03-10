@@ -108,6 +108,7 @@ int			is_operator(char c);
 t_token		*handle_operator(char *input, int *i);
 t_token		*handle_word(char *input, int *i);
 int			quote_len(char *s, int i);
+int			has_unclosed_quote(char *input);
 
 /* Parser */
 t_ast		*parser(t_token *tokens);
@@ -124,6 +125,7 @@ t_redir		*make_redir(t_token **tokens);
 /* Expander */
 void		expand_ast(t_ast *ast, t_shell *shell);
 char		*expand_str(char *str, t_shell *shell);
+char		*expand_heredoc_str(char *str, t_shell *shell);
 char		*expand_var(char *str, int *i, t_shell *shell);
 char		*get_var_value(char *name, t_shell *shell);
 char		*join_free(char *s1, char *s2);

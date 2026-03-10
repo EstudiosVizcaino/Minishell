@@ -13,10 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Changes directory to the HOME env variable.
+ * @brief Tries to cd to $HOME.
  *
- * @param shell Pointer to the shell structure.
- * @return 0 on success, 1 on failure.
+ * Gets HOME from env and calls chdir on it.
+ *
+ * @param shell The shell context.
+ * @return 0 on success, 1 if HOME is not set.
  */
 static int	cd_home(t_shell *shell)
 {
@@ -37,11 +39,12 @@ static int	cd_home(t_shell *shell)
 }
 
 /**
- * @brief Updates PWD and OLDPWD environment variables after a directory change.
- *        OLDPWD is only updated if it already exists in the environment,
- *        so that an explicit 'unset OLDPWD' is respected.
+ * @brief Updates PWD and OLDPWD after cd.
  *
- * @param shell Pointer to the shell structure.
+ * Saves old PWD as OLDPWD, then sets PWD to
+ * the current working directory.
+ *
+ * @param shell The shell context.
  */
 static void	update_pwd(t_shell *shell)
 {
@@ -56,7 +59,9 @@ static void	update_pwd(t_shell *shell)
 }
 
 /**
- * @brief Prints a cd error message with the path and errno string.
+ * @brief Prints an error when cd fails.
+ *
+ * Shows "cd: <path>: <strerror>" to stderr.
  *
  * @param path The path that caused the error.
  * @return 1 to indicate failure.
