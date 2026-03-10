@@ -1,3 +1,15 @@
-1 - >
-2
-3
+1 --> Makefile relinks when compiling bonus
+2 --> With this input in heredoc: cat << EOF
+        > "$USER"
+        > $USER
+        > '$USER'
+        > EOF
+      This is what should appear
+        "cvizcain"
+        cvizcain
+        'cvizcain'
+      This is what appears
+        cvizcain
+        cvizcain
+        $USER
+3 --> When doing echo "hello, it should continue receiving input until double quotes are closed , but it does not, it just finishes the prompt
