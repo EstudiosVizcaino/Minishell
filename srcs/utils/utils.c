@@ -79,9 +79,11 @@ int	array_len(char **arr)
 }
 
 /**
- * @brief Prints an error message and exits the program.
+ * @brief Prints an error and exits.
  *
- * @param msg The error message to print.
+ * Writes msg to stderr, then exits 1.
+ *
+ * @param msg The error message.
  */
 void	fatal_error(char *msg)
 {

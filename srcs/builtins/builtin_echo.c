@@ -33,12 +33,13 @@ static int	is_n_flag(char *s)
 }
 
 /**
- * @brief Implements the echo builtin command with optional -n flag.
- *        Supports multiple consecutive -n flags (e.g. -n -n) and
- *        combined flags (e.g. -nn, -nnn).
+ * @brief The echo builtin.
  *
- * @param cmd Pointer to the command structure.
- * @return 0 on success.
+ * Prints its args separated by spaces. The -n
+ * flag suppresses the trailing newline.
+ *
+ * @param cmd The command struct.
+ * @return Always 0.
  */
 int	builtin_echo(t_cmd *cmd)
 {

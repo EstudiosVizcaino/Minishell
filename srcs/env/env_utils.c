@@ -79,10 +79,13 @@ int	env_set(t_env **env, char *key, char *value)
 }
 
 /**
- * @brief Removes an environment variable by key.
+ * @brief Removes an env var by key.
  *
- * @param env A pointer to the head pointer of the environment linked list.
- * @param key The key of the environment variable to remove.
+ * Finds the node, unlinks it from the list,
+ * and frees its memory.
+ *
+ * @param env Pointer to the env list head.
+ * @param key The key to remove.
  */
 void	env_unset(t_env **env, char *key)
 {

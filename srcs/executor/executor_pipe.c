@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Waits for two child processes and returns exit status of the second.
+ * @brief Waits for both pipe children.
  *
- * @param pid1 The process ID of the first child.
- * @param pid2 The process ID of the second child.
- * @return The exit status of the second child process.
+ * Returns the exit status of the second child
+ * (the right side of the pipe).
+ *
+ * @param pid1 Left child PID.
+ * @param pid2 Right child PID.
+ * @return Exit status of pid2.
  */
 static int	wait_children(pid_t pid1, pid_t pid2)
 {
@@ -39,11 +42,14 @@ static int	wait_children(pid_t pid1, pid_t pid2)
 }
 
 /**
- * @brief Executes the left side of a pipe in a child process.
+ * @brief Runs the left side of a pipe (child).
  *
- * @param ast The AST node representing the pipe.
- * @param pipefd The pipe file descriptors.
- * @param shell The shell state.
+ * Redirects stdout to the pipe write end, then
+ * executes and exits.
+ *
+ * @param ast    The pipe AST node.
+ * @param pipefd Pipe file descriptors.
+ * @param shell  The shell context.
  */
 static void	child_left(t_ast *ast, int *pipefd, t_shell *shell)
 {
@@ -58,11 +64,14 @@ static void	child_left(t_ast *ast, int *pipefd, t_shell *shell)
 }
 
 /**
- * @brief Executes the right side of a pipe in a child process.
+ * @brief Runs the right side of a pipe (child).
  *
- * @param ast The AST node representing the pipe.
- * @param pipefd The pipe file descriptors.
- * @param shell The shell state.
+ * Redirects stdin from the pipe read end, then
+ * executes and exits.
+ *
+ * @param ast    The pipe AST node.
+ * @param pipefd Pipe file descriptors.
+ * @param shell  The shell context.
  */
 static void	child_right(t_ast *ast, int *pipefd, t_shell *shell)
 {
@@ -77,13 +86,16 @@ static void	child_right(t_ast *ast, int *pipefd, t_shell *shell)
 }
 
 /**
- * @brief Forks the right child of a pipe and waits for both children.
+ * @brief Forks the right child and waits for both.
  *
- * @param ast The AST node representing the pipe.
- * @param pipefd The pipe file descriptors.
- * @param shell The shell state.
- * @param p1 The process ID of the left child.
- * @return The exit status of the right child process.
+ * Called after the left child is already forked.
+ * Closes pipe fds in the parent after forking.
+ *
+ * @param ast    The pipe AST node.
+ * @param pipefd Pipe file descriptors.
+ * @param shell  The shell context.
+ * @param p1     PID of the left child.
+ * @return Exit status of the right child.
  */
 static int	fork_right(t_ast *ast, int *pipefd, t_shell *shell, pid_t p1)
 {
@@ -105,11 +117,14 @@ static int	fork_right(t_ast *ast, int *pipefd, t_shell *shell, pid_t p1)
 }
 
 /**
- * @brief Executes a pipe AST node by forking two child processes.
+ * @brief Executes a pipe: forks left and right.
  *
- * @param ast The AST node representing the pipe.
- * @param shell The shell state.
- * @return The exit status of the right side of the pipe.
+ * Creates a pipe, forks left child, then calls
+ * fork_right for the right child.
+ *
+ * @param ast   The pipe AST node.
+ * @param shell The shell context.
+ * @return Exit status of the right side.
  */
 int	exec_pipe(t_ast *ast, t_shell *shell)
 {

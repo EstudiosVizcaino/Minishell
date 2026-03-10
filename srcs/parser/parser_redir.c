@@ -13,9 +13,11 @@
 #include "minishell.h"
 
 /**
- * @brief Frees a linked list of redirection nodes.
+ * @brief Frees a linked list of redir nodes.
  *
- * @param redir The head of the redirection list to free.
+ * Also closes any open heredoc fds.
+ *
+ * @param redir Head of the redir list.
  */
 void	free_redir(t_redir *redir)
 {
@@ -33,9 +35,11 @@ void	free_redir(t_redir *redir)
 }
 
 /**
- * @brief Frees a command structure and its contents.
+ * @brief Frees a command struct and everything inside.
  *
- * @param cmd The command structure to free.
+ * Frees args array, redir list, and the cmd itself.
+ *
+ * @param cmd The command struct to free.
  */
 void	free_cmd(t_cmd *cmd)
 {
@@ -58,9 +62,11 @@ void	free_cmd(t_cmd *cmd)
 }
 
 /**
- * @brief Recursively frees an AST and all its children.
+ * @brief Recursively frees the whole AST.
  *
- * @param node The root of the AST subtree to free.
+ * Goes left, right, then frees the node's cmd.
+ *
+ * @param node Root of the subtree to free.
  */
 void	free_ast(t_ast *node)
 {
@@ -74,10 +80,14 @@ void	free_ast(t_ast *node)
 }
 
 /**
- * @brief Creates a redirection node from the current token.
+ * @brief Builds a redir node from the current token.
  *
- * @param tokens A pointer to the current position in the token list.
- * @return A pointer to the new redirection node, or NULL on failure.
+ * Reads the redir type, advances past the token,
+ * then grabs the filename if the next token is
+ * a word.
+ *
+ * @param tokens Current token position.
+ * @return The new redir node, or NULL.
  */
 t_redir	*make_redir(t_token **tokens)
 {
@@ -106,10 +116,13 @@ t_redir	*make_redir(t_token **tokens)
 }
 
 /**
- * @brief Parses consecutive redirection tokens into a linked list.
+ * @brief Parses consecutive redir tokens into a list.
  *
- * @param tokens A pointer to the current position in the token list.
- * @return A pointer to the head of the redirection list, or NULL if none found.
+ * Keeps reading redir tokens until it hits a
+ * word, pipe, EOF or another stop condition.
+ *
+ * @param tokens Current token position.
+ * @return Head of the redir list, or NULL.
  */
 t_redir	*parse_redir(t_token **tokens)
 {

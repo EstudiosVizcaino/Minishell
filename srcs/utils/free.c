@@ -34,12 +34,15 @@ void	free_shell(t_shell *shell)
 }
 
 /**
- * @brief Joins three strings into one newly allocated string.
+ * @brief Joins three strings into one.
  *
- * @param s1 The first string.
- * @param s2 The second string.
- * @param s3 The third string.
- * @return The newly allocated concatenated string, or NULL on failure.
+ * Joins s1+s2 first, then joins that with s3.
+ * The caller must free the result.
+ *
+ * @param s1 First string.
+ * @param s2 Second string.
+ * @param s3 Third string.
+ * @return The joined string, or NULL.
  */
 char	*ft_strjoin3(char *s1, char *s2, char *s3)
 {

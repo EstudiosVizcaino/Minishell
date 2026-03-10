@@ -13,11 +13,14 @@
 #include "minishell.h"
 
 /**
- * @brief Creates a new environment variable node.
+ * @brief Creates a new env node.
  *
- * @param key The key of the environment variable.
- * @param value The value of the environment variable.
- * @return A pointer to the new env node, or NULL on failure.
+ * Mallocs a t_env, sets key and value, and
+ * NULLs the next pointer.
+ *
+ * @param key   The variable name.
+ * @param value The variable value (can be NULL).
+ * @return The new node, or NULL on malloc fail.
  */
 t_env	*env_new(char *key, char *value)
 {

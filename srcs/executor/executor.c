@@ -13,10 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Checks if a command name corresponds to a shell builtin.
+ * @brief Checks if a command name is a builtin.
  *
- * @param name The command name to check.
- * @return 1 if the command is a builtin, 0 otherwise.
+ * Compares against all 7 builtins we support.
+ *
+ * @param name The command name.
+ * @return 1 if builtin, 0 otherwise.
  */
 int	is_builtin(char *name)
 {
@@ -40,11 +42,14 @@ int	is_builtin(char *name)
 }
 
 /**
- * @brief Dispatches execution to the appropriate builtin function.
+ * @brief Runs the matching builtin function.
  *
- * @param cmd The command structure containing the builtin name and arguments.
- * @param shell The shell state.
- * @return The exit status of the executed builtin.
+ * Compares cmd name and calls the right builtin
+ * handler (echo, cd, pwd, export, unset, env, exit).
+ *
+ * @param cmd  The command struct with name and args.
+ * @param shell The shell context.
+ * @return Exit status of the builtin.
  */
 int	exec_builtin(t_cmd *cmd, t_shell *shell)
 {

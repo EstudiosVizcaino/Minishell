@@ -13,10 +13,13 @@
 #include "minishell.h"
 
 /**
- * @brief Checks if a string consists entirely of variable references.
+ * @brief Checks if a string is only $VAR refs.
+ *
+ * Used to decide whether an empty expansion means
+ * the arg should be removed entirely.
  *
  * @param str The string to check.
- * @return 1 if the string contains only variable references, 0 otherwise.
+ * @return 1 if only vars, 0 otherwise.
  */
 static int	is_only_vars(char *str)
 {
@@ -113,11 +116,13 @@ static int	count_new_args(char **args, t_shell *shell)
 }
 
 /**
- * @brief Expands variables in all command arguments, applying word splitting
- *        for unquoted bare variable references.
+ * @brief Expands all args and drops empty ones.
  *
- * @param cmd   The command whose arguments to expand.
- * @param shell The shell context containing environment variables.
+ * If a var like $EMPTY expands to nothing and the
+ * original was only vars, we skip that arg.
+ *
+ * @param cmd   The command with args to expand.
+ * @param shell The shell context (has env).
  */
 void	expand_args(t_cmd *cmd, t_shell *shell)
 {
@@ -149,11 +154,12 @@ void	expand_args(t_cmd *cmd, t_shell *shell)
 }
 
 /**
- * @brief Expands variables in redirection file targets and marks heredoc
- *        delimiters as quoted if they contain quote or backslash characters.
+ * @brief Expands vars in redir filenames.
  *
- * @param redir The linked list of redirections to expand.
- * @param shell The shell context containing environment variables.
+ * Skips heredoc redirs (delimiter stays literal).
+ *
+ * @param redir Head of the redir list.
+ * @param shell The shell context (has env).
  */
 void	expand_redirs(t_redir *redir, t_shell *shell)
 {

@@ -13,10 +13,12 @@
 #include "minishell.h"
 
 /**
- * @brief Checks if a character is a shell operator.
+ * @brief Checks if a char is a shell operator.
+ *
+ * Operators are | < and >.
  *
  * @param c The character to check.
- * @return 1 if the character is an operator, 0 otherwise.
+ * @return 1 if operator, 0 otherwise.
  */
 int	is_operator(char c)
 {
@@ -26,11 +28,14 @@ int	is_operator(char c)
 }
 
 /**
- * @brief Handles double-character operators (heredoc and append).
+ * @brief Handles << (heredoc) and >> (append).
  *
- * @param input The input string being tokenized.
- * @param i A pointer to the current index in the input string.
- * @return A token for the double operator, or NULL if none matched.
+ * Checks the next two chars. If they match a double
+ * operator we advance i by 2 and return the token.
+ *
+ * @param input The input string.
+ * @param i     Current index pointer.
+ * @return Token for << or >>, or NULL if no match.
  */
 static t_token	*handle_double_op(char *input, int *i)
 {
@@ -48,11 +53,14 @@ static t_token	*handle_double_op(char *input, int *i)
 }
 
 /**
- * @brief Tokenizes a shell operator from the input string.
+ * @brief Reads a single operator token from input.
  *
- * @param input The input string being tokenized.
- * @param i A pointer to the current index in the input string.
- * @return A pointer to the newly created operator token.
+ * First tries double operators, then falls back to
+ * single | < or >.
+ *
+ * @param input The input string.
+ * @param i     Current index pointer.
+ * @return The operator token.
  */
 t_token	*handle_operator(char *input, int *i)
 {
@@ -78,11 +86,14 @@ t_token	*handle_operator(char *input, int *i)
 }
 
 /**
- * @brief Calculates the length of a quoted segment including quotes.
+ * @brief Gets the length of a quoted segment.
  *
- * @param s The string containing the quoted segment.
- * @param i The starting index of the opening quote.
- * @return The total length of the quoted segment.
+ * Counts chars from the opening quote to the closing
+ * one (both included).
+ *
+ * @param s The string with the quoted part.
+ * @param i Index of the opening quote.
+ * @return Total length of the quoted segment.
  */
 int	quote_len(char *s, int i)
 {
