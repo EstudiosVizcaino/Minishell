@@ -36,17 +36,28 @@
  */
 typedef enum e_token_type
 {
-	TOKEN_WORD,      /**< Regular word or argument. */
-	TOKEN_PIPE,      /**< Pipe operator (|). */
-	TOKEN_REDIR_IN,  /**< Input redirection (<). */
-	TOKEN_REDIR_OUT, /**< Output redirection (>). */
-	TOKEN_HEREDOC,   /**< Here-document operator (<<). */
-	TOKEN_APPEND,    /**< Append output redirection (>>). */
-	TOKEN_AND,       /**< Logical AND operator (&&). */
-	TOKEN_OR,        /**< Logical OR operator (||). */
-	TOKEN_LPAREN,    /**< Left parenthesis for subshell. */
-	TOKEN_RPAREN,    /**< Right parenthesis for subshell. */
-	TOKEN_EOF        /**< End-of-input sentinel. */
+	/* Regular word or argument. */
+	TOKEN_WORD,
+	/* Pipe operator (|). */
+	TOKEN_PIPE,
+	/* Input redirection (<). */
+	TOKEN_REDIR_IN,
+	/* Output redirection (>). */
+	TOKEN_REDIR_OUT,
+	/* Here-document operator (<<). */
+	TOKEN_HEREDOC,
+	/* Append output redirection (>>). */
+	TOKEN_APPEND,
+	/* Logical AND operator (&&). */
+	TOKEN_AND,
+	/* Logical OR operator (||). */
+	TOKEN_OR,
+	/* Left parenthesis for subshell. */
+	TOKEN_LPAREN,
+	/* Right parenthesis for subshell. */
+	TOKEN_RPAREN,
+	/* End-of-input sentinel. */
+	TOKEN_EOF
 }	t_token_type;
 
 /**
@@ -57,9 +68,12 @@ typedef enum e_token_type
  */
 typedef struct s_token
 {
-	t_token_type		type;   /**< Type of token (WORD, PIPE, etc.). */
-	char				*value; /**< Raw string content of the token. */
-	struct s_token		*next;  /**< Next token in the list. */
+	/* Classification of this token (WORD, PIPE, etc.). */
+	t_token_type		type;
+	/* Raw string content of the token. */
+	char				*value;
+	/* Next token in the list. */
+	struct s_token		*next;
 }	t_token;
 
 /**
@@ -70,11 +84,16 @@ typedef struct s_token
  */
 typedef struct s_redir
 {
-	t_token_type		type;       /**< Redirection kind (<, >, <<, >>). */
-	char				*file;      /**< Target file or heredoc delimiter. */
-	int					heredoc_fd; /**< Read-end of heredoc pipe, or -1. */
-	int					quoted;     /**< 1 if heredoc delimiter was quoted. */
-	struct s_redir		*next;      /**< Next redirection in the list. */
+	/* Redirection kind: TOKEN_REDIR_IN/OUT/HEREDOC/APPEND. */
+	t_token_type		type;
+	/* Target filename or heredoc delimiter string. */
+	char				*file;
+	/* Read-end fd of the heredoc pipe, or -1 if unused. */
+	int					heredoc_fd;
+	/* 1 if the heredoc delimiter was quoted (no expansion). */
+	int					quoted;
+	/* Next redirection in the list. */
+	struct s_redir		*next;
 }	t_redir;
 
 /**
@@ -85,8 +104,10 @@ typedef struct s_redir
  */
 typedef struct s_cmd
 {
-	char				**args;  /**< NULL-terminated argument array. */
-	t_redir				*redirs; /**< Head of the redirection list. */
+	/* NULL-terminated array of arguments; args[0] is the command name. */
+	char				**args;
+	/* Head of the redirection list for this command. */
+	t_redir				*redirs;
 }	t_cmd;
 
 /**
@@ -97,11 +118,16 @@ typedef struct s_cmd
  */
 typedef enum e_node_type
 {
-	NODE_CMD,      /**< Simple command node. */
-	NODE_PIPE,     /**< Pipe between two commands. */
-	NODE_AND,      /**< Logical AND (&&) operator node. */
-	NODE_OR,       /**< Logical OR (||) operator node. */
-	NODE_SUBSHELL  /**< Subshell ((...)) group node. */
+	/* Leaf node: a simple command. */
+	NODE_CMD,
+	/* Branch node: pipe between two commands. */
+	NODE_PIPE,
+	/* Branch node: logical AND (&&) operator. */
+	NODE_AND,
+	/* Branch node: logical OR (||) operator. */
+	NODE_OR,
+	/* Branch node: subshell group ((...)) . */
+	NODE_SUBSHELL
 }	t_node_type;
 
 /**
@@ -113,10 +139,14 @@ typedef enum e_node_type
  */
 typedef struct s_ast
 {
-	t_node_type			type;  /**< Node type (CMD/PIPE/AND/OR/SUB). */
-	t_cmd				*cmd;   /**< Command data (NODE_CMD only). */
-	struct s_ast		*left;  /**< Left child (first operand). */
-	struct s_ast		*right; /**< Right child (second operand). */
+	/* Kind of node: CMD, PIPE, AND, OR, or SUBSHELL. */
+	t_node_type			type;
+	/* Pointer to the command data (set for NODE_CMD only). */
+	t_cmd				*cmd;
+	/* Left child: first operand or the pipe's left side. */
+	struct s_ast		*left;
+	/* Right child: second operand or the pipe's right side. */
+	struct s_ast		*right;
 }	t_ast;
 
 /**
@@ -127,9 +157,12 @@ typedef struct s_ast
  */
 typedef struct s_env
 {
-	char				*key;   /**< Variable name. */
-	char				*value; /**< Variable value (may be NULL). */
-	struct s_env		*next;  /**< Next variable in the list. */
+	/* Environment variable name (key part of key=value). */
+	char				*key;
+	/* Environment variable value; may be NULL if unset. */
+	char				*value;
+	/* Next variable node in the linked list. */
+	struct s_env		*next;
 }	t_env;
 
 /**
@@ -141,11 +174,16 @@ typedef struct s_env
  */
 typedef struct s_shell
 {
-	t_env				*env;       /**< Head of the environment list. */
-	int					last_exit;  /**< Exit code of the last command. */
-	char				*input;     /**< Raw input from readline. */
-	int					in_heredoc; /**< Non-zero while reading heredoc. */
-	t_ast				*ast;       /**< AST of the current command. */
+	/* Head of the environment variable linked list. */
+	t_env				*env;
+	/* Exit code of the most recently executed command. */
+	int					last_exit;
+	/* Raw input string returned by readline each cycle. */
+	char				*input;
+	/* Non-zero while the shell is reading a heredoc body. */
+	int					in_heredoc;
+	/* Root of the AST for the current command line. */
+	t_ast				*ast;
 }	t_shell;
 
 extern int	g_signal;
