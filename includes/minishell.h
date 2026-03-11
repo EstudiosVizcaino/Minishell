@@ -126,7 +126,7 @@ typedef enum e_node_type
 	NODE_AND,
 	/* Branch node: logical OR (||) operator. */
 	NODE_OR,
-	/* Branch node: subshell group ((...)) . */
+	/* Branch node: subshell group ((...)).  */
 	NODE_SUBSHELL
 }	t_node_type;
 
