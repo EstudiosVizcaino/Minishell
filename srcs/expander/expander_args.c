@@ -64,6 +64,8 @@ static void	fill_one_arg(char **dst, int *j, char *orig, t_shell *shell)
 	int		k;
 
 	exp = expand_str(orig, shell);
+	if (!exp)
+		return ;
 	if (is_only_vars(orig) && *exp)
 	{
 		words = word_split(exp);
@@ -101,6 +103,11 @@ static int	count_new_args(char **args, t_shell *shell)
 	while (args[i])
 	{
 		exp = expand_str(args[i], shell);
+		if (!exp)
+		{
+			i++;
+			continue ;
+		}
 		if (is_only_vars(args[i]) && *exp)
 		{
 			words = word_split(exp);

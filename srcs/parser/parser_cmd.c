@@ -72,6 +72,8 @@ static void	add_redir(t_cmd *cmd, t_redir **tail, t_token **tokens)
 	t_redir	*r;
 
 	r = make_redir(tokens);
+	if (!r)
+		return ;
 	if (!cmd->redirs)
 		cmd->redirs = r;
 	else
@@ -91,6 +93,7 @@ static void	add_redir(t_cmd *cmd, t_redir **tail, t_token **tokens)
 static void	fill_cmd(t_cmd *cmd, t_token **tokens)
 {
 	t_redir	*redir_tail;
+	char	*dup;
 	int		i;
 
 	redir_tail = NULL;
@@ -103,7 +106,12 @@ static void	fill_cmd(t_cmd *cmd, t_token **tokens)
 		else
 		{
 			if (cmd->args)
-				cmd->args[i++] = ft_strdup((*tokens)->value);
+			{
+				dup = ft_strdup((*tokens)->value);
+				if (!dup)
+					fatal_error("malloc");
+				cmd->args[i++] = dup;
+			}
 			*tokens = (*tokens)->next;
 		}
 	}

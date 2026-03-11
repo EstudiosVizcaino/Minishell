@@ -32,6 +32,11 @@ static char	*search_in_paths(char *name, char **paths)
 	while (paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
+		if (!tmp)
+		{
+			i++;
+			continue ;
+		}
 		candidate = ft_strjoin(tmp, name);
 		free(tmp);
 		if (access(candidate, X_OK) == 0)

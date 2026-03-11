@@ -61,8 +61,11 @@ static void	write_heredoc_line(int fd, char *line, t_shell *shell, int quoted)
 	if (!quoted)
 	{
 		expanded = expand_heredoc_str(line, shell);
-		write(fd, expanded, ft_strlen(expanded));
-		free(expanded);
+		if (expanded)
+		{
+			write(fd, expanded, ft_strlen(expanded));
+			free(expanded);
+		}
 	}
 	else
 		write(fd, line, ft_strlen(line));
