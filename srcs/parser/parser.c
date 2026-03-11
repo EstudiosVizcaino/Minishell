@@ -92,3 +92,22 @@ t_ast	*parse_pipeline(t_token **tokens)
 	}
 	return (left);
 }
+
+/**
+ * @brief Entry point of the parser.
+ *
+ * Takes the token list and kicks off pipeline
+ * parsing. Returns the root of the AST.
+ *
+ * @param tokens The linked list of tokens.
+ * @return Root of the AST, or NULL if empty.
+ */
+t_ast	*parser(t_token *tokens)
+{
+	t_token	*tok;
+
+	tok = tokens;
+	if (!tok)
+		return (NULL);
+	return (parse_pipeline(&tok));
+}

@@ -47,19 +47,11 @@ static char	*get_word(char const *s, char c, int *pos)
 	return (word);
 }
 
-char	**ft_split(char const *s, char c)
+static int	fill_result(char **result, char const *s, char c, int words)
 {
-	char	**result;
-	int		words;
-	int		i;
-	int		pos;
+	int	i;
+	int	pos;
 
-	if (!s)
-		return (NULL);
-	words = count_words(s, c);
-	result = malloc((words + 1) * sizeof(char *));
-	if (!result)
-		return (NULL);
 	i = 0;
 	pos = 0;
 	while (i < words)
@@ -69,11 +61,29 @@ char	**ft_split(char const *s, char c)
 		{
 			while (i-- > 0)
 				free(result[i]);
-			free(result);
-			return (NULL);
+			return (0);
 		}
 		i++;
 	}
 	result[i] = NULL;
+	return (1);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**result;
+	int		words;
+
+	if (!s)
+		return (NULL);
+	words = count_words(s, c);
+	result = malloc((words + 1) * sizeof(char *));
+	if (!result)
+		return (NULL);
+	if (!fill_result(result, s, c, words))
+	{
+		free(result);
+		return (NULL);
+	}
 	return (result);
 }

@@ -26,9 +26,7 @@ SRCS =	srcs/main.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lexer_utils.c \
 	srcs/lexer/lexer_word.c \
-	srcs/lexer/lexer_check.c \
 	srcs/parser/parser.c \
-	srcs/parser/parser_entry.c \
 	srcs/parser/parser_cmd.c \
 	srcs/parser/parser_redir.c \
 	srcs/expander/expander.c \
@@ -56,7 +54,7 @@ SRCS =	srcs/main.c \
 # Files replaced by bonus versions
 BONUS_REPLACE = srcs/main.c \
 	srcs/lexer/lexer_utils.c \
-	srcs/parser/parser_entry.c \
+	srcs/parser/parser.c \
 	srcs/executor/executor_run.c \
 	srcs/expander/expander.c \
 	srcs/expander/expander_str.c
