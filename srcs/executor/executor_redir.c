@@ -100,6 +100,9 @@ static int	apply_append(t_redir *redir)
  *
  * Uses readline in a loop, writing each line into
  * a pipe. Stores the read-end fd in redir.
+ * Saves and restores STDIN_FILENO so that the
+ * sig_heredoc handler's close(STDIN_FILENO) does not
+ * permanently close the calling process's stdin.
  *
  * @param redir The heredoc redir with the delimiter.
  * @param shell The shell context for expansion.
@@ -109,9 +112,11 @@ int	open_heredoc(t_redir *redir, t_shell *shell)
 {
 	int		pipefd[2];
 	char	*line;
+	int		saved_stdin;
 
 	if (pipe(pipefd) == -1)
 		return (1);
+	saved_stdin = dup(STDIN_FILENO);
 	setup_signals_heredoc();
 	while (1)
 	{
@@ -123,6 +128,11 @@ int	open_heredoc(t_redir *redir, t_shell *shell)
 		}
 		write_heredoc_line(pipefd[1], line, shell, redir->quoted);
 		free(line);
+	}
+	if (saved_stdin >= 0)
+	{
+		dup2(saved_stdin, STDIN_FILENO);
+		close(saved_stdin);
 	}
 	setup_signals();
 	close(pipefd[1]);
