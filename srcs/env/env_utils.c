@@ -13,30 +13,55 @@
 #include "minishell.h"
 
 /**
- * @brief Parses a single "KEY=VALUE" string into an env node.
+ * @brief Splits a "KEY=VALUE" string into a t_env node.
  *
- * @param entry The environment string to parse.
- * @return A pointer to the new env node, or NULL on failure.
+ * The OS gives us strings like "PATH=/usr/bin:/bin".  We need to split
+ * on the first '=' to separate the key from the value so both parts
+ * can be managed independently (e.g. `export` can update just the
+ * value without touching the key).
+ *
+ * @param entry A single "KEY=VALUE" string from envp[].
+ * @return A new t_env node, or NULL on malloc failure or missing '='.
  */
 t_env	*env_parse_entry(char *entry)
 {
 	t_env	*node;
-	char	*eq;
+	char	*eq;    /* pointer to the '=' character inside entry */
 	char	*key;
 	char	*value;
 
+	/*
+	** ft_strchr scans 'entry' for the first '=' character and returns
+	** a pointer to it.  If there is no '=', this entry has no value
+	** (e.g. a shell function) – we skip it by returning NULL.
+	*/
 	eq = ft_strchr(entry, '=');
 	if (!eq)
 		return (NULL);
+
+	/*
+	** Extract the key: it starts at index 0 and is (eq - entry) chars long.
+	** ft_substr allocates a fresh copy so we can free it independently.
+	*/
 	key = ft_substr(entry, 0, eq - entry);
 	if (!key)
 		return (NULL);
+
+	/*
+	** The value is everything after the '='.  eq+1 skips past the '='
+	** itself; ft_strdup copies it into a new allocation.
+	*/
 	value = ft_strdup(eq + 1);
 	if (!value)
 	{
 		free(key);
 		return (NULL);
 	}
+
+	/*
+	** env_new() copies key and value again internally, so we own the
+	** local copies and must free them after the call.
+	*/
 	node = env_new(key, value);
 	free(key);
 	free(value);
@@ -46,10 +71,16 @@ t_env	*env_parse_entry(char *entry)
 /**
  * @brief Sets or updates an environment variable.
  *
- * @param env A pointer to the head pointer of the environment linked list.
- * @param key The key of the environment variable.
- * @param value The value to set.
- * @return 0 on success, or 1 on failure.
+ * If the key already exists in the list, its value is replaced in
+ * place (the node is reused).  If the key is new, a fresh node is
+ * prepended at the head of the list so that lookups for recently-set
+ * variables are fast.
+ *
+ * @param env   Double pointer to the head of the env list (may change
+ *              if a new node is prepended).
+ * @param key   The variable name.
+ * @param value The new value (can be NULL for valueless export).
+ * @return 0 on success, 1 on malloc failure.
  */
 int	env_set(t_env **env, char *key, char *value)
 {
@@ -57,35 +88,49 @@ int	env_set(t_env **env, char *key, char *value)
 	t_env	*new;
 	char	*val;
 
+	/*
+	** First check whether the variable is already in the list.
+	** If it is, update its value in place (no need to allocate a node).
+	*/
 	node = env_find(*env, key);
 	if (node)
 	{
+		/*
+		** Duplicate the new value before freeing the old one, so that
+		** if the duplication fails the old value is still intact.
+		*/
 		if (value)
 			val = ft_strdup(value);
 		else
 			val = NULL;
 		if (value && !val)
-			return (1);
-		free(node->value);
-		node->value = val;
+			return (1);  /* malloc failed; original value unchanged */
+		free(node->value);  /* release the old value string */
+		node->value = val;  /* store the new value (may be NULL) */
 		return (0);
 	}
+
+	/*
+	** Key not found → create a new node and prepend it to the list.
+	** Prepending is O(1) and avoids a full scan to find the tail.
+	*/
 	new = env_new(key, value);
 	if (!new)
 		return (1);
-	new->next = *env;
-	*env = new;
+	new->next = *env;   /* the new node points to the old head */
+	*env = new;         /* the caller's head pointer now points at the new node */
 	return (0);
 }
 
 /**
- * @brief Removes an env var by key.
+ * @brief Removes a variable from the environment list by key.
  *
- * Finds the node, unlinks it from the list,
- * and frees its memory.
+ * Performs a standard linked-list unlink operation: find the node,
+ * relink the previous node (or the head pointer) to skip over it,
+ * then free the node's memory.
  *
- * @param env Pointer to the env list head.
- * @param key The key to remove.
+ * @param env Pointer to the head pointer of the env list.
+ * @param key The key of the variable to remove.
  */
 void	env_unset(t_env **env, char *key)
 {
@@ -98,10 +143,17 @@ void	env_unset(t_env **env, char *key)
 	{
 		if (ft_strcmp(curr->key, key) == 0)
 		{
+			/*
+			** Found the node to remove.
+			** If there is a previous node, relink it to skip 'curr'.
+			** If 'curr' is the head (prev == NULL), update the head pointer.
+			*/
 			if (prev)
 				prev->next = curr->next;
 			else
 				*env = curr->next;
+
+			/* Release the memory owned by this node. */
 			free(curr->key);
 			free(curr->value);
 			free(curr);
@@ -110,40 +162,63 @@ void	env_unset(t_env **env, char *key)
 		prev = curr;
 		curr = curr->next;
 	}
+	/* If the key was not found we simply return without doing anything. */
 }
 
 /**
- * @brief Fills a string array with "KEY=VALUE" entries from the env list.
+ * @brief Fills a pre-allocated string array with "KEY=VALUE" strings.
+ *
+ * This is a helper for env_to_array().  It walks the linked list once,
+ * building one "KEY=VALUE" string per node by joining the key, "=", and
+ * the value.  The intermediate string (key + "=") is freed immediately
+ * after being consumed by the second join.
  *
  * @param env The head of the environment linked list.
- * @param arr The string array to fill.
+ * @param arr The array to fill (must have at least count+1 slots).
  */
 static void	env_arr_fill(t_env *env, char **arr)
 {
 	t_env	*curr;
-	char	*tmp;
+	char	*tmp;   /* temporary "KEY=" string */
 	int		i;
 
 	i = 0;
 	curr = env;
 	while (curr)
 	{
+		/*
+		** First join: "KEY" + "=" → "KEY="
+		** We need the intermediate string because ft_strjoin takes
+		** two arguments; there is no three-argument variant for this path.
+		*/
 		tmp = ft_strjoin(curr->key, "=");
+
+		/*
+		** Second join: "KEY=" + value → "KEY=VALUE"
+		** If the value is NULL (valueless export) we append an empty
+		** string so the result is still "KEY=" (valid for execve).
+		*/
 		if (curr->value)
 			arr[i] = ft_strjoin(tmp, curr->value);
 		else
 			arr[i] = ft_strjoin(tmp, "");
-		free(tmp);
+
+		free(tmp);   /* the intermediate "KEY=" string is no longer needed */
 		i++;
 		curr = curr->next;
 	}
 }
 
 /**
- * @brief Converts the environment linked list to a NULL-terminated string array.
+ * @brief Converts the env linked list to a NULL-terminated string array.
+ *
+ * execve() requires the environment as a char** array of "KEY=VALUE"
+ * strings terminated by a NULL pointer.  This function builds that
+ * array from our linked list representation so we can pass it to execve.
  *
  * @param env The head of the environment linked list.
- * @return A NULL-terminated array of "KEY=VALUE" strings, or NULL on failure.
+ * @return A newly-allocated NULL-terminated array, or NULL on failure.
+ *         The caller is responsible for freeing the array and its strings.
  */
 char	**env_to_array(t_env *env)
 {
@@ -151,6 +226,7 @@ char	**env_to_array(t_env *env)
 	char	**arr;
 	int		count;
 
+	/* Count the nodes so we know how large to make the array. */
 	count = 0;
 	curr = env;
 	while (curr)
@@ -158,10 +234,19 @@ char	**env_to_array(t_env *env)
 		count++;
 		curr = curr->next;
 	}
+
+	/*
+	** Allocate count+1 pointers: one per variable plus the NULL sentinel
+	** that execve uses to know where the array ends.
+	*/
 	arr = malloc((count + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);
+
+	/* Fill the array with "KEY=VALUE" strings. */
 	env_arr_fill(env, arr);
+
+	/* Terminate with NULL as required by execve. */
 	arr[count] = NULL;
 	return (arr);
 }
