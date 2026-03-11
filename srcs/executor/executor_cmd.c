@@ -62,7 +62,8 @@ static int	wait_for_child(pid_t pid)
 /**
  * @brief Runs redirs when the command has no args.
  *
- * Just opens heredocs and applies the redirs.
+ * Saves stdin/stdout, opens heredocs, applies the
+ * redirs, then restores the saved fds.
  *
  * @param cmd  The command (only redirs matter).
  * @param shell The shell context.
@@ -70,8 +71,27 @@ static int	wait_for_child(pid_t pid)
  */
 static int	exec_redir_only(t_cmd *cmd, t_shell *shell)
 {
+	int	saved_in;
+	int	saved_out;
+	int	ret;
+
+	saved_in = dup(STDIN_FILENO);
+	saved_out = dup(STDOUT_FILENO);
+	if (saved_in < 0 || saved_out < 0)
+	{
+		if (saved_in >= 0)
+			close(saved_in);
+		if (saved_out >= 0)
+			close(saved_out);
+		return (1);
+	}
 	open_heredocs(cmd->redirs, shell);
-	return (apply_redirs(cmd->redirs));
+	ret = apply_redirs(cmd->redirs);
+	dup2(saved_in, STDIN_FILENO);
+	dup2(saved_out, STDOUT_FILENO);
+	close(saved_in);
+	close(saved_out);
+	return (ret);
 }
 
 /**
