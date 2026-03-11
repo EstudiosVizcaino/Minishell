@@ -64,6 +64,7 @@ static int	wait_for_child(pid_t pid)
  *
  * Saves stdin/stdout, opens heredocs, applies the
  * redirs, then restores the saved fds.
+ * Aborts cleanly if a heredoc was interrupted by SIGINT.
  *
  * @param cmd  The command (only redirs matter).
  * @param shell The shell context.
@@ -86,6 +87,13 @@ static int	exec_redir_only(t_cmd *cmd, t_shell *shell)
 		return (1);
 	}
 	open_heredocs(cmd->redirs, shell);
+	if (g_signal == SIGINT)
+	{
+		close(saved_in);
+		close(saved_out);
+		g_signal = 0;
+		return (130);
+	}
 	ret = apply_redirs(cmd->redirs);
 	dup2(saved_in, STDIN_FILENO);
 	dup2(saved_out, STDOUT_FILENO);
@@ -118,6 +126,11 @@ int	exec_cmd(t_ast *ast, t_shell *shell)
 	if (!cmd->args || !cmd->args[0])
 		return (0);
 	open_heredocs(cmd->redirs, shell);
+	if (g_signal == SIGINT)
+	{
+		g_signal = 0;
+		return (130);
+	}
 	if (is_builtin(cmd->args[0]))
 	{
 		exec_builtin_redir(cmd, shell, &ret);
