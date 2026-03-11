@@ -129,6 +129,8 @@ static void	env_arr_fill(t_env *env, char **arr)
 	while (curr)
 	{
 		tmp = ft_strjoin(curr->key, "=");
+		if (!tmp)
+			fatal_error("malloc");
 		if (curr->value)
 			arr[i] = ft_strjoin(tmp, curr->value);
 		else

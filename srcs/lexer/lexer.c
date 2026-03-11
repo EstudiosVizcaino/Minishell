@@ -31,7 +31,14 @@ t_token	*new_token(t_token_type type, char *value)
 		return (NULL);
 	tok->type = type;
 	if (value)
+	{
 		tok->value = ft_strdup(value);
+		if (!tok->value)
+		{
+			free(tok);
+			return (NULL);
+		}
+	}
 	else
 		tok->value = NULL;
 	tok->next = NULL;
