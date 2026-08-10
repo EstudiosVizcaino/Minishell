@@ -2,6 +2,11 @@
 
 # Minishell
 
+![Grade](https://img.shields.io/badge/grade-125%2F100-brightgreen?style=flat-square)
+![Norminette](https://img.shields.io/badge/norminette-0%20errors-brightgreen?style=flat-square)
+![Language](https://img.shields.io/badge/language-C-00599C?style=flat-square&logo=c&logoColor=white)
+![42](https://img.shields.io/badge/42-Madrid-000000?style=flat-square)
+
 ## Description
 
 Minishell is a simple UNIX shell implemented in C as part of the 42 School curriculum. The goal of the project is to recreate the core functionality of a POSIX-compliant shell — similar to Bash — from scratch.
